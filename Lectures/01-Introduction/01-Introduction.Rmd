@@ -1,0 +1,664 @@
+---
+title: "What is Economics?"
+subtitle: "EC 201: Principles of Microeconomics"
+author: "Kyle Raze"
+date: "Winter 2020"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'metropolis', 'metropolis-fonts', 'my-css.css']
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "https://platform.twitter.com/widgets.js"
+---
+class: inverse, middle
+
+```{r Setup, include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, viridis, knitr, dslabs, gapminder, extrafont, Ecdat, wooldridge, tidyverse, magrittr, janitor)
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#272822" # metropolis font color 
+purple <- "#9370DB"
+green <- "#007935"
+light_green <- "#7DBA97"
+# Notes directory
+dir_slides <- "~/GitHub/Intro_Econometrics_F19/Lectures/01-Introduction/"
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  warning = F,
+  message = F
+)  
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+wrapper <- function(x, ...) paste(strwrap(x, ...), collapse = "\n")
+```
+
+# Prologue
+
+---
+# Who am I? 
+
+[Kyle Raze](https://kyleraze.com)
+
+- Doctoral student in economics
+- UO alumnus: BA '15, MS '17, & PhD '21
+- Applied microeconomist and econometrician
+- I study the economics of education and labor (and sometimes politics). 
+
+--
+
+Where can you find me?
+
+- Office: 522 PLC
+- Office hours: Monday 14:00-15:00, Tuesday 15:00-16:00, or by appointment
+- Email: [.mono[raze@uoregon.edu]](mailto:raze@uoregon.edu) **(use EC 201 in the subject line)**
+
+---
+class: inverse, middle
+
+# What is economics?
+
+---
+# What is economics?
+
+According to [John Maynard Keynes](https://en.wikipedia.org/wiki/John_Maynard_Keynes),
+
+> The theory of economics does not furnish a body of settled conclusions immediately applicable to policy. It is a method rather than a doctrine, an apparatus of the mind, a technique of thinking which helps its possessor to draw correct conclusions.
+
+---
+# Why study economics?
+
+--
+
+1. Develop critical thinking **skills that employers value**.
+
+--
+
+1. Cultivate **healthy skepticism**.
+
+--
+
+1. Learn to navigate a diverse set of **policy-relevant** questions.
+
+---
+# Why study economics?
+
+## Navigate important questions
+
+--
+
+- Should college be free?
+
+--
+
+- Would universal healthcare make us healthier?
+
+--
+
+- Who benefits from a $15 minimum wage? Who suffers?
+
+--
+
+- Why is the rent so damn high?
+
+--
+
+- What can governments do to address climate change?
+
+--
+
+- Why are governments taking so long to address climate change?
+
+---
+# Why study economics?
+
+## Navigate important questions
+
+- Does immigration reduce wages for native workers?
+
+--
+
+- Do cigarette taxes make smokers happier?
+
+--
+
+- How much should the university charge out-of-state students?
+
+--
+
+- Should cities pay for professional sports stadiums?
+
+--
+
+- How does grade inflation affect labor market outcomes? 
+
+--
+
+- Why is there grade inflation?
+
+---
+class: clear-slide
+
+**Q:** Do additional freeway lanes .hi-green[reduce congestion?]
+
+```{r, fig.retina = 2.75, echo = FALSE}
+include_graphics("portland_traffic.png")
+```
+
+--
+
+How do additional lanes .green[change the **price**] of driving .green[**relative** to alternative modes] of transportation?
+
+```{r, fig.retina = 4.75, echo = FALSE}
+include_graphics("transport_alternatives.jpg")
+```
+
+---
+class: clear-slide
+
+**Q:** Should the federal government .green[legalize cannabis?]
+
+```{R, echo = FALSE, fig.height = 5.25, dev = "svg"}
+p_load(sf, ggthemes, albersusa)
+
+state_df <- map_data("state")
+
+us_sf <- usa_sf("laea") %>% 
+  mutate(laws = case_when(name %in% c("Oregon", "Washington", "California", "Illinois", "Alaska", "Colorado", "Nevada", "Michigan", "District of Columbia", "Vermont", "Maine", "Massachusetts") ~ "Legal",
+                          name %in% c("Montana", "North Dakota", "Minnesota", "Utah", "Arizona", "New Mexico", "Oklahoma", "Missouri", "Arkansas", "Louisiana", "Florida", "Ohio", "West Virginia", "Maryland", "Delaware", "New Jersey", "Pennsylvania", "New York", "New Hampshire", "Connecticut", "Rhode Island") ~ "Medical Only",
+                          TRUE ~ "Illegal"))
+ggplot() +
+  geom_sf(data = us_sf, size = 0.5, color = "white", aes(fill = laws)) +
+  scale_fill_manual(values = c(purple, green, light_green)) + 
+  labs(subtitle = "State Cannabis Laws (2019)", 
+       fill = "",
+       caption = "Source: National Conference of State Legislatures") +
+  # remove clutter
+  theme_map() + theme(text = element_text(family = "Fira Sans", size = 17, color = met_slate),
+                      legend.position = c(0.95, 0.5))
+
+```
+
+--
+
+What about .green[meth?]
+
+--
+
+**The bigger question:** What are the relevant trade-offs of legalization?
+
+---
+class: clear-slide
+
+**Q:** Does a "kingpin" strategy weaken drug cartels?
+
+- Principal strategy in Mexico's War on Drugs
+
+--
+
+- New cartels .mono[=>] more competition .mono[=>] more violence
+
+```{R, echo = FALSE, fig.height = 5.25, dev = "svg"}
+homicides <- read_csv("homicides_1990_2017.csv") %>% 
+  clean_names() %>% 
+  rename(hom_rate = homicide_rate_deaths_per_100_000) %>% 
+  filter(entity %in% c("Mexico", "United States"))
+
+my_label <- "Mexico's War on Drugs Begins"
+ggplot(homicides, aes(x = year, y = hom_rate, color = entity)) +
+  geom_line(size = 1) +
+  scale_y_continuous(expand = c(0, 0)) +
+  expand_limits(y = 0) +
+  scale_x_continuous(breaks = seq(1990, 2015, 5)) +
+  geom_vline(xintercept = 2006 - 0.0833, linetype = "dashed", color = met_slate, size = 1) +
+  labs(color = "",
+       caption = "Source: Our World in Data",
+       x = "", 
+       y = "Homicide Rate (deaths per 100,000)") +
+  annotate("label", label = wrapper(my_label, width = 22), x = 2006 - 0.0833, y = 30, family = "Fira Sans", size = 4) +
+  scale_color_manual(values = c(red_pink, purple)) +
+  theme_simple
+
+```
+
+---
+class: clear-slide
+
+**Q:** Should the government require insurance companies to pay for a second night in the hospital following childbirth?
+
+- Overnight hospital stays are expensive.
+
+    - How expensive? Expensive enough that parents rarely opt to pay for a second night.
+    
+--
+
+- If insurance companies are required to cover two nights, then .green[premiums will increase].
+
+--
+
+**The real question:** Are you willing to make some parents more comfortable if it means that .green[others will lose coverage] for basic care?
+
+---
+class: clear-slide
+
+**Q:** Suppose you learn that orchestras employ many more male musicians than female musicians? **How would you explain this?**
+
+```{r, fig.retina = 2.75, echo = FALSE}
+include_graphics("symphony.png")
+```
+
+Do orchestras .hi[discriminate] against women?
+
+--
+
+**Natural experiment:** In the 1950s, American orchestras introduced "blind" auditions.
+
+- **Result:** Women 50% more likely to make past the first round and several times more likely to make the final cut.
+
+--
+
+- **Takeaway:** The evidence is *consistent* with discrimination.
+
+---
+class: clear-slide
+
+**Q:** The university has a fixed number of student tickets for each home football game. Which of the following ways of dispensing tickets is discriminatory?
+
+> **A.** First come, first served.
+
+> **B.** Distribute them using a random drawing.
+
+> **C.** Raise the price until that number of students want tickets.
+
+> **D.** Distribute them according to GPA.
+
+> **E.** All of the above.
+
+---
+class: clear-slide
+count: false
+
+**Q:** The university has a fixed number of student tickets for each home football game. Which of the following ways of dispensing tickets is discriminatory?
+
+> **A.** First come, first served.
+
+> **B.** Distribute them using a random drawing.
+
+> **C.** Raise the price until that number of students want tickets.
+
+> **D.** Distribute them according to GPA.
+
+> .pink[**E.** All of the above.]
+
+--
+
+**Note:** Starting next class, we'll use .mono[iClicker]s for questions like this one.
+
+---
+# What is economics?
+
+## Textbook definitions
+
+> The study of how humans coordinate their wants.
+
+--
+
+> The study of how scarce resources, each having alternative uses, are allocated amongst competing ends.
+
+--
+
+> The study of how individuals and societies allocate their limited resources to satisfy their unlimited wants.
+
+--
+
+**Common thread:** .hi[scarcity]
+
+- A not-so-dismal .green[objective:] learn how we can better .green[mitigate the costs of scarcity.]
+
+---
+# What is economics?
+
+## Micro *vs.* Macro
+
+**Microeconomics** focuses on the causes and consequences of the choices people make in a market economy.
+
+- What factors constrain the choices of individuals? How do people respond when we relax those constraints or impose new ones? Do we like the consequences?
+
+**Macroeconomics** focuses on the performance of entire economies.
+
+- How do we grow the economy and avoid recessions?
+
+---
+# Is economics a science?
+
+Economics seeks to explain real-world events by way of .green[observation] .mono[->] .green[hypothesis] .mono[->] .green[prediction] .mono[->] .green[experimentation] .mono[->] .green[conclusion].
+
+--
+
+Economists employ the .green[scientific method] to learn about human behavior.
+
+- Difficult to conduct controlled experiments like those in chemistry or physics.
+
+- **Alternative:** approximate controlled experiments with [randomized control trials](https://www.ted.com/talks/esther_duflo_social_experiments_to_fight_poverty?language=en), psychology-style lab experiments, and natural experiments.
+
+---
+# Is economics a science?
+
+Focus on *human* behavior .mono[=>] social science.
+
+The core fields of social science are anthropology, economics, political science, psychology, and sociology.
+
+- Common objective: explain some aspect of human behavior.
+
+- They differ in the questions they pose and their frameworks for analysis.
+
+---
+# Example: *Blue Paradox*
+
+[Recent study](https://www.pnas.org/content/116/12/5319) by UO economist [Grant McDermott](https://grantmcdermott.com) and coauthors.
+
+**Question:** Do commercial fishers preempt fishing bans by increasing their fishing effort before the bans go into effect?
+
+**Motivation**
+
+- Recent conservation efforts seek to preserve aquatic habitat and increase fish stocks.
+- Policy lever: Restrict fishing activity in marine protected areas.
+- Concern: Preemptive behavior could *decrease* fish stocks.
+
+--
+
+**Approach**
+
+- Use vessel-level data on fishing effort/intensity to measure the behavioral response to impending fishing restrictions.
+
+---
+# Example: *Blue Paradox*
+
+**Natural Experiment**
+
+Phoenix Islands Protected Area (PIPA) 
+
+- First mentioned on 1 September 2014; implemented 1 January 2015.
+- *Treatment group:* PIPA.
+- *Control group:* Outlying Kiribati islands. 
+
+````{r, fig.retina = 6, eval=TRUE, echo=FALSE}
+include_graphics("figure2.jpg")
+```
+
+---
+# Example: *Blue Paradox*
+
+**Natural Experiment**
+
+Measure the causal effect of the fishing ban by comparing fishing effort in treatment and control regions, before-and-after PIPA.
+
+- A *difference-in-differences* comparison.
+
+- .hi-red[Assumption:] .red[If Kiribati hadn't adopted the policy, then treatment region would have experienced the same trend in fishing activity as the control region.] 
+
+- If we believe this assumption, then the observed difference-in-differences supports a causal interpretation. If not, then the change could reflect other factors and thus fail to isolate the causal effect of the ban.
+
+---
+# Example: *Blue Paradox*
+
+**Results**
+
+````{r, fig.retina = 3.5, eval=TRUE, echo=FALSE}
+include_graphics("figure3.jpg")
+```
+
+---
+# Example: *Blue Paradox*
+
+**Discussion**
+
+Results provide causal evidence that commercial fishers engage in preemptive behavior in response to conservation policy changes.
+
+Results are *consistent* with economic theory, but *cannot prove* that the theory is correct.
+
+- **Science cannot prove anything.**
+- Science can .hi[falsify or reject] existing hypotheses or .hi[corroborate] existing evidence.
+
+--
+
+Also...the causal statement rests on a critical assumption.
+
+- Cannot prove that the assumption is true, but can falsify it.
+- Failure to falsify .mono[!=] assumption is true.
+
+---
+# What role should economists play?
+
+It will be important for us to separate our beliefs about *what is desirable* from what we believe to be *true or false.*
+
+--
+
+Robust economic analysis consists of .hi[positive] statements.
+
+- *Positive statement* .mono[=] statement that can be classified as either true or false.
+
+--
+
+Economists try to avoid .hi[normative] statements in their analyses.
+
+- *Normative statement* .mono[=] statement expressing a value judgement or *what ought to be.* 
+
+- No matter how widely shared, value judgements are not scientifically justifiable (*i.e.,* they are untestable).
+
+---
+# What role should economists play?
+
+**Q:** Is there a role for the normative?
+
+- **A:** To the extent that it is supported by well-defined positive statements, yes.
+
+- *e.g.,* evidence-based policy recommendations.
+
+---
+# Positive or normative?
+
+*"The unemployment rate is 3.7 percent."*
+
+--
+
+- **A:** Positive statement.
+
+--
+
+*"Congress should abolish ICE."*
+
+--
+
+- **A:** Normative statement.
+
+--
+
+*"The expiration of the US Federal Assault Weapons Ban in 2004 increased gun violence in neighboring Mexican states."*
+
+--
+
+- **A:** Positive statement.
+
+---
+# Positive or normative?
+
+*"Vaccines cause autism."*
+
+--
+
+- **A:** Positive statement...that happens to be false.
+
+--
+
+*"When coupled with counseling, housing vouchers provide a cost-effective means to move low-income families to high-opportunity neighborhoods. Policymakers should consider incorporating additional counseling services into federal housing assistance programs."*
+
+--
+
+- **A:** Normative statement supported by a positive statement.
+
+---
+# Positive or normative?
+
+<br>
+<center>
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">We should have a contest as to which of the Networks, plus CNN and not including Fox, is the most dishonest, corrupt and/or distorted in its political coverage of your favorite President (me). They are all bad. Winner to receive the FAKE NEWS TROPHY!</p>&mdash; Donald J. Trump (@realDonaldTrump) <a href="https://twitter.com/realDonaldTrump/status/935147410472480769?ref_src=twsrc%5Etfw">November 27, 2017</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</center>
+<br>
+
+--
+
+.center[**A:** Normative statement.]
+
+---
+# Positive or normative?
+
+<br>
+<center>
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">In addition to winning the Electoral College in a landslide, I won the popular vote if you deduct the millions of people who voted illegally</p>&mdash; Donald J. Trump (@realDonaldTrump) <a href="https://twitter.com/realDonaldTrump/status/802972944532209664?ref_src=twsrc%5Etfw">November 27, 2016</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</center>
+<br>
+
+--
+
+.center[**A:** Positive statement, but [unfounded](https://www.npr.org/2016/11/27/503506026/trump-makes-unfounded-claim-that-millions-voted-illegally-for-clinton).]
+
+---
+# Prices
+
+**Q:** Who coordinates the needs and wants of the 325 million people in the US economy?
+
+- No individual commands more than a tiny part of the production of any good.
+
+- Each individual, acting in self-interest on narrowly-defined projects, creates useful goods for consumers in exchange for wages or other remuneration.
+
+- These activities are based on mutual benefits, coordinated by market-determined .hi-green[prices].
+
+---
+# Economic Learning
+
+## Five important dimensions
+
+1. Economic reasoning
+
+2. Economic terminology
+
+3. Economic insights
+
+4. Economic institutions
+
+5. Economic policy
+
+---
+# Economic Learning
+
+## 1. Economic reasoning
+
+Framework for formulating and answering questions
+
+How does one think as an economist?
+
+- Define the relevant benefits and costs.
+
+- Define the margins of importance.
+
+- Construct a predictive model that explains past behavior and predicts future behavior.
+
+---
+# Economic Learning
+
+## 2. Economic terminology
+
+Terminology abounds
+
+- *e.g.,* marginal benefit, marginal cost, market power, externalities, adverse selection, price controls, utility, profit, *etc.*
+
+**Q:** Why bother? 
+
+**A:** Discipline-specific terminology facilitates quick and precise communication of complex ideas.
+
+---
+# Economic Learning
+
+## 3. Economic insights
+
+We base insights on economic theory.
+
+- Theory provides generalizations about the inner workings of an abstract economy.
+
+- *e.g.,* who coordinates the needs and wants of the millions of people in the US economy? 
+
+---
+# Economic Learning
+
+## 4. Economic institutions
+
+An institution is a physical or mental structure that influences economic decisions.
+
+- *e.g.,* markets, private property, slavery, religion, *etc.*
+
+-  Differences in institutions can explain differences in living standards, inequality, and the way people coordinate their wants.
+
+---
+# Economic Learning
+
+## 5. Economic policy
+
+An intervention by a government, manager, or professor that seeks to manipulate incentives associated with a particular behavior.
+
+- To increase educational attainment among poor children, Mexico pays low-income mothers based on their children’s school attendance.
+
+- To deter shirking, Amazon ranks its employees and fires those toward the bottom of the rankings.
+
+- To reduce the expected benefits of cheating, I generate a randomized seating chart for exams.
+
+---
+# Incentives
+
+.hi[People respond to incentives], but not always in the way policymakers want.
+
+**Example:** License plate rationing in Mexico City
+
+```{r, fig.retina = 2, echo = FALSE}
+include_graphics("mexico_city_smog.png")
+```
+
+---
+# Incentives
+
+**The big question:** Given that humans are self-interested, how does one conduct policy to promote social welfare?
+
+- When are incentives aligned with what is socially desirable?
+
+- When are they misaligned?
+
+---
+# Our Priorities
+
+Develop a base of knowledge from which you can build sound arguments for or against economic policies and observations.
+
+- Build a foundation for further study in economics.
+
+- Furnish new critical thinking skills.
+
+- Calibrate your skepticism.

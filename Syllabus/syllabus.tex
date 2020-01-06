@@ -1,0 +1,245 @@
+% !TEX program = XeLaTex
+\documentclass[11pt]{article}
+%\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace, titling}
+\newcommand{\subtitle}[1]{%
+  \posttitle{%
+    \par\end{center}
+    \begin{center}\large#1\end{center}
+    \vskip0.5em}%
+}
+
+%% FONTS
+\usepackage{fontspec}
+% See: https://tex.stackexchange.com/a/50593
+\setmainfont[
+BoldFont       = FiraSans-SemiBold.otf,
+ItalicFont     = FiraSans-Italic.otf,
+BoldItalicFont = FiraSans-SemiBoldItalic.otf
+]{FiraSans-Regular.otf} %
+\setmonofont[
+BoldFont       = FiraCode-Bold.ttf
+]{FiraCode-Regular.ttf}
+\usepackage{marvosym} % For cool symbols.
+\usepackage{fontawesome} % Ditto
+%\usepackage{libertine}
+
+\usepackage[normalem]{ulem} %% For strikeout font: \sout()
+
+\usepackage[dvipsnames]{xcolor}
+\definecolor{uo_green}{HTML}{154733}
+\definecolor{forest_green}{HTML}{006241}
+\definecolor{pine_green}{HTML}{007935}
+\definecolor{grass_green}{HTML}{62A70F}
+\definecolor{golden_yellow}{HTML}{FFD200}
+\definecolor{cool_gray}{HTML}{54565B}
+\definecolor{light_cool_gray}{HTML}{A8A8AA}
+
+\usepackage[colorlinks = true,
+linkcolor = pine_green,
+urlcolor  = pine_green,
+citecolor = pine_green,
+anchorcolor = black]{hyperref}
+\usepackage{graphicx}
+
+% For table formatting:
+\usepackage{array, booktabs, caption, siunitx, multirow, float}
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+
+\begin{document}
+
+\title{
+	\texttt{\textbf{Principles of Microeconomics} [EC 201]}\\[1em]
+	\large Winter 2020 Syllabus
+}
+\author{\textbf{Kyle Raze} \\ Department of Economics \\ University of Oregon}
+%\date{}  % Toggle commenting to test
+\date{\vspace{-1ex}}
+
+\maketitle
+
+%\section*{Course at a glance}
+
+\begin{table}[!h]
+	\ra{1.1}
+\begin{tabular}{l @{\hspace{1.25\tabcolsep}} l l l @{\hspace{1.25\tabcolsep}} l l l @{\hspace{1.25\tabcolsep}} l @{}}
+	& \textbf{{Lecture}} & & & \textbf{{Discussion}} & & & \textbf{{Materials}} \\
+	\faMapMarker & \href{https://map.uoregon.edu/e961047b9}{Pacific 123} & & \faMapMarker &  \href{https://map.uoregon.edu/055606083}{Pacific 16} & & \faBook & \href{https://www.amazon.com/Principles-Microeconomics-Second-Lee-Coppock/dp/0393614085}{Principles of Microeconomics, 2\textsuperscript{nd} ed.} \\
+	\faClockO & M \& W 12:00--13:20 & & \faClockO & See \href{https://duckweb.uoregon.edu/pls/prod/twbkwbis.P_WWWLogin}{DuckWeb} & & \faHeadphones & Podcasts  \\
+	& & & & & & \faChevronRight & \href{https://www.uoduckstore.com/Iclicker-2-142928047}{{\texttt{iClicker} 2}}
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+	\ra{1.1}
+\begin{tabular}{l @{\hspace{1.25\tabcolsep}} l @{}}
+	& \textbf{{Instructor}}\\
+	\faUser & Kyle Raze \\
+	\faGlobe & \href{https://kyleraze.com}{kyleraze.com} \\
+	\faPaperPlaneO & \href{mailto:raze@uoregon.edu}{raze@uoregon.edu} \\
+	\faMapMarker & \href{https://map.uoregon.edu/fae79fcfd}{PLC 522} \\
+	\faClockO & M 14:00--15:00, T 15:00--16:00, or by appointment	
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+	\ra{1.1}
+	\begin{tabular}{l @{\hspace{1.25\tabcolsep}} l l l @{\hspace{1.25\tabcolsep}} l @{}}
+		& \textbf{{GE}} & & & \textbf{{GE}} \\
+		\faUser & Connor Wiegand & & \faUser & Promise Kamanga \\
+		\faPaperPlaneO & \href{mailto:cwiegand@uoregon.edu}{cwiegand@uoregon.edu} & & \faPaperPlaneO & \href{mailto:promisek@uoregon.edu}{promisek@uoregon.edu} \\
+		\faMapMarker & \href{https://map.uoregon.edu/c112309a4}{PLC 819} & & \faMapMarker & \href{https://map.uoregon.edu/a9378a60c}{PLC 828} \\
+		\faClockO & TBA & & \faClockO & Th \& F 14:00--15:00
+	\end{tabular}
+\end{table}
+
+\section*{Course Summary}
+
+The purpose of this course is to cultivate your economic intuition. My goal is not to teach you \textit{what to think}, but rather \textit{how to think} as an economist. We will consider how social outcomes are shaped by the decisions of many individuals, even though each individual commands only a small fraction of the economy. Expanding upon the notion that individuals respond to incentives, we will use models to analyze and assess a variety of social phenomena. Successful students will leave the course with an intellectual framework for understanding and evaluating economic issues and policy.
+
+\subsection*{Prerequisites} 
+
+There are no formal prerequisites for this course, but the Economics Department recommends Math 111 (pre-calculus). I expect that you can read a graph and solve a system of two equations.
+
+\subsection*{Textbook} 
+
+The required textbook is \href{https://www.amazon.com/Principles-Microeconomics-Second-Lee-Coppock/dp/0393614085}{\textbf{Principles of Microeconomics}, 2\textsuperscript{nd} ed.} by Dirk Mateer and Lee Coppock. You can purchase it at the Duck Store or your preferred online bookseller. You should complete the assigned readings \textit{before} lecture. Attending lecture is not a substitute for reading and comprehending the texts. Likewise, reading is not a substitute for attending lecture. The lectures and the readings are meant to complement one another. The tentative course schedule (further below) lists the assigned readings for each topic.
+
+\subsection*{Podcasts}
+
+How can economics help us understand the tradeoffs that societies and individuals experience? How can we apply economic concepts to solve real-world problems? To help you navigate those questions, I assign podcast episodes that provide real-world examples of economics in action. The assigned podcasts include episodes from \href{https://www.npr.org/sections/money/}{\textit{Planet Money}}, \href{https://www.npr.org/podcasts/452538045/freakonomics-radio}{\textit{Freakonomics Radio}}, \href{https://www.vox.com/the-weeds}{\textit{The Weeds}}, and \href{https://www.vox.com/ezra-klein-show-podcast}{\textit{The Ezra Klein Show}}. You should listen to the assigned episodes \textit{before} lecture. The tentative course schedule (further below) lists the assigned episode for each topic.
+
+\subsection*{\texttt{iClicker}} 
+
+To facilitate participation during lectures, we will use the \texttt{iClicker} classroom response system. You can purchase an \href{https://www.uoduckstore.com/Iclicker-2-142928047}{\textbf{\texttt{iClicker} 2 remote}} at the Duck Store or your preferred online retailer. To earn participation points, you must first \href{https://canvas.uoregon.edu/courses/26168/pages/enabling-browser-cookies-and-registering-i%3Eclickers?module_item_id=108448}{register your remote on Canvas}.
+
+
+
+\subsection*{Discussion} 
+
+In your weekly discussion section, your GE will review and extend ideas introduced in lecture. To help you learn the material and prepare for exams, the discussion sections will feature a variety of practice problems. Attendance is discretionary, but highly recommended. 
+
+\newpage
+\section*{Course Structure}
+
+\subsection*{Grading}
+
+I will award grades based on your relative performance in the class, as determined by the following weights:
+
+\begin{table}[!h]
+	\ra{1.2}
+	\centering
+	\begin{tabular}{@{\extracolsep{1cm}}ll@{}}
+		\textbf{Midterm Exam I} & 25\% \\
+		\textbf{Midterm Exam II} & 25\% \\
+		\textbf{Final Exam}   & 40\% \\
+		\textbf{Participation} & 10\% \\
+		\textbf{Optional Short Essays} & up to 4\% extra credit
+	\end{tabular}
+\end{table}
+
+\noindent The Economics Department stipulates that 55\% of the class will earn grades in the A or B range, including +/- distinctions. I will follow this policy by curving the class \textit{at the end of the quarter}. The generosity of the curve will depend on 1) the average overall performance of the class and 2) your position in the distribution of overall scores. Under no circumstances will the curve reduce your overall score.
+
+\subsection*{Exams} 
+
+I will generate a randomized seating chart for each exam. During the exams, you may use a writing utensil, a non-programmable calculator, and a 3-by-5-inch note card. As you turn in your exam, I will ask you to present your student ID. I do not give makeup exams. See the course policy on makeup assignments for more information.  
+
+\subsection*{Participation} 
+
+You will receive a participation score for each lecture based on your \texttt{iClicker} question performance. Three kinds of questions will contribute to your participation score:
+
+\begin{enumerate}
+	\setlength{\itemsep}{0pt}
+	\item \textbf{Podcast questions:} Most of the lectures have an assigned podcast episode. I expect you to listen to each assigned episode \textit{before} lecture. To encourage timely listening, I will ask you 1-2 questions about the episode in lecture. I will grade your responses to these questions for accuracy.
+	\item \textbf{Practice questions:} To help you gauge your understanding of new concepts, I will ask you to work through practice problems in lecture. I will grade your responses to these questions for participation only.
+	\item \textbf{Activity questions:} I may use \texttt{iClicker} polling to facilitate classroom activities. The way I grade these questions will depend on the activity.
+\end{enumerate}
+
+\noindent I will drop your three lowest participation scores at the end of the quarter.
+
+You may not give your iClicker remote to another student to earn points in your absence. If I catch you using more than one remote in lecture, I will confiscate the remotes and you and the other students involved will earn zero participation points for the quarter. 
+
+\subsection*{Optional Short Essays}
+
+You may submit up to four optional short essays that connect reputable sources to course concepts (\textit{e.g.,} scarcity, competition, diminishing marginal value, market failure, \textit{etc.}). A successful submission is a 400-word essay that summarizes a source of your choice and demonstrates how the source is relevant to the course. Each submission is worth up to 1\% extra credit. To earn credit, you must submit your short essays on Canvas before 10:00 on Monday of Week 10. You have three options for each short essay:
+
+\begin{enumerate}
+	\setlength{\itemsep}{0pt}
+	\item \textbf{Article Summary:} Pick an article from a reputable outlet (\textit{e.g.,} \href{https://www.nytimes.com/}{\textit{The New York Times}}, \href{https://www.wsj.com/}{\textit{The Wall Street Journal}}, \href{https://www.vox.com/}{\textit{Vox}}, \href{https://slate.com/}{\textit{Slate}}, \href{https://www.economist.com/}{\textit{The Economist}}, \textit{etc.}), summarize it, and connect it to at least one concept from the course.
+	\item \textbf{Podcast Summary:} Pick an \textit{unassigned} episode from a relevant podcast (\textit{e.g.,} \href{https://www.npr.org/sections/money/}{\textit{Planet Money}}, \href{https://www.npr.org/podcasts/452538045/freakonomics-radio}{\textit{Freakonomics Radio}}, \href{https://www.econtalk.org/}{\textit{EconTalk}}, \href{https://www.vox.com/the-weeds}{\textit{The Weeds}}, \href{https://www.npr.org/podcasts/381444600/marketplace}{\textit{Marketplace}}, \textit{etc.}), summarize it, and connect it to at least one concept from the course.
+	\item \textbf{Data Analysis:} Analyze a dataset and describe your findings. This rigorous option involves using \texttt{R}, a statistical programming language. Learning \texttt{R} will give you a head start in upper-division economics courses and help you develop a marketable skill that employers value. If you want to pursue this challenge, please see me in office hours.
+\end{enumerate}
+
+
+
+\newpage
+
+\section*{Course Policies}
+
+\subsection*{Email} 
+
+When you send me an email, please include ``EC 201'' in the subject line. You should expect a response within two business days with the understanding that immediate responses are rare. 
+
+\subsection*{Makeup Assignments} 
+
+I do not give makeup assignments. In extreme circumstances that lead you to miss one of the midterm exams---such as death in the family or grave illness or injury---I will consider re-weighting your grade toward the final. To qualify for re-weighting, you will need to notify me no later than two days after the exam, provide documentation that your absence was due to extreme circumstances, and complete a qualifying assignment.
+
+\subsection*{Grade Appeals} 
+
+You must submit any request for re-grading in writing within one week of the day grades are posted for the problem set or exam in question. Your request should include a cogent argument explaining why your responses warrant full credit.
+
+\subsection*{Etiquette} 
+
+Please respect those around you by turning off your phone and other potentially distracting devices. I ask that you stay for the entire lecture: getting up and leaving distracts your fellow classmates. If you must leave early, please position yourself near the door when you get to class. As a final note, a growing body of evidence suggests that \href{https://www.theverge.com/2017/11/27/16703904/laptop-learning-lecture}{using laptops in lecture reduces comprehension and recollection}. In light of this evidence, I ask that you refrain from using your laptop during lecture. As a practical matter, it is much easier to draw graphs by hand than it is to describe them with typed text. 
+
+\subsection*{Academic Integrity} 
+
+I will not tolerate cheating, plagiarism, and other violations of the \href{https://studentlife.uoregon.edu/conduct}{Student Conduct Code}. If I catch you cheating or plagiarizing on any component of this course, you will receive a failing grade for the term and I will report your offense to the university. 
+
+\subsection*{Accommodations} 
+
+Notify me if there are aspects of this course that pose disability-related barriers to your participation. If you require special accommodations for a documented disability, then you will need to provide me a letter from the \href{https://aec.uoregon.edu/}{Accessible Education Center} (AEC) that verifies your need and details the appropriate accommodations. Please make arrangements with the AEC by the end of Week 1. If your accommodations include exam proctoring at the AEC, then you are responsible for scheduling those exams with the AEC \textit{at least seven days in advance}.
+
+\newpage
+
+\begin{table}[H]
+	\caption*{\Large\textbf{Tentative Schedule}}
+	\centering
+	\small
+  \ra{1.5}
+  \begin{tabular}{@{\extracolsep{0.25cm}} c c l >{\raggedright\arraybackslash}p{4.5cm}<{} l @{}}
+    \toprule
+    \textbf{Week} & \textbf{Date} & \textbf{Topic} & \textbf{Podcast} & \textbf{Reading} \\ \toprule
+    01 & 1/06 & What is Economics? &  & Ch. 1\\
+    01 & 1/08 & Motivating the Economic Problem & \textit{Planet Money}: \href{https://www.npr.org/sections/money/2017/03/01/517985813/episode-513-dear-economist-i-need-a-date}{Dear Economist, I Need a Date} [23:13] & Ch. 2 \\
+    02 & 1/13 & Consumer Theory I &  & Ch. 16 \\
+    02 & 1/15 & Consumer Theory II &  & Ch. 3 \\
+    03 & 1/22 & The Market Mechanism & \textit{Planet Money}: \href{https://www.npr.org/sections/money/2017/11/22/565736836/episode-665-the-free-food-market}{The Free Food Market} [17:58] & Ch. 3 \\
+    04 & 1/27 & Demand and Supply & \textit{Planet Money}: \href{https://www.npr.org/sections/money/2014/02/07/273060341/episode-516-why-paying-192-for-a-5-mile-car-ride-may-be-rational}{Why Paying \$192 for a 5-Mile Car Ride May Be Rational} [23:31] & Chs. 3 \& 4 \\ \midrule
+    04 & 1/29 & \textbf{Midterm Exam I} (in-class) \\ \midrule
+    05 & 2/03 & Policy Levers: Taxes \& Subsidies & \textit{Planet Money}: \href{https://www.npr.org/sections/money/2018/08/31/643486297/episode-862-big-government-cheese}{Big Government Cheese} [23:05] & Ch. 5 \\
+    05 & 2/05 & Policy Levers: Price Controls & \textit{The Weeds}: \href{https://www.vox.com/2019/5/17/18628267/jenny-schuetz-weeds-interview}{America's Two Housing Crises} [1:02:18] & Ch. 6 \\
+    06 & 2/10 & How Economists Learn from Data I & \textit{Freakonomics Radio}: \href{http://freakonomics.com/podcast/parenting/}{The Data-Driven Guide to Sane Parenting} [51:41] & \\
+    06 & 2/12 & How Economists Learn from Data II & \textit{The Ezra Klein Show}: \href{https://www.vox.com/2019/8/15/20801907/raj-chetty-ezra-klein-social-mobility-opportunity}{Can Raj Chetty Save the American Dream?} [1:22:42] & \\
+    07 & 2/17 & Market Failure: Externalities & \textit{Planet Money}: \href{https://www.npr.org/sections/money/2018/07/18/630267782/episode-472-the-one-page-plan-to-fix-global-warming-revisited}{The One-Page Plan to Fix Global Warming} [23:55] & Ch. 7 \\
+    07 & 2/19 & Game Theory & & Ch. 13 \\
+    08 & 2/24 & Market Failure: Public Goods & \textit{Planet Money}: \href{https://www.npr.org/sections/money/2018/04/25/605848456/episode-640-the-bottom-of-the-well}{The Bottom of the Well} [22:31] & Ch. 7 \\ \midrule
+    08 & 2/26 & \textbf{Midterm Exam II} (in-class) \\ \midrule
+    09 & 3/02 & Producer Theory I & & Ch. 8 \\
+    09 & 3/04 & Producer Theory II & & Ch. 9 \\
+    10 & 3/09 & Monopoly \& Antitrust & \textit{The Weeds}: \href{https://www.stitcher.com/podcast/voxs-the-weeds/e/61765712?autoplay=true}{A User's Guide to Antitrust} [1:09:00] & Ch. 10 \\
+    10 & 3/11 & Progress through Policy? & \textit{The Weeds}: \href{https://www.stitcher.com/podcast/voxs-the-weeds/e/64989293}{Beyond the Leaky Bucket} [57:08] & \\ \midrule
+    11 & 3/18 & \textbf{Final Exam} (see \href{https://registrar.uoregon.edu/calendars/examinations#complete-final-exam-schedule}{final exam schedule}) \\
+    \bottomrule 
+  \end{tabular}
+\end{table}
+
+%\begin{center}
+%	\textbf{Subject to change!}
+%\end{center}
+
+\end{document}
