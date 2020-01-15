@@ -16,3 +16,5 @@ The .html versions of the lecture slides allow you to view animations and intera
 2. **Motivating the Economic Problem** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/02-Economic_Problem_Motivation/02-Economic_Problem_Motivation.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/02-Economic_Problem_Motivation/02-Economic_Problem_Motivation.pdf)
 
 3. **Consumer Theory I** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/03-Consumer_Theory/03-Consumer_Theory.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/03-Consumer_Theory/03-Consumer_Theory.pdf)
+
+4. **Consumer Theory II** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/04-Consumer_Theory/04-Consumer_Theory.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/04-Consumer_Theory/04-Consumer_Theory.pdf)

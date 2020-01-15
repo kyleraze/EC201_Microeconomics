@@ -1,0 +1,1446 @@
+---
+title: "Consumer Theory"
+subtitle: "EC 201: Principles of Microeconomics"
+author: "Kyle Raze"
+date: "Winter 2020"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'metropolis', 'metropolis-fonts', 'my-css.css']
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "https://platform.twitter.com/widgets.js"
+---
+class: inverse, middle
+
+```{r Setup, include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, readxl, viridis, knitr, dslabs, gapminder, extrafont, Ecdat, wooldridge, tidyverse, magrittr, janitor, RcmdrPlugin.KMggplot2, kableExtra)
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#272822" # metropolis font color 
+purple <- "#9370DB"
+green <- "#007935"
+light_green <- "#7DBA97"
+orange <- "#FD5F00"
+turquoise <- "#44C1C4"
+red <- "#b92e34"
+# Notes directory
+dir_slides <- "~/GitHub/Intro_Microeconomics_W20/Lectures/03-Consumer_Theory/"
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  warning = F,
+  message = F
+)  
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+theme_market <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.title.x = element_text(hjust = 1, size = 17),
+  axis.title.y = element_text(hjust = 1, angle = 0, size = 17),
+  # axis.text.x = element_text(size = 12),
+  # axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+theme_gif <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+wrapper <- function(x, ...) paste(strwrap(x, ...), collapse = "\n")
+# functions
+demand <- function(x) 10 - x
+demand_2 <- function(x) 9 - x
+demand_3 <- function(x) 8 - x
+demand_inc <- function(x) 11 - x
+demand_dec <- function(x) 5 - x
+supply <- function(x) 1 + (4/5)*x
+step_demand <- data.frame(x = c(0, 1, 2, 3, 4, 5, 6, 7, 8), mv = c(8, 7, 6, 5, 4, 3, 2, 1, 0))
+```
+
+# Prologue
+
+---
+# Housekeeping
+
+.mono[**iClicker**]**:** Register your remote if you haven't already.
+
+- Click the .mono[i>clicker] tab on the course Canvas page and follow the instructions.
+
+--
+
+**Friday discussions:** Connor will lead you through a consumer theory worksheet.
+
+- Good attendance last week. Keep it up!
+
+--
+
+**Midterm 1:** Two weeks from today!
+
+- Details next week. 
+- I will post practice problems by the end of the week.
+- *Note:* I do not post solutions to the practice problems. 
+
+---
+# Next Week
+
+**Monday:** No lecture (MLK Day).
+
+**Wednesday:** In-class activity!
+
+- More participation points than usual.
+
+---
+# Today
+
+## Consumer Theory II
+
+Our exploration of consumer behavior continues!
+
+1. Inflation
+
+2. Individual Responsiveness
+
+3. Determinants of Demand
+
+4. Shipping the Good Apples Out
+
+5. Practice
+
+---
+class: inverse, middle
+
+# Inflation
+
+---
+# Inflation
+
+**Q:** Why do we see inflation?
+
+- Big business milks helpless consumers for all it can?
+
+- Unions forces companies to raise wages and then companies have to raise prices to survive?
+
+--
+
+**Q:** Why do those explanations fail?
+
+--
+
+- **A:** They are based on *ad hoc* changes in tastes.
+
+---
+# Inflation
+
+## Law of demand 
+
+> The marginal value of any good falls as the quantity of that good increases *relative* to other goods.
+
+--
+
+The law of demand also applies to money!
+
+--
+
+Money is a good with a price.
+
+- The price of one US dollar .mono[=] the amount of other goods a consumer would willingly give up to maintain control of that dollar.
+
+---
+# Inflation
+
+## Example
+
+If one unit of good $x$ has a price of .mono[$]45, then the price of .mono[$]45 is one unit of good $x$.
+
+--
+
+- *i.e.,* the price of .mono[$]1 is one 45.super[th] of a unit of $x$.
+
+--
+
+- If the supply of good $x$ increases such that the price of $x$ falls to .mono[$]30, then the price of .mono[$]1 increases to one 30.super[th] of a unit of $x$.
+
+--
+
+**Q:** What happens when the quantity of money increases relative to the quantity of good $x$?
+
+--
+
+- **A.sub[1]:** The price of money falls in terms of good $x$.
+
+- **A.sub[2]:** The price of $x$ rises in terms of money.
+
+---
+# Inflation
+
+## Insight
+
+When the government prints new money in greater amounts than the increase in the amount of other goods, the .pink[marginal value of money decreases.]
+
+- Equivalently, .pink[the price of goods in terms of money increases.]
+
+--
+
+.hi[This is a fundamental reason for inflation!]
+
+---
+class: inverse, middle
+
+# Individual Responsiveness
+
+---
+class: clear-slide
+
+**Q:** If there are 10 billion packs of cigarettes sold in a year, how much revenue would a new tax of .mono[$]0.25 per pack generate?
+
+> **A.** Less than .mono[$]2.5 billion.
+
+> **B.** .mono[$]2.5 billion.
+
+> **C.** More than .mono[$]2.5 billion.
+
+---
+count: false
+class: clear-slide
+
+**Q:** If there are 10 billion packs of cigarettes sold in a year, how much revenue would a new tax of .mono[$]0.25 per pack generate?
+
+> .pink[**A.** Less than .mono[$]2.5 billion.]
+
+> **B.** .mono[$]2.5 billion.
+
+> **C.** More than .mono[$]2.5 billion.
+
+---
+# Price Elasticity of Demand
+
+## Definition
+
+> A measure of the responsiveness of quantity demanded to changes in price:
+
+> $$\epsilon_d = \dfrac{\text{% change in quantity demanded}}{\text{% change in price}} \leq 0$$
+
+--
+
+.hi[Interpretation:] "A one-percent increase the price leads to an $\epsilon_d$ percent increase in quantity demanded."
+
+- $\epsilon_d < -1$ .mono[==>] demand is .pink[elastic] or .pink[sensitive] to changes in price.
+
+- $-1 <\epsilon_d \leq 0$ .mono[==>] demand is .pink[inelastic] or .pink[insensitive] to changes in price.
+
+---
+# Price Elasticity of Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  geom_hline(yintercept = 5, color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 10, y = 5.5, color = red_pink, family = "Fira Sans", size = 9)
+```
+]
+
+.less-right[
+### .pink[Perfectly Elastic Demand]
+
+Quantity demanded falls to zero when the price increases and approaches infinity when the price decreases.
+
+$\epsilon_d$ .mono[->] $-\infty$
+
+]
+
+---
+# Price Elasticity of Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  geom_vline(xintercept = 5, color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 5.35, y = 0.5, color = red_pink, family = "Fira Sans", size = 9)
+```
+]
+
+.less-right[
+### .pink[Perfectly Inelastic Demand]
+
+Quantity demanded does not change when the price changes.
+
+$\epsilon_d = 0$
+
+]
+
+---
+# Price Elasticity of Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+demand <- function(x) 6 - (1/5)*x
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  geom_rect(aes(xmin = 0, xmax = 5, ymin = 5, ymax = 10.5), alpha = 0.2, fill = red_pink) +
+  geom_rect(aes(xmin = 5, xmax = 10.5, ymin = 0, ymax = 5), alpha = 0.2, fill = red_pink) +
+  geom_vline(xintercept = 5, color = red_pink, size = 1, linetype = "dashed") +
+  geom_hline(yintercept = 5, color = red_pink, size = 1, linetype = "dashed") +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 10, y = 4.5, color = red_pink, family = "Fira Sans", size = 9) 
+```
+]
+
+.less-right[
+
+*All else being equal*, flatter demand curves are .pink[more elastic] than steeper demand curves.
+
+As $\epsilon_d$ increases toward zero, the same price increase leads to smaller decreases in the quantity demanded.
+
+]
+
+---
+count: false
+# Price Elasticity of Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+demand <- function(x) 8 - 0.6*x
+inv_demand <- function(x) (5/3)*(8 - x)
+p_1 <- 7
+p_2 <- 6
+q_1 <- inv_demand(p_1) 
+q_2 <- inv_demand(p_2)
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  geom_rect(aes(xmin = 0, xmax = 5, ymin = 5, ymax = 10.5), alpha = 0.2, fill = red_pink) +
+  geom_rect(aes(xmin = 5, xmax = 10.5, ymin = 0, ymax = 5), alpha = 0.2, fill = red_pink) +
+  geom_vline(xintercept = 5, color = red_pink, size = 1, linetype = "dashed") +
+  geom_hline(yintercept = 5, color = red_pink, size = 1, linetype = "dashed") +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dotted", size = 1) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dotted", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dotted", size = 1) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dotted", size = 1) +
+  annotate("text", label = "D", x = 10, y = 2.5, color = red_pink, family = "Fira Sans", size = 9) 
+```
+]
+
+.less-right[
+
+*All else being equal*, flatter demand curves are .pink[more elastic] than steeper demand curves.
+
+As $\epsilon_d$ increases toward zero, the same price increase leads to smaller decreases in the quantity demanded.
+
+]
+
+---
+count: false
+# Price Elasticity of Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+demand <- function(x) 10 - x
+inv_demand <- function(x) 10 - x
+p_1 <- 7
+p_2 <- 6
+q_1 <- inv_demand(p_1) 
+q_2 <- inv_demand(p_2)
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  geom_rect(aes(xmin = 0, xmax = 5, ymin = 5, ymax = 10.5), alpha = 0.2, fill = red_pink) +
+  geom_rect(aes(xmin = 5, xmax = 10.5, ymin = 0, ymax = 5), alpha = 0.2, fill = red_pink) +
+  geom_vline(xintercept = 5, color = red_pink, size = 1, linetype = "dashed") +
+  geom_hline(yintercept = 5, color = red_pink, size = 1, linetype = "dashed") +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dotted", size = 1) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dotted", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dotted", size = 1) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dotted", size = 1) +
+  annotate("text", label = "D", x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) 
+```
+]
+
+.less-right[
+
+*All else being equal*, flatter demand curves are .pink[more elastic] than steeper demand curves.
+
+As $\epsilon_d$ increases toward zero, the same price increase leads to smaller decreases in the quantity demanded.
+
+]
+
+---
+count: false
+# Price Elasticity of Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+demand <- function(x) 40/3 - 10/6*x 
+inv_demand <- function(x) (1/5)*(40 - 3*x)
+p_1 <- 7
+p_2 <- 6
+q_1 <- inv_demand(p_1) 
+q_2 <- inv_demand(p_2)
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  geom_rect(aes(xmin = 0, xmax = 5, ymin = 5, ymax = 10.5), alpha = 0.2, fill = red_pink) +
+  geom_rect(aes(xmin = 5, xmax = 10.5, ymin = 0, ymax = 5), alpha = 0.2, fill = red_pink) +
+  geom_vline(xintercept = 5, color = red_pink, size = 1, linetype = "dashed") +
+  geom_hline(yintercept = 5, color = red_pink, size = 1, linetype = "dashed") +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dotted", size = 1) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dotted", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dotted", size = 1) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dotted", size = 1) +
+  annotate("text", label = "D", x = 8, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) 
+```
+]
+
+.less-right[
+
+*All else being equal*, flatter demand curves are .pink[more elastic] than steeper demand curves.
+
+As $\epsilon_d$ increases toward zero, the same price increase leads to smaller decreases in the quantity demanded.
+
+]
+
+---
+count: false
+# Price Elasticity of Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+demand <- function(x) 35 - 6*x
+inv_demand <- function(x) (35 - x)/6
+p_1 <- 7
+p_2 <- 6
+q_1 <- inv_demand(p_1) 
+q_2 <- inv_demand(p_2)
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  geom_rect(aes(xmin = 0, xmax = 5, ymin = 5, ymax = 10.5), alpha = 0.2, fill = red_pink) +
+  geom_rect(aes(xmin = 5, xmax = 10.5, ymin = 0, ymax = 5), alpha = 0.2, fill = red_pink) +
+  geom_vline(xintercept = 5, color = red_pink, size = 1, linetype = "dashed") +
+  geom_hline(yintercept = 5, color = red_pink, size = 1, linetype = "dashed") +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dotted", size = 1) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dotted", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dotted", size = 1) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dotted", size = 1) +
+  annotate("text", label = "D", x = 6, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) 
+```
+]
+
+.less-right[
+
+*All else being equal*, flatter demand curves are .pink[more elastic] than steeper demand curves.
+
+As $\epsilon_d$ increases toward zero, the same price increase leads to smaller decreases in the quantity demanded.
+
+]
+
+---
+# Individual Responsiveness
+
+What influences the responsiveness of an individual's choice of quantity demanded to a change in price?
+
+--
+
+1. .pink[Availability of close substitutes.] 
+
+  - More alternatives .mono[==>] higher price sensitivity.
+
+--
+
+2. .pink[Fraction of income spent on the good.] 
+
+  - More spending relative to income .mono[==>] higher price sensitivity.
+
+--
+
+3. .pink[Time.]
+
+  - More time to adjust .mono[==>] higher price sensitivity.
+
+---
+class: clear-slide
+
+.center[**Real-World Price Sensitivity**]
+```{R, echo = F, escape = F}
+data.frame(
+  v1 = c("Business travel", "Medical care", "Coffee", "Tobacco", "Movies", "Private school", "Restaurant meals", "Leisure travel", "Fresh vegetables", "Honda cars"),
+  v2 = c(-0.1, -0.17, -0.25, -0.45, -0.9, -1.1, -1.6, -2.4, -3.7, -4),
+  v3 = c(rep("Inelastic", 5), rep("Elastic", 5))
+) %>% kable(
+  escape = F,
+  col.names = c("Good/Service", "Elasticity of Demand", "Elastic or Inelastic?"),
+  align = c("l", "c", "c")
+) %>%
+row_spec(1:7, color = met_slate) %>%
+row_spec(1:7, extra_css = "line-height: 110%;") %>% 
+column_spec(1, italic = T, color = met_slate)
+```
+
+---
+# Price Elasticity of Demand
+
+## Precise Definition
+
+> A measure of the responsiveness of quantity demanded to changes in price:
+
+> $$\epsilon_d = \dfrac{\partial Q_d}{\partial P} \dfrac{P}{Q} \leq 0$$
+
+--
+
+.hi[Implication:] As quantity demanded increases along a linear demand curve, $\epsilon_d$ increases toward zero.
+
+- *i.e.,* demand becomes less elastic.
+
+- **Q:** What does this imply about the effect of a price increase on revenue?
+
+---
+# Responsiveness and Revenue
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+demand <- function(x) 10 - x
+inv_demand <- function(x) 10 - x
+p_1 <- 7
+p_2 <- 9
+q_1 <- inv_demand(p_1) 
+q_2 <- inv_demand(p_2)
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  geom_rect(aes(xmin = 0, xmax = q_1, ymin = 0, ymax = p_1), alpha = 0.2, fill = green) +
+  #geom_rect(aes(xmin = 0, xmax = q_2, ymin = 0, ymax = p_2), alpha = 0.2, fill = green) +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  #geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  #geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  #geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = "D", x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) 
+```
+]
+
+.less-right[
+### .pink[Elastic Region]
+
+Price increase .mono[==>] .hi-green[revenue] .green[decreases].
+
+The decrease in quantity demanded (.pink[revenue lost]) outweighs the increase in price (.purple[revenue gained]).
+
+]
+
+---
+count: false
+# Responsiveness and Revenue
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+demand <- function(x) 10 - x
+inv_demand <- function(x) 10 - x
+p_1 <- 7
+p_2 <- 9
+q_1 <- inv_demand(p_1) 
+q_2 <- inv_demand(p_2)
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  #geom_rect(aes(xmin = 0, xmax = q_1, ymin = 0, ymax = p_1), alpha = 0.2, fill = green) +
+  geom_rect(aes(xmin = 0, xmax = q_2, ymin = 0, ymax = p_2), alpha = 0.2, fill = green) +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = "D", x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) 
+```
+]
+
+.less-right[
+### .pink[Elastic Region]
+
+Price increase .mono[==>] .hi-green[revenue] .green[decreases].
+
+The decrease in quantity demanded (.pink[revenue lost]) outweighs the increase in price (.purple[revenue gained]).
+
+]
+
+---
+count: false
+# Responsiveness and Revenue
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+demand <- function(x) 10 - x
+inv_demand <- function(x) 10 - x
+p_1 <- 7
+p_2 <- 9
+q_1 <- inv_demand(p_1) 
+q_2 <- inv_demand(p_2)
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  geom_rect(aes(xmin = 0, xmax = q_2, ymin = p_1, ymax = p_2), alpha = 0.2, fill = purple) +
+  geom_rect(aes(xmin = q_1, xmax = q_2, ymin = 0, ymax = p_1), alpha = 0.2, fill = red_pink) +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = "D", x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) 
+```
+]
+
+.less-right[
+### .pink[Elastic Region]
+
+Price increase .mono[==>] .hi-green[revenue] .green[decreases].
+
+The decrease in quantity demanded (.pink[revenue lost]) outweighs the increase in price (.purple[revenue gained]).
+
+]
+
+---
+# Responsiveness and Revenue
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+demand <- function(x) 10 - x
+inv_demand <- function(x) 10 - x
+p_1 <- 4
+p_2 <- 6
+q_1 <- inv_demand(p_1) 
+q_2 <- inv_demand(p_2)
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  geom_rect(aes(xmin = 0, xmax = q_1, ymin = 0, ymax = p_1), alpha = 0.2, fill = green) +
+  #geom_rect(aes(xmin = 0, xmax = q_2, ymin = 0, ymax = p_2), alpha = 0.2, fill = green) +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  #geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  #geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  #geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = "D", x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) 
+```
+]
+
+.less-right[
+### .pink[Unit-Elastic Region]
+
+Price increase .mono[==>] .hi-green[revenue] .green[does not change].
+
+.pink[Revenue lost] .mono[=] .purple[revenue gained].
+
+]
+
+---
+count: false
+# Responsiveness and Revenue
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+demand <- function(x) 10 - x
+inv_demand <- function(x) 10 - x
+p_1 <- 4
+p_2 <- 6
+q_1 <- inv_demand(p_1) 
+q_2 <- inv_demand(p_2)
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  #geom_rect(aes(xmin = 0, xmax = q_1, ymin = 0, ymax = p_1), alpha = 0.2, fill = green) +
+  geom_rect(aes(xmin = 0, xmax = q_2, ymin = 0, ymax = p_2), alpha = 0.2, fill = green) +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = "D", x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) 
+```
+]
+
+.less-right[
+### .pink[Unit-Elastic Region]
+
+Price increase .mono[==>] .hi-green[revenue] .green[does not change].
+
+.pink[Revenue lost] .mono[=] .purple[revenue gained].
+
+]
+
+---
+count: false
+# Responsiveness and Revenue
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+demand <- function(x) 10 - x
+inv_demand <- function(x) 10 - x
+p_1 <- 4
+p_2 <- 6
+q_1 <- inv_demand(p_1) 
+q_2 <- inv_demand(p_2)
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  geom_rect(aes(xmin = 0, xmax = q_2, ymin = p_1, ymax = p_2), alpha = 0.2, fill = purple) +
+  geom_rect(aes(xmin = q_1, xmax = q_2, ymin = 0, ymax = p_1), alpha = 0.2, fill = red_pink) +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = "D", x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) 
+```
+]
+
+.less-right[
+### .pink[Unit-Elastic Region]
+
+Price increase .mono[==>] .hi-green[revenue] .green[does not change].
+
+.pink[Revenue lost] .mono[=] .purple[revenue gained].
+
+]
+
+---
+# Responsiveness and Revenue
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+demand <- function(x) 10 - x
+inv_demand <- function(x) 10 - x
+p_1 <- 1
+p_2 <- 3
+q_1 <- inv_demand(p_1) 
+q_2 <- inv_demand(p_2)
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  geom_rect(aes(xmin = 0, xmax = q_1, ymin = 0, ymax = p_1), alpha = 0.2, fill = green) +
+  #geom_rect(aes(xmin = 0, xmax = q_2, ymin = 0, ymax = p_2), alpha = 0.2, fill = green) +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  #geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  #geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  #geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = "D", x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) 
+```
+]
+
+.less-right[
+### .pink[Inelastic Region]
+
+Price increase .mono[==>] .hi-green[revenue] .green[increases].
+
+The increase in price (.purple[revenue gained]) outweighs the decrease in quantity demanded (.pink[revenue lost]). 
+
+]
+
+---
+count: false
+# Responsiveness and Revenue
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+demand <- function(x) 10 - x
+inv_demand <- function(x) 10 - x
+p_1 <- 1
+p_2 <- 3
+q_1 <- inv_demand(p_1) 
+q_2 <- inv_demand(p_2)
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  #geom_rect(aes(xmin = 0, xmax = q_1, ymin = 0, ymax = p_1), alpha = 0.2, fill = green) +
+  geom_rect(aes(xmin = 0, xmax = q_2, ymin = 0, ymax = p_2), alpha = 0.2, fill = green) +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = "D", x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) 
+```
+]
+
+.less-right[
+### .pink[Inelastic Region]
+
+Price increase .mono[==>] .hi-green[revenue] .green[increases].
+
+The increase in price (.purple[revenue gained]) outweighs the decrease in quantity demanded (.pink[revenue lost]). 
+
+]
+
+---
+count: false
+# Responsiveness and Revenue
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+demand <- function(x) 10 - x
+inv_demand <- function(x) 10 - x
+p_1 <- 1
+p_2 <- 3
+q_1 <- inv_demand(p_1) 
+q_2 <- inv_demand(p_2)
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  geom_rect(aes(xmin = 0, xmax = q_2, ymin = p_1, ymax = p_2), alpha = 0.2, fill = purple) +
+  geom_rect(aes(xmin = q_1, xmax = q_2, ymin = 0, ymax = p_1), alpha = 0.2, fill = red_pink) +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = "D", x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) 
+```
+]
+
+.less-right[
+### .pink[Inelastic Region]
+
+Price increase .mono[==>] .hi-green[revenue] .green[increases].
+
+The increase in price (.purple[revenue gained]) outweighs the decrease in quantity demanded (.pink[revenue lost]). 
+
+]
+
+---
+# Policy Effectiveness
+
+**Q:** How might a narcotics bust affect drug-related crime?
+
+```{r, fig.retina = 1.5, echo = FALSE}
+include_graphics("drugs.png")
+```
+
+--
+
+**A:** .pink[Narcotics supply decreases] 
+<br> $\quad$ .pink[.mono[-->] price of narcotics increases]
+<br> $\quad$ .pink[.mono[-->] gang revenue increases (inelastic demand)] 
+<br> $\quad$ .pink[.mono[-->] drug-related crime?]
+
+---
+class: inverse, middle
+
+# Determinants of Demand
+
+---
+# Determinants of Demand
+
+**Q:** What determines a consumer's demand for a particular product?
+
+- Income or wealth.
+
+- Prices of related goods.
+
+- Expectations about future prices or future income.
+
+- Tastes.
+
+- Age, health, quality, advertising, cost of maintaining the good, legality of the good, *etc.*
+
+---
+# Determinants of Demand
+
+Income and the prices of other goods have **ambiguous** effects on the demand for a good.
+
+- The demand response to income depends on whether the good is .hi[normal] or .hi[inferior].
+
+- The demand response to the price of an other good depends on whether the goods are .hi[substitutes] or .hi[complements].
+
+---
+# Changes in Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 12 - x
+supply <- function(x) 1 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  #geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  #geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  #geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = "S", x = 9.2, y = 9.65, color = purple, family = "Fira Sans", size = 9)
+```
+]
+
+.less-right[
+### .pink[Demand Increase]
+
+At every price, the individual is now willing and able to purchase more units than before.
+
+Equilibrium quantity increases.
+
+Equilibrium price increases.
+
+]
+
+---
+count: false
+# Changes in Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 12 - x
+supply <- function(x) 1 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1, alpha = 0.5) +
+  stat_function(fun = demand_2, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(aes(x = 6 + 0.2, y = 4, xend = 8 - 0.2, yend = 4), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 10, y = 2.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = "S", x = 9.2, y = 9.65, color = purple, family = "Fira Sans", size = 9)
+```
+]
+
+.less-right[
+### .pink[Demand Increase]
+
+At every price, the individual is now willing and able to purchase more units than before.
+
+Equilibrium quantity increases.
+
+Equilibrium price increases.
+
+]
+
+---
+# Changes in Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 8 - x
+supply <- function(x) 1 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  #geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  #geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  #geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = "S", x = 9.2, y = 9.65, color = purple, family = "Fira Sans", size = 9)
+```
+]
+
+.less-right[
+### .pink[Demand Decrease]
+
+At every price, the individual is now willing and able to purchase fewer units than before.
+
+Equilibrium quantity decreases.
+
+Equilibrium price decreases.
+
+]
+
+---
+count: false
+# Changes in Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 8 - x
+supply <- function(x) 1 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  labs(x = "q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1, alpha = 0.5) +
+  stat_function(fun = demand_2, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(aes(x = 6 - 0.2, y = 4, xend = 4 + 0.2, yend = 4), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 8, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = "S", x = 9.2, y = 9.65, color = purple, family = "Fira Sans", size = 9)
+```
+]
+
+.less-right[
+### .pink[Demand Decrease]
+
+At every price, the individual is now willing and able to purchase fewer units than before.
+
+Equilibrium quantity decreases.
+
+Equilibrium price decreases.
+
+]
+
+---
+# Normal Good
+
+## Definition
+
+> A good for which .pink[demand increases] as .pink[income increases], *all else being equal*.
+
+--
+
+## Examples
+
+- Organic food
+- Fine dining
+- Air travel
+- Political donations
+- Consumer electronics
+- Children?
+
+---
+# Inferior Good
+
+## Definition
+
+> A good for which .pink[demand decreases] as .pink[income increases], *all else being equal*.
+
+--
+
+## Examples
+
+- Top Ramen
+- Fast food
+- Canned vegetables
+- Second-hand furniture
+- Public transportation
+- Payday loans
+
+---
+# Substitutes
+
+## Definition
+
+> Two goods for which the .pink[demand of one good increases] as the .pink[price of the other good increases], *all else being equal*.
+
+--
+
+## Examples
+
+- Uber .mono[<->] traditional taxis
+- Levi jeans .mono[<->] Wrangler jeans
+- MacBook Pro .mono[<->] Microsoft Surface Pro
+- Honda CRV .mono[<->] Toyota RAV4
+- Pepsi .mono[<->] Coca-Cola
+- Small coffee .mono[<->] Large coffee
+
+---
+# Complements
+
+## Definition
+
+> Two goods for which the .pink[demand of one good decreases] as the .pink[price of the other good increases], *all else being equal*.
+
+--
+
+## Examples
+
+- Peanut butter .mono[<->] jelly
+- Flexible work .mono[<->] school
+- Gasoline .mono[<->] giant, gas-guzzling SUVs
+- Paper .mono[<->] pencils
+- Wine .mono[<->] cheese
+- Coffee .mono[<->] milk
+
+---
+class: inverse, middle
+
+# Shipping the Good Apples Out
+
+---
+# Shipping the Good Apples Out
+
+**Q:** Why do grocery stores in apple-importing areas have a higher proportion of .green[**high-quality apples**] (.green[`r emo::ji("green_apple")`]) to .red[**low-quality apples**] (.red[`r emo::ji("apple")`]) than stores in apple-growing areas?
+
+--
+
+**Q:** If we add a fixed transportation cost, $\boldsymbol{t}$, to the existing prices of two goods, what happens to their *relative* prices?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c(paste("Price of", emo::ji("green_apple")), paste("Price of", emo::ji("apple")), "Ratio of prices"),
+  v2 = c(4, 2, '<font color="#007935">2</font>:<font color="#b92e34">1</font>'),
+  v3 = c(5, 3, '<font color="#007935">1.7</font>:<font color="#b92e34">1</font>'),
+  v4 = c(6, 4, '<font color="#007935">1.5</font>:<font color="#b92e34">1</font>'),
+  v5 = c(7, 5, '<font color="#007935">1.4</font>:<font color="#b92e34">1</font>') 
+) %>% kable(
+  escape = F,
+  col.names = c("", "\\(\\boldsymbol{t = }\\) 0", "\\(\\boldsymbol{t = }\\) 1", "\\(\\boldsymbol{t = }\\) 2", "\\(\\boldsymbol{t = }\\) 3"),
+  align = c("c", "c", "c", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1, color = green) %>%
+  row_spec(2, color = red) %>%
+  row_spec(3, color = met_slate) %>%
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+
+---
+count: false
+# Shipping the Good Apples Out
+**Q:** Why do grocery stores in apple-importing areas have a higher proportion of .green[**high-quality apples**] (.green[`r emo::ji("green_apple")`]) to .red[**low-quality apples**] (.red[`r emo::ji("apple")`]) than stores in apple-growing areas?
+
+**Q:** If we add a fixed transportation cost, $\boldsymbol{t}$, to the existing prices of two goods, what happens to their *relative* prices?
+
+```{R, echo = F, escape = F}
+tab %>% column_spec(2, bold = T)
+```
+
+---
+count: false
+# Shipping the Good Apples Out
+
+**Q:** Why do grocery stores in apple-importing areas have a higher proportion of .green[**high-quality apples**] (.green[`r emo::ji("green_apple")`]) to .red[**low-quality apples**] (.red[`r emo::ji("apple")`]) than stores in apple-growing areas?
+
+**Q:** If we add a fixed transportation cost, $\boldsymbol{t}$, to the existing prices of two goods, what happens to their *relative* prices?
+
+```{R, echo = F, escape = F}
+tab %>% column_spec(3, bold = T)
+```
+
+---
+count: false
+# Shipping the Good Apples Out
+
+**Q:** Why do grocery stores in apple-importing areas have a higher proportion of .green[**high-quality apples**] (.green[`r emo::ji("green_apple")`]) to .red[**low-quality apples**] (.red[`r emo::ji("apple")`]) than stores in apple-growing areas?
+
+**Q:** If we add a fixed transportation cost, $\boldsymbol{t}$, to the existing prices of two goods, what happens to their *relative* prices?
+
+```{R, echo = F, escape = F}
+tab %>% column_spec(4, bold = T)
+```
+
+---
+count: false
+# Shipping the Good Apples Out
+
+**Q:** Why do grocery stores in apple-importing areas have a higher proportion of .green[**high-quality apples**] (.green[`r emo::ji("green_apple")`]) to .red[**low-quality apples**] (.red[`r emo::ji("apple")`]) than stores in apple-growing areas?
+
+**Q:** If we add a fixed transportation cost, $\boldsymbol{t}$, to the existing prices of two goods, what happens to their *relative* prices?
+
+```{R, echo = F, escape = F}
+tab %>% column_spec(5, bold = T)
+```
+
+---
+count: false
+# Shipping the Good Apples Out
+
+**Q:** Why do grocery stores in apple-importing areas have a higher proportion of .green[**high-quality apples**] (.green[`r emo::ji("green_apple")`]) to .red[**low-quality apples**] (.red[`r emo::ji("apple")`]) than stores in apple-growing areas?
+
+**Q:** If we add a fixed transportation cost, $\boldsymbol{t}$, to the existing prices of two goods, what happens to their *relative* prices?
+
+```{R, echo = F, escape = F}
+tab
+```
+
+---
+# Shipping the Good Apples Out
+
+**Q:** Why do grocery stores in apple-importing areas have a higher proportion of .green[**high-quality apples**] (.green[`r emo::ji("green_apple")`]) to .red[**low-quality apples**] (.red[`r emo::ji("apple")`]) than stores in apple-growing areas?
+
+**A:** If .green[`r emo::ji("green_apple")`] are *relatively* cheaper in Phoenix, then *relative* demand for .green[`r emo::ji("green_apple")`] in Phoenix should be greater.
+
+--
+
+- An apple grower in Yakima will want to ship .green[`r emo::ji("green_apple")`] to Phoenix and stock local fruit stands with .red[`r emo::ji("apple")`].
+
+--
+
+We observe similar patterns in other markets, too.
+
+- Christmas trees
+- Wine
+- Beef
+- Avocados 
+
+
+---
+class: clear-slide
+
+**Q:** Why is a couple more likely to go out for dinner and a concert than run errands when they pay a babysitter to watch their children?
+ 
+--
+
+**A:** .pink[The added fixed cost of babysitting lowers the price of more-expensive activities *relative* to less-expensive activities.]
+
+---
+class: clear-slide
+
+**Q:** In the early 1990s, Singapore imposed extensive automobile taxes to combat road congestion. The new taxes had the effect of driving up the price of
+low-cost cars proportionately more than the price of expensive cars. .green[**What do you predict about new car sales?**]
+
+--
+
+**A:** .pink[Mercedes-Benz models became the best-selling new cars in Singapore.]
+
+---
+class: clear-slide
+
+**Q:** Suppose that a choice seat at a college football game costs .mono[$]40 while a standard seat costs .mono[$]20. There are local fans and traveling fans. .green[**Who sits where?**]
+
+--
+
+**A:** .pink[*All else equal*, the traveling fan is more likely to purchase a choice seat.]
+
+--
+
+- To a local fan, choice seat is twice as expensive.
+
+--
+
+- To the fan who spends .mono[$]80 to travel 300 miles to the game, choice seat is only 20% more expensive overall (.mono[$]120 vs. .mono[$]100).
+
+--
+
+- If relative price of choice-seat package is lower for traveling fan, then relative demand should be higher.
+
+--
+
+.pink[There is documented evidence that fans who travel the farthest buy the best seats.]
+
+---
+class: clear-slide
+
+**Q:** If the Ducks' offense averages 5 yards per running play and 4 yards per passing play, then the team will tend to run more often than pass. .green[**Should the offense run more or pass more when it rains?**].super[.pink[<span>&#8224;</span>]]
+
+.footnote[.pink[<span>&#8224;</span>]: Obviously not an issue in Autzen Stadium.]
+
+- Suppose that rainfall decreases average yardage for both running and passing plays by 2 yards.
+
+--
+
+**A:** .pink[The offense should run even more when it rains.]
+
+--
+
+- Although running still has the same 1-yard advantage (3 *vs.* 2 yards per play), the *relative* advantage increases in the rain.
+
+- Running is 25 percent more productive in dry conditions, but 50 percent more productive in wet conditions.
+
+---
+class: inverse, middle
+
+# Practice
+
+---
+class: clear-slide
+
+**Q:** What changes would you expect in the market for cigarettes when a state raises the minimum age for tobacco purchases from 18 to 21?  
+
+> **A.** The equilibrium quantity of cigarettes should increase and their price should also increase.
+
+
+> **B.** The equilibrium quantity of cigarettes should increase and their price should decrease.
+
+
+> **C.** The equilibrium quantity of cigarettes should decrease and their price should also decrease.
+
+
+> **D.** The equilibrium quantity of cigarettes should decrease and their price should increase.
+
+---
+count: false
+class: clear-slide
+
+**Q:** What changes would you expect in the market for cigarettes when a state raises the minimum age for tobacco purchases from 18 to 21?  
+
+> **A.** The equilibrium quantity of cigarettes should increase and their price should also increase.
+
+
+> **B.** The equilibrium quantity of cigarettes should increase and their price should decrease.
+
+
+> .pink[**C.** The equilibrium quantity of cigarettes should decrease and their price should also decrease.]
+
+
+> **D.** The equilibrium quantity of cigarettes should decrease and their price should increase.
+
+---
+class: clear-slide
+
+**Q:** What will happen to the market equilibrium of Netflix subscriptions when the price of a Hulu subscription increases?
+
+> **A.** The price will go up and the quantity will fall.
+
+> **B.** The price will go up and the quantity will rise.
+
+> **C.** The price will go down and the quantity will fall.
+
+> **D.** The price will go down and the quantity will rise.
+
+---
+count: false
+class: clear-slide
+
+**Q:** What will happen to the market equilibrium of Netflix subscriptions when the price of a Hulu subscription increases?
+
+> **A.** The price will go up and the quantity will fall.
+
+> .pink[**B.** The price will go up and the quantity will rise.]
+
+> **C.** The price will go down and the quantity will fall.
+
+> **D.** The price will go down and the quantity will rise.
+
