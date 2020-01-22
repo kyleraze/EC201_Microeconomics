@@ -1,0 +1,1828 @@
+% !TEX TS-program = xelatex
+\documentclass[16pt]{article}
+
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+
+%% FONTS
+\usepackage{marvosym} % For cool symbols.
+\usepackage{fontawesome} % Ditto
+\usepackage{fontspec}
+% See: https://tex.stackexchange.com/a/50593
+\setmainfont[
+BoldFont       = FiraSans-SemiBold.otf,
+ItalicFont     = FiraSans-Italic.otf,
+BoldItalicFont = FiraSans-SemiBoldItalic.otf
+]{FiraSans-Regular.otf} %
+\setmonofont[
+BoldFont       = FiraCode-Bold.ttf
+]{FiraCode-Regular.ttf}
+%\textsc{\setmathfont(Greek){FiraSans-Italic.otf}
+%\setmathfont(Latin,Digits){FiraMath-Regular.otf}}
+\usepackage[mathrm=sym]{unicode-math}
+\setmathfont{Fira Math}
+
+
+%\usepackage{libertine}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{latexsym}
+\usepackage{verbatim}
+\usepackage{xspace}
+\usepackage{setspace}
+\usepackage{blindtext}
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{caption}
+\captionsetup[table]{labelformat=empty}
+\usepackage{enumerate}
+\usepackage{titling}
+\usepackage{textcomp}
+\usepackage{float}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{dcolumn}
+
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{uo_green}{HTML}{154733}
+\definecolor{forest_green}{HTML}{006241}
+\definecolor{pine_green}{HTML}{007935}
+\definecolor{grass_green}{HTML}{62A70F}
+\definecolor{golden_yellow}{HTML}{FFD200}
+\definecolor{cool_gray}{HTML}{54565B}
+\definecolor{light_cool_gray}{HTML}{A8A8AA}
+\definecolor{medium_blue}{HTML}{157CAE}
+
+\usepackage{listings}
+\lstset{language=R,
+	basicstyle=\small\ttfamily,
+	stringstyle=\color{cool_gray},
+	otherkeywords={0,1,2,3,4,5,6,7,8,9},
+	morekeywords={TRUE,FALSE},
+	deletekeywords={data,frame,length,as,character,},
+	keywordstyle=\color{cool_gray},
+	commentstyle=\color{pine_green},
+}
+
+\usepackage[colorlinks = true,
+linkcolor = pine_green,
+urlcolor  = pine_green,
+citecolor = pine_green,
+anchorcolor = black]{hyperref}
+
+\newcommand{\name}{\makebox[0.75\textwidth]{Name:\ \enspace\hrulefill}}
+
+\begin{document}
+	
+	\thispagestyle{empty}
+	
+	{\centering
+		
+		\Huge \texttt{\textbf{Team 01} [Buyers]}
+		
+		\Large
+		
+		\bigskip
+		\bigskip
+		\bigskip
+		\bigskip
+		\bigskip
+		\bigskip
+		
+		\textbf{Write your full name legibly!}
+		
+		\bigskip
+		\bigskip
+		\bigskip
+		\bigskip
+		\bigskip
+		\bigskip
+		
+		\name
+		
+		\bigskip
+		\bigskip
+		\bigskip
+		\bigskip
+		
+		\name
+		
+		\bigskip
+		\bigskip
+		\bigskip
+		\bigskip
+		
+		\name
+		
+		\bigskip
+		\bigskip
+		\bigskip
+		\bigskip
+		
+		\name
+		
+		\bigskip
+		\bigskip
+		\bigskip
+		\bigskip
+		
+		\name
+		
+		\bigskip
+		\bigskip
+		\bigskip
+		\bigskip
+		
+		\name
+		
+		\bigskip
+		\bigskip
+		\bigskip
+		\bigskip
+		
+		\name
+		
+	
+	}
+
+\newpage
+
+	\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 02} [Buyers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+	\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 03} [Buyers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+	\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 04} [Buyers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+	\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 05} [Buyers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+	\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 06} [Buyers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+	\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 07} [Buyers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 08} [Buyers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 09} [Buyers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 10} [Buyers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 11} [Buyers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 12} [Buyers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 13} [Sellers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 14} [Sellers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 15} [Sellers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 16} [Sellers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 17} [Sellers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 18} [Sellers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 19} [Sellers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 20} [Sellers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 21} [Sellers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 22} [Sellers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 23} [Sellers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+{\centering
+	
+	\Huge \texttt{\textbf{Team 24} [Sellers]}
+	
+	\Large
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\textbf{Write your full name legibly!}
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	\bigskip
+	\bigskip
+	\bigskip
+	\bigskip
+	
+	\name
+	
+	
+}
+	
+\end{document}

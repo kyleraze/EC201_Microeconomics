@@ -1,0 +1,136 @@
+% !TEX TS-program = xelatex
+\documentclass[12pt]{article}
+
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+
+%% FONTS
+\usepackage{marvosym} % For cool symbols.
+\usepackage{fontawesome} % Ditto
+\usepackage{fontspec}
+% See: https://tex.stackexchange.com/a/50593
+\setmainfont[
+BoldFont       = FiraSans-SemiBold.otf,
+ItalicFont     = FiraSans-Italic.otf,
+BoldItalicFont = FiraSans-SemiBoldItalic.otf
+]{FiraSans-Regular.otf} %
+\setmonofont[
+BoldFont       = FiraCode-Bold.ttf
+]{FiraCode-Regular.ttf}
+%\textsc{\setmathfont(Greek){FiraSans-Italic.otf}
+%\setmathfont(Latin,Digits){FiraMath-Regular.otf}}
+\usepackage[mathrm=sym]{unicode-math}
+\setmathfont{Fira Math}
+
+
+%\usepackage{libertine}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{latexsym}
+\usepackage{verbatim}
+\usepackage{xspace}
+\usepackage{setspace}
+\usepackage{blindtext}
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{caption}
+\captionsetup[table]{labelformat=empty}
+\usepackage{enumerate}
+\usepackage{titling}
+\usepackage{textcomp}
+\usepackage{float}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{dcolumn}
+
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{uo_green}{HTML}{154733}
+\definecolor{forest_green}{HTML}{006241}
+\definecolor{pine_green}{HTML}{007935}
+\definecolor{grass_green}{HTML}{62A70F}
+\definecolor{golden_yellow}{HTML}{FFD200}
+\definecolor{cool_gray}{HTML}{54565B}
+\definecolor{light_cool_gray}{HTML}{A8A8AA}
+\definecolor{medium_blue}{HTML}{157CAE}
+
+\usepackage{listings}
+\lstset{language=R,
+	basicstyle=\small\ttfamily,
+	stringstyle=\color{cool_gray},
+	otherkeywords={0,1,2,3,4,5,6,7,8,9},
+	morekeywords={TRUE,FALSE},
+	deletekeywords={data,frame,length,as,character,},
+	keywordstyle=\color{cool_gray},
+	commentstyle=\color{pine_green},
+}
+
+\usepackage[colorlinks = true,
+linkcolor = pine_green,
+urlcolor  = pine_green,
+citecolor = pine_green,
+anchorcolor = black]{hyperref}
+
+\begin{document}
+	
+	\singlespacing 
+	
+	{\centering
+		
+		\Large \texttt{\textbf{Pit Market Activity}}
+		
+		
+		
+		\Large \texttt{\textbf{Principles of Microeconomics} [EC 201]}
+		
+		\normalsize
+		
+		Instructor:\ Kyle Raze
+		
+		University of Oregon \par
+	}
+	
+	\section*{Instructions}
+	
+	We are going to simulate a financial market in which buyers and sellers trade bonds. Before trading, we will pass out a playing card that gives you the information you need to decide whether and at what price you would be willing to make a trade. If you receive a red playing card (either $\varheartsuit$ or $\vardiamondsuit$), you are a buyer. If you receive a black card ($\clubsuit$ or $\spadesuit$), you are a seller. We will conduct up to 7 rounds of trading at the front of the lecture hall. 
+	
+	\bigskip
+	
+	\noindent To ensure that everyone has a chance to participate, you will play in a team of up to 7 people. Each person should go to the trading floor at least once. There are 24 teams total. Teams 1--12 will act as buyers. Teams 13--24 will act as sellers. If you haven't already joined a team, please join one now. If you have extra space on your team, please raise your team card.
+	
+	\subsection*{Buyers} 
+	
+	You can buy one bond during each trading period. The number on your card is the dollar value that you receive if you make a purchase. You must buy at a price no higher than the value number on your card. Your earnings on a purchase are the difference between the value number on your card and the price you negotiate. If you do not make a purchase, your earnings for the round are \$0. If you mistakenly agree to a price above your value, we will invalidate the trade when you come to the trading desk; we will return your card and then you can resume negotiations. 
+	
+	\bigskip
+	
+	\noindent \textbf{Example:} If your card is a 10 of $\varheartsuit$ and you negotiate a price of \$5, then your earnings are \$5.
+	
+	\subsection*{Sellers} 
+	
+	You can each sell one bond during each trading period. The number on your card is the dollar cost that you incur if you make a sale. You must sell at a price no lower than the cost number on your card. Your earnings on a sale are the difference between the price you negotiate and the cost number on your card. If you do not make a sale, your earnings for the round are \$0 (you incur no cost). If you mistakenly agree to a price below your cost, we will invalidate the trade when you come to the trading desk; we will return your card and then you can resume negotiations. 
+	
+	\bigskip
+	
+	\noindent \textbf{Example:} If your card is a 4 of $\clubsuit$ and you negotiate a price of \$7, then your earnings are \$2.
+	
+	\newpage
+	
+	\subsection*{Trading} Buyers and sellers will meet at the front of the lecture hall and negotiate during a short trading period. Your negotiated prices must be multiples of \$0.50. When a buyer and seller agree on a price, both should immediately go to the trading desk to turn in their cards together. If there is a line, wait together with your trading partner. After we verify the price, we will announce it to the class. After you turn in your cards, return to your seat, calculate your earnings, and wait for the trading period to end. 
+	
+	\bigskip
+	
+	\noindent If you are a seller with high costs or a buyer with low values, you might be unable to negotiate a trade. Do not be discouraged: we will pass out new cards at the beginning of the next period.
+	
+	\subsection*{Advice} You should make every effort to maximize your earnings over the course of the activity. At the end of the activity, we will award extra credit based on your team's total earnings. The top 6 teams (in terms of total earnings) will earn 2 extra participation points per person. Teams ranked 7--12 will earn 1.5 extra participation points per person. Teams ranked 13--18 will earn 1 extra participation point per person. The bottom 6 teams will earn 0.5 extra participation points per person. 
+	
+	\bigskip
+	
+	\noindent \textbf{Note:} It is in your best interest to \textbf{not} reveal the number on your card to teams on the other side of the market! 
+	
+	\bigskip
+	
+	\noindent \textbf{To receive bonus points, you must turn in your team card at the end of class!}
+	
+\end{document}

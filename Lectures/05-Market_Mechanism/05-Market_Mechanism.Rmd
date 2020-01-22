@@ -1,0 +1,1235 @@
+---
+title: "The Market Mechanism"
+subtitle: "EC 201: Principles of Microeconomics"
+author: "Kyle Raze"
+date: "Winter 2020"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'metropolis', 'metropolis-fonts', 'my-css.css']
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "https://platform.twitter.com/widgets.js"
+---
+class: inverse, middle
+
+```{r Setup, include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, readxl, viridis, knitr, extrafont, tidyverse, RcmdrPlugin.KMggplot2, magrittr, janitor, kableExtra, scales)
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#272822" # metropolis font color 
+purple <- "#9370DB"
+green <- "#007935"
+light_green <- "#7DBA97"
+orange <- "#FD5F00"
+turquoise <- "#44C1C4"
+red <- "#b92e34"
+# Notes directory
+dir_slides <- "~/GitHub/Intro_Microeconomics_W20/Lectures/05-Market_Mechanism/"
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  warning = F,
+  message = F
+)  
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.text.x = element_text(size = 17),
+  axis.text.y = element_text(size = 17),
+  axis.ticks = element_blank()
+)
+theme_market <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.title.x = element_text(hjust = 1, size = 17),
+  axis.title.y = element_text(hjust = 1, angle = 0, size = 17),
+  # axis.text.x = element_text(size = 12),
+  # axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+theme_gif <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+wrapper <- function(x, ...) paste(strwrap(x, ...), collapse = "\n")
+# functions
+step_demand <- tibble(x = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), mv = c(10, 10, 9, 9, 8, 8, 7, 7, 6, 6, 5, 4, 4))
+step_supply <- tibble(x = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), mv = c(2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8))
+step_supply_tax <- step_supply %>% 
+  mutate(mv = mv + 2)
+
+data <- read_csv("05-Activity_Pit_Market/Results.csv") %>% 
+  filter(!is.na(price))
+```
+
+# Prologue
+
+---
+# Agenda
+
+## Pit Market Activity
+
+1. Read instructions handout
+
+2. Join a team
+
+3. Make trades and earn extra participation points
+
+## The Market Mechanism
+
+- Activity debrief and discussion
+
+## Midterm 1 Overview
+
+- One week from today!
+
+---
+class: inverse, middle
+
+# Pit Market Activity
+
+---
+class: clear-slide
+
+.center[**Pit Market Results**]
+
+.pull-left[
+```{r price, echo = FALSE, fig.height = 5.25, fig.width = 4, dev = "svg"}
+data %>% 
+  group_by(round) %>% 
+  summarize(median = median(price),
+            lower = quantile(price, 1/4),
+            upper = quantile(price, 3/4)) %>% 
+  ungroup() %>% 
+  ggplot() +
+  geom_errorbar(aes(x = round, ymin = lower, ymax = upper), size = 1, color = red_pink) + 
+  geom_point(aes(x = round, y = median), size = 2, color = red_pink) +
+  labs(x = "Round", y = "Price") +
+  scale_x_continuous(limits = c(0, 7.5), expand = c(0, 0), breaks = seq(0, 7, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  geom_vline(xintercept = 5.5, size = 1, linetype = "dashed") +
+  annotate("label", label = "$2 Tax Imposed", x = 5.5, y = 10, color = met_slate, family = "Fira Sans", size = 5) +
+  theme_simple
+```
+]
+
+.pull-right[
+```{r quantity, echo = FALSE, fig.height = 5.25, fig.width = 4, dev = "svg"}
+data %>% 
+  group_by(round) %>% 
+  summarize(trades = n()) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = round, y = trades)) +
+  geom_col(fill = red_pink, color = red_pink, alpha = 0.5) +
+  labs(x = "Round", y = "Number of Trades") +
+  scale_x_continuous(limits = c(0, 7.5), expand = c(0, 0), breaks = seq(0, 7, 1)) +
+  scale_y_continuous(limits = c(0, 12.5), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  geom_vline(xintercept = 5.5, size = 1, linetype = "dashed") +
+  annotate("label", label = "$2 Tax Imposed", x = 5.5, y = 12, color = met_slate, family = "Fira Sans", size = 5) +
+  theme_simple
+```
+]
+
+---
+class: inverse, middle
+
+# The Market Mechanism
+
+---
+# Pit Market
+
+.less-right[
+## .pink[Buyers]
+
+.pink[Maximum willingness to pay:]
+.pull-left[
+10 of .red[`r emo::ji("diamond_suit")`] <br>
+9 of .red[`r emo::ji("diamond_suit")`] <br>
+8 of .red[`r emo::ji("diamond_suit")`] <br>
+7 of .red[`r emo::ji("diamond_suit")`] <br>
+6 of .red[`r emo::ji("diamond_suit")`] <br>
+5 of .red[`r emo::ji("diamond_suit")`] <br>
+4 of .red[`r emo::ji("diamond_suit")`]
+]
+.pull-right[
+10 of .red[`r emo::ji("heart_suit")`] <br>
+9 of .red[`r emo::ji("heart_suit")`] <br>
+8 of .red[`r emo::ji("heart_suit")`] <br>
+7 of .red[`r emo::ji("heart_suit")`] <br>
+6 of .red[`r emo::ji("heart_suit")`] 
+]
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  #geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = met_slate, size = 1) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  #geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = met_slate, size = 1, alpha = 0.5) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market
+```
+]
+
+---
+# Pit Market
+
+.less-right[
+## .purple[Sellers]
+
+.purple[Minimum willingness to accept:]
+.pull-left[
+2 of `r emo::ji("spade_suit")` <br>
+3 of `r emo::ji("spade_suit")` <br>
+4 of `r emo::ji("spade_suit")` <br>
+5 of `r emo::ji("spade_suit")` <br>
+6 of `r emo::ji("spade_suit")` <br>
+7 of `r emo::ji("spade_suit")` <br>
+8 of `r emo::ji("spade_suit")`
+]
+.pull-right[
+2 of `r emo::ji("club_suit")` <br>
+3 of `r emo::ji("club_suit")` <br>
+4 of `r emo::ji("club_suit")` <br>
+5 of `r emo::ji("club_suit")` <br>
+6 of `r emo::ji("club_suit")`
+]
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  #geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  #annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  #geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1, alpha = 0.5) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market
+```
+]
+
+---
+# Pit Market
+
+.less-right[
+## .purple[Sellers]
+
+The tax increases each seller's cost by .mono[$]2.
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1, alpha = 0.5) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9, alpha = 0.5) +
+  #geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  #annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market
+```
+]
+
+---
+# Pit Market
+
+.less-right[
+## Equilibrium
+
+Theory predicts that a price of .mono[$]6 clears the market..super[.pink[<span>&#8224;</span>]]
+
+**Q:** Who trades? Who doesn't?
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market
+```
+]
+
+.footnote[.pink[<span>&#8224;</span>]: *Clears the market* .mono[<=>] Q.sub[D] .mono[=] Q.sub[S].]
+
+---
+count: false
+# Pit Market
+
+.less-right[
+## Equilibrium
+
+Theory predicts that a price of .mono[$]6 clears the market..super[.pink[<span>&#8224;</span>]]
+
+**Q:** Who trades? Who doesn't?
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_point(aes(x = 10, y = 6), color = met_slate, size = 2) +
+  geom_segment(aes(x = 10, y = 0, xend = 10, yend = 6), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = 0, y = 6, xend = 10, yend = 6), linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+.footnote[.pink[<span>&#8224;</span>]: *Clears the market* .mono[<=>] Q.sub[D] .mono[=] Q.sub[S].]
+
+---
+count: false
+# Pit Market
+
+.less-right[
+## Equilibrium
+
+Theory predicts that a price of .mono[$]6 clears the market..super[.pink[<span>&#8224;</span>]]
+
+**Q:** Who trades? Who doesn't?
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_point(aes(x = 8, y = 6), color = met_slate, size = 2) +
+  geom_segment(aes(x = 8, y = 0, xend = 8, yend = 6), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = 0, y = 6, xend = 8, yend = 6), linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+.footnote[.pink[<span>&#8224;</span>]: *Clears the market* .mono[<=>] Q.sub[D] .mono[=] Q.sub[S].]
+
+---
+count: false
+# Pit Market
+
+.less-right[
+## Equilibrium
+
+Theory predicts that a price of .mono[$]6 clears the market..super[.pink[<span>&#8224;</span>]]
+
+**Q:** Who trades? Who doesn't?
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_point(aes(x = 9, y = 6), color = met_slate, size = 2) +
+  geom_segment(aes(x = 9, y = 0, xend = 9, yend = 6), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = 0, y = 6, xend = 9, yend = 6), linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+.footnote[.pink[<span>&#8224;</span>]: *Clears the market* .mono[<=>] Q.sub[D] .mono[=] Q.sub[S].]
+
+---
+# Pit Market
+
+.less-right[
+## Market Surplus
+
+Theory predicts that prices above .mono[$]6 create a market surplus..super[.pink[<span>&#8224;</span>]]
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_hline(yintercept = 7.5, linetype  = "dashed", color = met_slate, size = 1) #+
+  # geom_point(aes(x = 11, y = 7.5), color = met_slate, size = 2) +
+  # geom_point(aes(x = 6, y = 7.5), color = met_slate, size = 2) +
+  # geom_segment(aes(x = 6, y = 0, xend = 6, yend = 7.5), linetype  = "dashed", color = met_slate, size = 1) + 
+  # geom_segment(aes(x = 11, y = 0, xend = 11, yend = 7.5), linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+.footnote[.pink[<span>&#8224;</span>]: *Market surplus* .mono[<=>] Q.sub[D] .mono[<] Q.sub[S].]
+
+---
+count: false
+# Pit Market
+
+.less-right[
+## Market Surplus
+
+Theory predicts that prices above .mono[$]6 create a market surplus..super[.pink[<span>&#8224;</span>]]
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_hline(yintercept = 7.5, linetype  = "dashed", color = met_slate, size = 1) +
+  geom_point(aes(x = 11, y = 7.5), color = met_slate, size = 2) +
+  geom_point(aes(x = 6, y = 7.5), color = met_slate, size = 2) +
+  geom_segment(aes(x = 6, y = 0, xend = 6, yend = 7.5), linetype  = "dashed", color = met_slate, size = 1) +
+  geom_segment(aes(x = 11, y = 0, xend = 11, yend = 7.5), linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+.footnote[.pink[<span>&#8224;</span>]: *Market surplus* .mono[<=>] Q.sub[D] .mono[<] Q.sub[S].]
+
+---
+# Pit Market
+
+.less-right[
+## Shortage
+
+Theory predicts that prices below .mono[$]6 create a shortage..super[.pink[<span>&#8224;</span>]]
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_hline(yintercept = 4.5, linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+.footnote[.pink[<span>&#8224;</span>]: *Shortage* .mono[<=>] Q.sub[D] .mono[>] Q.sub[S].]
+
+---
+count: false
+# Pit Market
+
+.less-right[
+## Shortage
+
+Theory predicts that prices below .mono[$]6 create a shortage..super[.pink[<span>&#8224;</span>]]
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_hline(yintercept = 4.5, linetype  = "dashed", color = met_slate, size = 1) +
+  geom_point(aes(x = 11, y = 4.5), color = met_slate, size = 2) +
+  geom_point(aes(x = 6, y = 4.5), color = met_slate, size = 2) +
+  geom_segment(aes(x = 6, y = 0, xend = 6, yend = 4.5), linetype  = "dashed", color = met_slate, size = 1) +
+  geom_segment(aes(x = 11, y = 0, xend = 11, yend = 4.5), linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+.footnote[.pink[<span>&#8224;</span>]: *Shortage* .mono[<=>] Q.sub[D] .mono[>] Q.sub[S].]
+
+---
+# Pit Market
+
+.less-right[
+## Tax
+
+The tax increases each seller's cost by .mono[$]2:
+
+1. Supply curve shifts.
+2. Market adjusts to a new equilibrium.
+
+**Q:** By how much does the equilibrium price increase?
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market
+```
+]
+
+---
+count: false
+# Pit Market
+
+.less-right[
+## Tax
+
+The tax increases each seller's cost by .mono[$]2:
+
+1. Supply curve shifts.
+2. Market adjusts to a new equilibrium.
+
+**Q:** By how much does the equilibrium price increase?
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_point(aes(x = 9, y = 6), color = met_slate, size = 2) +
+  geom_segment(aes(x = 9, y = 0, xend = 9, yend = 6), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = 0, y = 6, xend = 9, yend = 6), linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+---
+count: false
+# Pit Market
+
+.less-right[
+## Tax
+
+The tax increases each seller's cost by .mono[$]2:
+
+1. Supply curve shifts.
+2. Market adjusts to a new equilibrium.
+
+**Q:** By how much does the equilibrium price increase?
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1, alpha = 0.5) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9, alpha = 0.5) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_point(aes(x = 9, y = 6), color = met_slate, size = 2, alpha = 0.5) +
+  geom_segment(aes(x = 9, y = 0, xend = 9, yend = 6), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + 
+  geom_segment(aes(x = 0, y = 6, xend = 9, yend = 6), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5)
+```
+]
+
+---
+count: false
+# Pit Market
+
+.less-right[
+## Tax
+
+The tax increases each seller's cost by .mono[$]2:
+
+1. Supply curve shifts.
+2. Market adjusts to a new equilibrium.
+
+**Q:** By how much does the equilibrium price increase?
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1, alpha = 0.5) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9, alpha = 0.5) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_point(aes(x = 9, y = 6), color = met_slate, size = 2, alpha = 0.5) +
+  geom_segment(aes(x = 9, y = 0, xend = 9, yend = 6), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + 
+  geom_segment(aes(x = 0, y = 6, xend = 9, yend = 6), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) +
+  geom_point(aes(x = 7, y = 7), color = met_slate, size = 2, alpha = 1) +
+  geom_segment(aes(x = 7, y = 0, xend = 7, yend = 7), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + 
+  geom_segment(aes(x = 0, y = 7, xend = 7, yend = 7), linetype  = "dashed", color = met_slate, size = 1, alpha = 1)
+```
+]
+
+---
+count: false
+# Pit Market
+
+.less-right[
+## Tax
+
+The tax increases each seller's cost by .mono[$]2:
+
+1. Supply curve shifts.
+2. Market adjusts to a new equilibrium.
+
+**Q:** By how much does the equilibrium price increase?
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1, alpha = 0.5) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9, alpha = 0.5) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_point(aes(x = 7, y = 7), color = met_slate, size = 2, alpha = 1) +
+  geom_segment(aes(x = 7, y = 0, xend = 7, yend = 7), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + 
+  geom_segment(aes(x = 0, y = 7, xend = 7, yend = 7), linetype  = "dashed", color = met_slate, size = 1, alpha = 1)
+```
+]
+
+---
+# Mutual Gains from Trade
+
+.less-right[
+
+.pink[Consumer surplus] .mono[=] sum of buyers' earnings.
+
+.purple[Producer surplus] .mono[=] sum of sellers' earnings.
+
+.green[Total surplus] .mono[=] .pink[consumer surplus] .mono[+] .purple[producer surplus].
+
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_stepribbon(data = step_demand, aes(ymax = ifelse(x < 9, mv, 6), ymin = 6, x = x), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "CS", x = 2, y = 7.5, color = red_pink, family = "Fira Sans", size = 9) +
+  geom_stepribbon(data = step_supply, aes(ymax = ifelse(x < 9, mv, 6), ymin = 6, x = x), fill = purple, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "PS", x = 2, y = 4.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_point(aes(x = 9, y = 6), color = met_slate, size = 2) +
+  geom_segment(aes(x = 9, y = 0, xend = 9, yend = 6), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = 0, y = 6, xend = 9, yend = 6), linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+---
+count: false
+# Mutual Gains from Trade
+
+.less-right[
+
+.pink[Consumer surplus] .mono[=] sum of buyers' earnings.
+
+.purple[Producer surplus] .mono[=] sum of sellers' earnings.
+
+.green[Total surplus] .mono[=] .pink[consumer surplus] .mono[+] .purple[producer surplus].
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_stepribbon(data = step_demand, aes(ymax = ifelse(x < 9, mv, 6), ymin = 6, x = x), fill = green, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "TS", x = 1.5, y = 7, color = green, family = "Fira Sans", size = 9) +
+  geom_stepribbon(data = step_supply, aes(ymax = ifelse(x < 9, mv, 6), ymin = 6, x = x), fill = green, alpha = 0.2, linetype = "blank") +
+  geom_point(aes(x = 9, y = 6), color = met_slate, size = 2) +
+  geom_segment(aes(x = 9, y = 0, xend = 9, yend = 6), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = 0, y = 6, xend = 9, yend = 6), linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+---
+# Mutual Gains from Trade
+
+.less-right[
+## Market Surplus
+
+P .mono[=].mono[$]7.50 .mono[==>] TS .mono[=] .mono[$]36.
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_stepribbon(data = step_demand, aes(ymax = ifelse(x < 6, mv, 7.5), ymin = 7.5, x = x), fill = green, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "TS", x = 2, y = 6, color = green, family = "Fira Sans", size = 9) +
+  geom_stepribbon(data = step_supply, aes(ymax = ifelse(x < 6, mv, 7.5), ymin = 7.5, x = x), fill = green, alpha = 0.2, linetype = "blank") +
+  geom_hline(yintercept = 7.5, linetype  = "dashed", color = met_slate, size = 1) +
+  geom_point(aes(x = 11, y = 7.5), color = met_slate, size = 2) +
+  geom_point(aes(x = 6, y = 7.5), color = met_slate, size = 2) +
+  geom_segment(aes(x = 6, y = 0, xend = 6, yend = 7.5), linetype  = "dashed", color = met_slate, size = 1) +
+  geom_segment(aes(x = 11, y = 0, xend = 11, yend = 7.5), linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+---
+# Mutual Gains from Trade
+
+.less-right[
+## Shortage
+
+P .mono[=].mono[$]4.50 .mono[==>] TS .mono[=] .mono[$]36.
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_hline(yintercept = 4.5, linetype  = "dashed", color = met_slate, size = 1) +
+  geom_point(aes(x = 11, y = 4.5), color = met_slate, size = 2) +
+  geom_point(aes(x = 6, y = 4.5), color = met_slate, size = 2) +
+  geom_vline(xintercept = 6, linetype  = "dashed", color = met_slate, size = 1) +
+  geom_segment(aes(x = 11, y = 0, xend = 11, yend = 4.5), linetype  = "dashed", color = met_slate, size = 1) +
+  geom_stepribbon(data = step_demand, aes(ymax = ifelse(x < 6, mv, 7.5), ymin = 7.5, x = x), fill = green, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "TS", x = 2, y = 6, color = green, family = "Fira Sans", size = 9) +
+  geom_stepribbon(data = step_supply, aes(ymax = ifelse(x < 6, mv, 7.5), ymin = 7.5, x = x), fill = green, alpha = 0.2, linetype = "blank")
+```
+]
+
+---
+# Mutual Gains from Trade
+
+.less-right[
+## Equilibrium
+
+P .mono[=].mono[$]6 .mono[==>] TS .mono[=] .mono[$]40.
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_stepribbon(data = step_demand, aes(ymax = ifelse(x < 9, mv, 6), ymin = 6, x = x), fill = green, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "TS", x = 1.5, y = 7, color = green, family = "Fira Sans", size = 9) +
+  geom_stepribbon(data = step_supply, aes(ymax = ifelse(x < 9, mv, 6), ymin = 6, x = x), fill = green, alpha = 0.2, linetype = "blank") +
+  geom_point(aes(x = 9, y = 6), color = met_slate, size = 2) +
+  geom_segment(aes(x = 9, y = 0, xend = 9, yend = 6), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = 0, y = 6, xend = 9, yend = 6), linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+---
+# Mutual Gains from Trade
+
+.less-right[
+## Intervention
+
+**Q:** True or false? The government can increase TS by mandating 12 trades.
+
+> **A.** True
+
+> **B.** False
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  #geom_stepribbon(data = step_demand, aes(ymax = ifelse(x < 9, mv, 6), ymin = 6, x = x), fill = green, alpha = 0.2, linetype = "blank") +
+  #annotate("text", label = "TS", x = 2, y = 6, color = green, family = "Fira Sans", size = 9) +
+  #geom_stepribbon(data = step_supply, aes(ymax = ifelse(x < 9, mv, 6), ymin = 6, x = x), fill = green, alpha = 0.2, linetype = "blank") +
+  geom_vline(xintercept = 12, linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+---
+count: false
+# Mutual Gains from Trade
+
+.less-right[
+## Intervention
+
+**Q:** True or false? The government can increase TS by mandating 12 trades.
+
+> **A.** True
+
+> .pink[**B.** False]
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  #geom_stepribbon(data = step_demand, aes(ymax = ifelse(x < 9, mv, 6), ymin = 6, x = x), fill = green, alpha = 0.2, linetype = "blank") +
+  #annotate("text", label = "TS", x = 2, y = 6, color = green, family = "Fira Sans", size = 9) +
+  #geom_stepribbon(data = step_supply, aes(ymax = ifelse(x < 9, mv, 6), ymin = 6, x = x), fill = green, alpha = 0.2, linetype = "blank") +
+  geom_vline(xintercept = 12, linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+---
+count: false
+# Mutual Gains from Trade
+
+.less-right[
+## Intervention
+
+**Q:** True or false? The government can increase TS by mandating 12 trades.
+
+> **A.** True
+
+> .pink[**B.** False]
+
+TS would decrease from .mono[$]40 to .mono[$]34
+
+]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5.4, dev = "svg"}
+ggplot() +
+  geom_step(data = step_supply, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  annotate("text", label = "S", x = 12.5, y = 8, color = purple, family = "Fira Sans", size = 9) +
+  geom_step(data = step_demand, mapping = aes(x = x, y = mv), color = red_pink, size = 1) +
+  annotate("text", label = "D", x = 12.5, y = 4, color = red_pink, family = "Fira Sans", size = 9) +
+  # geom_step(data = step_supply_tax, mapping = aes(x = x, y = mv), color = purple, size = 1) +
+  # annotate("text", label = expression(S[Tax]), x = 13, y = 10, color = purple, family = "Fira Sans", size = 9) +
+  labs(x = "Q", y = "P") +
+  scale_x_continuous(limits = c(0, 14), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  theme_market +
+  geom_stepribbon(data = step_demand, aes(ymax = ifelse(x < 9, mv, 6), ymin = 6, x = x), fill = green, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "+TS", x = 2, y = 6, color = green, family = "Fira Sans", size = 9) +
+  geom_stepribbon(data = step_supply, aes(ymax = ifelse(x < 9, mv, 6), ymin = 6, x = x), fill = green, alpha = 0.2, linetype = "blank") +
+  
+  geom_stepribbon(data = step_demand, aes(ymax = ifelse(x > 9, mv, 6), ymin = 6, x = x), fill = orange, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "-TS", x = 11, y = 6, color = orange, family = "Fira Sans", size = 9) +
+  geom_stepribbon(data = step_supply, aes(ymax = ifelse(x > 9, mv, 6), ymin = 6, x = x), fill = orange, alpha = 0.2, linetype = "blank") +
+  
+  geom_vline(xintercept = 12, linetype  = "dashed", color = met_slate, size = 1)
+```
+]
+
+---
+class: clear-slide
+
+**Q:** What is the source of mutual benefits from voluntary trade?
+
+--
+
+**A:** .pink[Differences in marginal values.]
+
+--
+
+**Example:** You own a pair of sneakers. You value them at .mono[$]20. I value them at .mono[$]50. Could we benefit from trade?
+
+--
+
+- **A:** Yes! Marginal value differential of .mono[$]30 .mono[=] .mono[$]30 in mutual benefits!.super[.pink[<span>&#8224;</span>]]
+
+.footnote[.pink[<span>&#8224;</span>]: The distribution of the benefits depends on the price we negotiate.]
+
+---
+class: clear-slide
+
+**Q:** What role do "middlemen".super[.pink[<span>&#8224;</span>]] play?
+
+.footnote[.pink[<span>&#8224;</span>]: *e.g.,* real estate agents, stock brokers, grocers, retailers, *etc.*]
+--
+
+**A:** .pink[They play match-maker in exchange for part of the marginal-value differential.]
+
+---
+# Efficiency
+
+## Definition 1 (market-specific)
+
+> The outcome that maximizes mutual benefits from voluntary trade (*i.e.,* total surplus).
+
+--
+
+## Definition 2 (more general)
+
+> The absence of waste.
+
+--
+
+## Definition 3 (.pink[*Pareto Efficiency*])
+
+> The state in which no person can be made better off without harming someone else.
+
+---
+class: clear-slide
+
+**Podcast Question:** What problem(s) did Alaska's food bank have before *Feeding America* established an auction market?
+
+> **A.** It received too few pickles.
+
+> **B.** It received so much fresh produce that it would rot before people could eat it.
+
+> **C.** It received too many potatoes.
+
+> **D.** It received too few potatoes.
+
+> **E.** It received too many pickles.
+
+---
+count: false
+class: clear-slide
+
+**Podcast Question:** What problem(s) did Alaska's food bank have before *Feeding America* established an auction market?
+
+> **A.** It received too few pickles.
+
+> **B.** It received so much fresh produce that it would rot before people could eat it.
+
+> **C.** It received too many potatoes.
+
+> **D.** It received too few potatoes.
+
+> .pink[**E.** It received too many pickles.]
+
+---
+class: clear-slide
+
+**Podcast Question:** Which food banks received the most "fake money" to use in the auction market?
+
+> **A.** Those in relatively affluent areas.
+
+> **B.** Those in relatively poor areas.
+
+> **C.** Those with the most donors.
+
+> **D.** Those most willing to pay.
+
+> **E.** Those with the most food stockpiled.
+
+---
+count: false
+class: clear-slide
+
+**Podcast Question:** Which food banks received the most "fake money" to use in the auction market?
+
+> **A.** Those in relatively affluent areas.
+
+> .pink[**B.** Those in relatively poor areas.]
+
+> **C.** Those with the most donors.
+
+> **D.** Those most willing to pay.
+
+> **E.** Those with the most food stockpiled.
+
+---
+class: clear-slide
+
+**Q:** What problems did the *Feeding America* auction market solve?
+
+--
+
+1. .pink[Local information problem:] Food bank directors knew exactly what they wanted, but *Feeding America* executives had to make guesses.
+
+2. .pink[Shortages and surpluses:] Food banks had insufficient quantities of sought-after items but abundant quantities of unwanted items.
+
+--
+
+**Q:** Are food banks and their clients better off now than they were before? 
+
+--
+
+**A:** Yes. 
+
+- Less food waste .mono[-->] more food for people in need.
+
+- .pink[*Pareto improving:*] More mutually beneficial transactions..super[.pink[<span>&#8224;</span>]]
+
+.footnote[.pink[<span>&#8224;</span>]: *Pareto improvement* .mono[=] A transaction that makes at least one person better off without harming others.]
+
+---
+# Efficient Markets
+
+## Conditions
+
+1. Well-defined property rights.
+
+2. No market power.
+
+3. *Symmetric* information.
+
+--
+
+## Result 
+
+> If all three conditions hold, then an *unregulated* market maximizes total surplus.
+
+---
+# Efficient Markets
+
+## Result 
+
+> If all three conditions hold, then an *unregulated* market maximizes total surplus.
+
+## Implications
+
+1. When all three conditions hold, government intervention in a market can generate inefficient outcomes.
+
+2. When at least one condition fails, an *unregulated* market can generate inefficient outcomes. 
+
+    - Well-designed government intervention *can* redress inefficiencies.
+
+---
+# Efficient Markets
+
+**Q:** What kinds of markets are most likely to yield efficient outcomes?
+
+--
+
+**A:** Markets that feature 
+
+1. Transactions that don't hurt or help those outside the transaction.
+
+2. Many buyers and sellers.
+
+3. Goods with easily observable quality.
+
+--
+
+Examples?
+
+---
+class: inverse, middle
+
+# Midterm 1
+
+---
+# Midterm Topics
+
+.green[Anything from the lectures, discussions, or podcasts] .hi-green[is fair game!]
+
+1. What is Economics?
+
+2. Motivating the Economic Problem
+
+3. Consumer Theory I
+
+4. Consumer Theory II
+
+5. The Market Mechanism
+
+6. Demand and Supply
+
+---
+# Midterm Structure
+
+## Multiple Choice
+
+- 50 questions
+- 1 point per question
+
+---
+# Midterm Protocol
+
+## Materials
+
+- Writing utensil
+- 3-inch-by-5-inch note card
+- Basic or scientific calculator (no graphing or programming capabilities)
+- .hi[Nothing else]
+
+--
+
+## Procedure
+
+- **Randomized** seating chart
+- 80 minutes from *"you may begin"* to *"pencils down"*
+- First 30 minutes: .hi[quiet period] (no questions, no getting up)
+- Last 50 minutes: ask lots of questions
+- Show your UO ID card as you turn-in your exam
+
+---
+# Midterm Preparation
+
+1. Lecture slides
+
+2. Discussion worksheets
+ 
+    - New worksheet this week!
+
+3. Practice midterm questions
+
+    - No solutions posted, but you can ask about the questions in discussion or in office hours.
+
+4. Extra office hours next week (TBA)
+
+5. Prepare your note card

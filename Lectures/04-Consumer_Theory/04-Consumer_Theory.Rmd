@@ -258,7 +258,7 @@ class: clear-slide
 # Price Elasticity of Demand
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
   scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
   scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
@@ -282,7 +282,7 @@ $\epsilon_d$ .mono[->] $-\infty$
 # Price Elasticity of Demand
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
   scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
   scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
@@ -306,7 +306,7 @@ $\epsilon_d = 0$
 # Price Elasticity of Demand
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 demand <- function(x) 6 - (1/5)*x
 ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
   scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
@@ -335,7 +335,7 @@ count: false
 # Price Elasticity of Demand
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 demand <- function(x) 8 - 0.6*x
 inv_demand <- function(x) (5/3)*(8 - x)
 p_1 <- 7
@@ -375,7 +375,7 @@ count: false
 # Price Elasticity of Demand
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 demand <- function(x) 10 - x
 inv_demand <- function(x) 10 - x
 p_1 <- 7
@@ -415,7 +415,7 @@ count: false
 # Price Elasticity of Demand
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 demand <- function(x) 40/3 - 10/6*x 
 inv_demand <- function(x) (1/5)*(40 - 3*x)
 p_1 <- 7
@@ -455,7 +455,7 @@ count: false
 # Price Elasticity of Demand
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 demand <- function(x) 35 - 6*x
 inv_demand <- function(x) (35 - x)/6
 p_1 <- 7
@@ -553,7 +553,7 @@ column_spec(1, italic = T, color = met_slate)
 # Responsiveness and Revenue
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 demand <- function(x) 10 - x
 inv_demand <- function(x) 10 - x
 p_1 <- 7
@@ -592,7 +592,7 @@ count: false
 # Responsiveness and Revenue
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 demand <- function(x) 10 - x
 inv_demand <- function(x) 10 - x
 p_1 <- 7
@@ -631,7 +631,7 @@ count: false
 # Responsiveness and Revenue
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 demand <- function(x) 10 - x
 inv_demand <- function(x) 10 - x
 p_1 <- 7
@@ -669,7 +669,7 @@ The decrease in quantity demanded (.pink[revenue lost]) outweighs the increase i
 # Responsiveness and Revenue
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 demand <- function(x) 10 - x
 inv_demand <- function(x) 10 - x
 p_1 <- 4
@@ -708,7 +708,7 @@ count: false
 # Responsiveness and Revenue
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 demand <- function(x) 10 - x
 inv_demand <- function(x) 10 - x
 p_1 <- 4
@@ -747,7 +747,7 @@ count: false
 # Responsiveness and Revenue
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 demand <- function(x) 10 - x
 inv_demand <- function(x) 10 - x
 p_1 <- 4
@@ -785,7 +785,7 @@ Price increase .mono[==>] .hi-green[revenue] .green[does not change].
 # Responsiveness and Revenue
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 demand <- function(x) 10 - x
 inv_demand <- function(x) 10 - x
 p_1 <- 1
@@ -824,7 +824,7 @@ count: false
 # Responsiveness and Revenue
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 demand <- function(x) 10 - x
 inv_demand <- function(x) 10 - x
 p_1 <- 1
@@ -863,7 +863,7 @@ count: false
 # Responsiveness and Revenue
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 demand <- function(x) 10 - x
 inv_demand <- function(x) 10 - x
 p_1 <- 1
@@ -946,7 +946,7 @@ Income and the prices of other goods have **ambiguous** effects on the demand fo
 # Changes in Demand
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 x <- 0:10
 demand <- function(x) 10 - x
 demand_2 <- function(x) 12 - x
@@ -992,7 +992,7 @@ count: false
 # Changes in Demand
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 x <- 0:10
 demand <- function(x) 10 - x
 demand_2 <- function(x) 12 - x
@@ -1040,7 +1040,7 @@ Equilibrium price increases.
 # Changes in Demand
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 x <- 0:10
 demand <- function(x) 10 - x
 demand_2 <- function(x) 8 - x
@@ -1086,7 +1086,7 @@ count: false
 # Changes in Demand
 
 .more-left[
-```{r, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 x <- 0:10
 demand <- function(x) 10 - x
 demand_2 <- function(x) 8 - x
@@ -1308,13 +1308,9 @@ tab
 
 --
 
-We observe similar patterns in other markets, too.
+We observe similar patterns in other markets, too:
 
-- Christmas trees
-- Wine
-- Beef
-- Avocados 
-
+- Christmas trees, wine, beef, avocados, *etc.*
 
 ---
 class: clear-slide

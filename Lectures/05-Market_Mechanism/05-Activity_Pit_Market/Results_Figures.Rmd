@@ -1,0 +1,119 @@
+---
+output:
+  xaringan::moon_reader:
+    css: ['default', 'metropolis', 'metropolis-fonts', 'my-css.css']
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "https://platform.twitter.com/widgets.js"
+---
+class: clear-slide
+
+```{r Setup, include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, readxl, viridis, knitr, extrafont, tidyverse, RcmdrPlugin.KMggplot2, magrittr, janitor, kableExtra, scales)
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#272822" # metropolis font color 
+purple <- "#9370DB"
+green <- "#007935"
+light_green <- "#7DBA97"
+orange <- "#FD5F00"
+turquoise <- "#44C1C4"
+red <- "#b92e34"
+# Notes directory
+dir_slides <- "~/GitHub/Intro_Microeconomics_W20/Lectures/05-Market_Mechanism/"
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  warning = F,
+  message = F
+)  
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.text.x = element_text(size = 17),
+  axis.text.y = element_text(size = 17),
+  axis.ticks = element_blank()
+)
+theme_market <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.title.x = element_text(hjust = 1, size = 17),
+  axis.title.y = element_text(hjust = 1, angle = 0, size = 17),
+  # axis.text.x = element_text(size = 12),
+  # axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+theme_gif <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+wrapper <- function(x, ...) paste(strwrap(x, ...), collapse = "\n")
+# functions
+step_demand <- tibble(x = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), mv = c(10, 10, 9, 9, 8, 8, 7, 7, 6, 6, 5, 4, 4))
+step_supply <- tibble(x = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), mv = c(2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8))
+step_supply_tax <- step_supply %>% 
+  mutate(mv = mv + 2)
+
+data <- read_csv("Results.csv") %>% 
+  filter(!is.na(price))
+```
+
+.center[**Pit Market Results**]
+
+.pull-left[
+```{r price, echo = FALSE, fig.height = 5.25, fig.width = 4, dev = "svg"}
+data %>% 
+  group_by(round) %>% 
+  summarize(median = median(price),
+            lower = quantile(price, 1/4),
+            upper = quantile(price, 3/4)) %>% 
+  ungroup() %>% 
+  ggplot() +
+  geom_errorbar(aes(x = round, ymin = lower, ymax = upper), size = 1, color = red_pink) + 
+  geom_point(aes(x = round, y = median), size = 2, color = red_pink) +
+  labs(x = "Round", y = "Price") +
+  scale_x_continuous(limits = c(0, 7.5), expand = c(0, 0), breaks = seq(0, 7, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  geom_vline(xintercept = 5.5, size = 1, linetype = "dashed") +
+  annotate("label", label = "$2 Tax Imposed", x = 5.5, y = 10, color = met_slate, family = "Fira Sans", size = 5) +
+  theme_simple
+```
+]
+
+.pull-right[
+```{r quantity, echo = FALSE, fig.height = 5.25, fig.width = 4, dev = "svg"}
+data %>% 
+  group_by(round) %>% 
+  summarize(trades = n()) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = round, y = trades)) +
+  geom_col(fill = red_pink, color = red_pink, alpha = 0.5) +
+  labs(x = "Round", y = "Number of Trades") +
+  scale_x_continuous(limits = c(0, 7.5), expand = c(0, 0), breaks = seq(0, 7, 1)) +
+  scale_y_continuous(limits = c(0, 12.5), expand = c(0, 0), breaks = seq(0, 12, 1)) +
+  geom_vline(xintercept = 5.5, size = 1, linetype = "dashed") +
+  annotate("label", label = "$2 Tax Imposed", x = 5.5, y = 12, color = met_slate, family = "Fira Sans", size = 5) +
+  theme_simple
+```
+]

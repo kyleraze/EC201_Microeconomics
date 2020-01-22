@@ -103,7 +103,7 @@ class: clear-slide
 
 .center[**History's Hockey Stick**]
 
-```{R, echo = FALSE, fig.fullwidth = T, dev = "svg"}
+```{R, echo = FALSE, fig.height = 6.75, dev = "svg"}
 gdp <- read_csv("gdp_global.csv") %>% 
   clean_names() %>% 
   rename(gdp = real_gdp_per_capita_in_2011_us) %>% 
@@ -155,7 +155,7 @@ anim_save(
   filename = "gapminder.gif",
   path = dir_slides,
   width = 10.5,
-  height = 7,
+  height = 6.5,
   units = "in",
   res = 150,
   nframes = 56,
@@ -221,7 +221,7 @@ Winston Churchill:
 
 **Mercantilism:** An economic system in which the government distributes rights for specific economic activities.
 
-- Example: Hudson’s Bay Company and the fur trade.
+- Example: Hudson's Bay Company and the fur trade.
 
 - The government decides what, how, and for whom to produce.
 
@@ -252,7 +252,7 @@ Winston Churchill:
 - Dominant economic system in Eastern Europe, China, and some parts of Africa, Southeast Asia, and Latin America during the 1900s.
 
 ---
-# Economic Systems 🐄🐄
+# Economic Systems 🐄 🐄
 
 **Marxism:** 
 
@@ -271,7 +271,7 @@ Winston Churchill:
 > You have two cows. You sell one and buy a bull. Your herd multiplies, and the economy grows. You sell them and retire on the income.
 
 ---
-# Economic Systems 🐄🐄
+# Economic Systems 🐄 🐄
 
 **Crony Capitalism:** 
 
@@ -342,7 +342,7 @@ anim_save(
   filename = "income.gif",
   path = dir_slides,
   width = 10.5,
-  height = 7,
+  height = 6.5,
   units = "in",
   res = 150,
   nframes = 25,
@@ -364,7 +364,7 @@ By example, a theory is structured: if "postulate *A*," then "event *B*."
 
 - If "you attend class regularly," then "you will earn a higher grade."
 
-- If "nobody owns water and we don’t act to protect it," then "our water will become contaminated."
+- If "nobody owns water and we don't act to protect it," then "our water will become contaminated."
 
 - If "the fine for not wearing a seatbelt increases," then "speed will increase."
 
@@ -387,9 +387,7 @@ By example, a theory is structured: if "postulate *A*," then "event *B*."
 **Refutability**
 
 - What do we mean by "good in theory, but lousy in practice?"
-    
 - The theory could, in principle, be wrong.
-    
 - Economists seek to make statements that could be wrong, but are repeatedly shown to be consistent with the facts.
 
 --
@@ -410,17 +408,15 @@ By example, a theory is structured: if "postulate *A*," then "event *B*."
 **Caveat 1:** A theory does not imply its converse.
 
 - The observation of *B* does not guarantee that *A* is true. *Something else could have caused B!*
-
 - *Example:* More people catch colds in winter months than in summer months, but low temperatures do not *cause* colds.
-  
+
 - *Example:* Indoor temperatures are negatively correlated with the running time on furnaces, but furnaces do not cool houses.
 
 --
 
 **Caveat 2:** Science cannot prove that a theory is true.
 
-- At best, science fails to refute a theory’s postulates or predictions.
-
+- At best, science fails to refute a theory's postulates or predictions.
 - *Example:* We will not *prove* that free trade is good. Nor will we *prove* that free trade is bad.
 
 ---
@@ -596,7 +592,7 @@ Are those behaviors equally costly? To the individual? To society?
 ---
 # Cost
 
-When resources are scarce, the decision to do one thing necessarily implies that something else doesn’t get done.
+When resources are scarce, the decision to do one thing necessarily implies that something else doesn't get done.
 
 - Every human action has a cost associated with it.
 
@@ -667,7 +663,7 @@ class: clear-slide
 
 .center[**A Typical Age-Earnings Profile**]
 
-```{R, echo = FALSE, fig.height = 7, dev = "svg"}
+```{R, echo = FALSE, fig.height = 6.75, dev = "svg"}
 x <- 18:40
 
 No_College <- function(x) 125*x^2 - 2.4*x^3 - 5000
@@ -702,7 +698,7 @@ class: clear-slide
 
 .center[**Typical Age-Earnings Profiles**]
 
-```{R, echo = FALSE, fig.height = 7, dev = "svg"}
+```{R, echo = FALSE, fig.height = 6.75, dev = "svg"}
 base_plot +
   stat_function(aes(x), fun = College, color = red_pink, size = 0.75) + # college
   geom_segment(aes(x = 22.2, y = -13000, xend = 22.2, yend = 43945), color = red_pink, size = 0.75, linetype = "solid") +
@@ -717,7 +713,7 @@ class: clear-slide
 
 > **Answer:**
 
-```{R, echo = FALSE, fig.height = 6.25, dev = "svg"}
+```{R, echo = FALSE, fig.height = 5.5, dev = "svg"}
 w <- seq(22.2, 40, 0.01)
 z <- seq(18, 22.2, 0.01)
 
@@ -742,7 +738,7 @@ count: false
 
 > .pink[**Answer:** Area B]
 
-```{R, echo = FALSE, fig.height = 6.25, dev = "svg"}
+```{R, echo = FALSE, fig.height = 5.5, dev = "svg"}
 w <- seq(22.2, 40, 0.01)
 z <- seq(18, 22.2, 0.01)
 
@@ -772,7 +768,7 @@ class: clear-slide
 
 > **D.** A .mono[+] C .mono[<] B
 
-```{R, echo = FALSE, fig.height = 3.5, dev = "svg"}
+```{R, echo = FALSE, fig.height = 3, dev = "svg"}
 w <- seq(22.2, 40, 0.01)
 z <- seq(18, 22.2, 0.01)
 
@@ -803,7 +799,7 @@ count: false
 
 > **D.** A .mono[+] C .mono[<] B
 
-```{R, echo = FALSE, fig.height = 3.5, dev = "svg"}
+```{R, echo = FALSE, fig.height = 3, dev = "svg"}
 w <- seq(22.2, 40, 0.01)
 z <- seq(18, 22.2, 0.01)
 

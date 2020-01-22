@@ -152,7 +152,7 @@ Shows the amount of a good .pink[consumers] are willing and able to purchase at 
 ]
 
 .more-left[
-```{r market_demand, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r market_demand, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
   scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
   scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
@@ -175,7 +175,7 @@ Shows the amount of a good .purple[producers or sellers] are willing and able to
 ]
 
 .more-left[
-```{r market_supply, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r market_supply, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
   scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
   scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
@@ -198,7 +198,7 @@ No tendency for prices to change.
 ]
 
 .more-left[
-```{r equilibrium, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r equilibrium, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 market <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
   scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
   scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
@@ -225,7 +225,7 @@ No tendency for prices to change.
 ]
 
 .more-left[
-```{r equilibrium2, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r equilibrium2, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 market + 
   geom_point(aes(x = 5, y = 5), color = met_slate, size = 2) +
   geom_segment(aes(x = 5, y = 0, xend = 5, yend = 5), linetype  = "dashed", color = met_slate, size = 1) + 
@@ -249,7 +249,7 @@ include_graphics("shortage.png")
 ]
 
 .more-left[
-```{r shortage1, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r shortage1, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 market + geom_hline(yintercept = 3, linetype  = "dashed", color = met_slate, size = 1) 
 ```
 ]
@@ -271,7 +271,7 @@ include_graphics("shortage.png")
 ]
 
 .more-left[
-```{r shortage2, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r shortage2, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 market + geom_hline(yintercept = 3, linetype  = "dashed", color = met_slate, size = 1) +
   geom_segment(aes(x = 7, y = 0, xend = 7, yend = 3), linetype  = "dashed", color = met_slate, size = 1) + 
   geom_point(aes(x = 7, y = 3), color = met_slate, size = 2) +
@@ -296,7 +296,7 @@ include_graphics("surplus.png")
 ]
 
 .more-left[
-```{r surplus1, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r surplus1, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 market + geom_hline(yintercept = 7, linetype  = "dashed", color = met_slate, size = 1) 
 ```
 ]
@@ -319,7 +319,7 @@ include_graphics("surplus.png")
 
 
 .more-left[
-```{r surplus2, echo = FALSE, fig.height = 5.25, fig.width = 5.25, dev = "svg"}
+```{r surplus2, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 market + geom_hline(yintercept = 7, linetype  = "dashed", color = met_slate, size = 1) +
   geom_segment(aes(x = 3, y = 0, xend = 3, yend = 7), linetype  = "dashed", color = met_slate, size = 1) + 
   geom_point(aes(x = 3, y = 7), color = met_slate, size = 2) +
@@ -359,7 +359,7 @@ However, the forthcoming behavioral assumptions concern individual preferences.
 
 --
 
-**A:** 🤷 
+**A:** `r emo::ji("shrug")`
 
 --
 
@@ -448,7 +448,7 @@ class: clear-slide
 # Diminishing Marginal Value
 
 .more-left[
-```{r mv, echo = FALSE, fig.height = 5.65, fig.width = 5.65, dev = "svg"}
+```{r mv, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 ggplot(data = step_demand, mapping = aes(x = x, y = mv)) +
   geom_step(color = red_pink, size = 1) +
   labs(x = "q", y = "MV") +
@@ -485,7 +485,7 @@ q increases .mono[->] MV decreases.
 # Optimal Purchase
 
 .more-left[
-```{r mv1, echo = FALSE, fig.height = 5.65, fig.width = 5.65, dev = "svg"}
+```{r mv1, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 ggplot(data = step_demand, mapping = aes(x = x, y = mv)) +
   geom_step(color = red_pink, size = 1) +
   labs(x = "q", y = "MV") +
@@ -508,7 +508,7 @@ count: false
 # Optimal Purchase
 
 .more-left[
-```{r mv1b, echo = FALSE, fig.height = 5.65, fig.width = 5.65, dev = "svg"}
+```{r mv1b, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 ggplot(data = step_demand, mapping = aes(x = x, y = mv)) +
   geom_step(color = red_pink, size = 1) +
   labs(x = "q", y = "MV") +
@@ -532,7 +532,7 @@ ggplot(data = step_demand, mapping = aes(x = x, y = mv)) +
 # Optimal Purchase
 
 .more-left[
-```{r mv2, echo = FALSE, fig.height = 5.65, fig.width = 5.65, dev = "svg"}
+```{r mv2, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 ggplot(data = step_demand, mapping = aes(x = x, y = mv)) +
   geom_step(color = red_pink, size = 1) +
   labs(x = "q", y = "MV") +
@@ -555,7 +555,7 @@ count: false
 # Optimal Purchase
 
 .more-left[
-```{r mv2b, echo = FALSE, fig.height = 5.65, fig.width = 5.65, dev = "svg"}
+```{r mv2b, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 ggplot(data = step_demand, mapping = aes(x = x, y = mv)) +
   geom_step(color = red_pink, size = 1) +
   labs(x = "q", y = "MV") +
@@ -579,7 +579,7 @@ ggplot(data = step_demand, mapping = aes(x = x, y = mv)) +
 # Optimal Purchase
 
 .more-left[
-```{r mv3, echo = FALSE, fig.height = 5.65, fig.width = 5.65, dev = "svg"}
+```{r mv3, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 ggplot(data = step_demand, mapping = aes(x = x, y = mv)) +
   geom_step(color = red_pink, size = 1) +
   labs(x = "q", y = "MV") +
@@ -601,7 +601,7 @@ count: false
 # Optimal Purchase
 
 .more-left[
-```{r mv3b, echo = FALSE, fig.height = 5.65, fig.width = 5.65, dev = "svg"}
+```{r mv3b, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 ggplot(data = step_demand, mapping = aes(x = x, y = mv)) +
   geom_step(color = red_pink, size = 1) +
   labs(x = "q", y = "MV") +
@@ -644,7 +644,7 @@ Do you follow such a rule?
 # Living Your Best Life
 
 .more-left[
-```{r cs, echo = FALSE, fig.height = 5.65, fig.width = 5.65, dev = "svg"}
+```{r cs, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 ggplot(data = step_demand, mapping = aes(x = x, y = mv)) +
   geom_step(color = red_pink, size = 1) +
   labs(x = "q", y = "MV") +
@@ -662,7 +662,7 @@ ggplot(data = step_demand, mapping = aes(x = x, y = mv)) +
 .less-right[
 ### .pink[Consumer Surplus]
 
-The total value of the consumer’s purchase in excess of the cost of the purchase.
+The total value of the consumer's purchase in excess of the cost of the purchase.
 
 Measures the gains to the consumer from the transaction.
 
@@ -672,7 +672,7 @@ Measures the gains to the consumer from the transaction.
 # Individual Demand
 
 .more-left[
-```{r ind_demand1, echo = FALSE, fig.height = 5.65, fig.width = 5.65, dev = "svg"}
+```{r ind_demand1, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 ggplot(data = step_demand, mapping = aes(x = x, y = mv)) +
   geom_step(color = red_pink, size = 1) +
   labs(x = "q", y = "P") +
@@ -695,7 +695,7 @@ Both show how the quantity demanded changes as the price changes, *holding all o
 # Individual Demand
 
 .more-left[
-```{r ind_demand2, echo = FALSE, fig.height = 5.65, fig.width = 5.65, dev = "svg"}
+```{r ind_demand2, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
 ggplot(data = step_demand, mapping = aes(x = x, y = mv)) +
   stat_function(fun = demand_2, color = red_pink, size = 1) + 
   labs(x = "q", y = "P") +
@@ -727,7 +727,7 @@ Due to diminishing marginal value, we depict the relationship between P and q.su
 class: clear-slide
 
 .center[**Increase in Price .mono[->] Decrease in q.sub[D]**]
-```{r p_increase, echo = FALSE, fig.height = 5.75, fig.width = 5.75, dev = "svg"}
+```{r p_increase, echo = FALSE, fig.height = 5.7, fig.width = 5.7, dev = "svg"}
 ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
   scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
   scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
@@ -745,7 +745,7 @@ count: false
 class: clear-slide
 
 .center[**Increase in Price .mono[->] Decrease in q.sub[D]**]
-```{r p_increase2, echo = FALSE, fig.height = 5.75, fig.width = 5.75, dev = "svg"}
+```{r p_increase2, echo = FALSE, fig.height = 5.7, fig.width = 5.7, dev = "svg"}
 ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
   scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
   scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
@@ -768,7 +768,7 @@ ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
 class: clear-slide
 
 .center[**Decrease in Price .mono[->] Increase in q.sub[D]**]
-```{r p_decrease, echo = FALSE, fig.height = 5.75, fig.width = 5.75, dev = "svg"}
+```{r p_decrease, echo = FALSE, fig.height = 5.7, fig.width = 5.7, dev = "svg"}
 ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
   scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
   scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
@@ -786,7 +786,7 @@ count: false
 class: clear-slide
 
 .center[**Decrease in Price .mono[->] Increase in q.sub[D]**]
-```{r p_decrease2, echo = FALSE, fig.height = 5.75, fig.width = 5.75, dev = "svg"}
+```{r p_decrease2, echo = FALSE, fig.height = 5.7, fig.width = 5.7, dev = "svg"}
 ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
   scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
   scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
@@ -822,7 +822,7 @@ A change in price leads to .green[*movement along*] the demand curve.
 class: clear-slide
 
 .center[**An Increase in Demand**]
-```{r demand_increase, echo = FALSE, fig.height = 5.75, fig.width = 5.75, dev = "svg"}
+```{r demand_increase, echo = FALSE, fig.height = 5.7, fig.width = 5.7, dev = "svg"}
 ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
   scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
   scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
@@ -837,7 +837,7 @@ count: false
 class: clear-slide
 
 .center[**An Increase in Demand**]
-```{r demand_increase2, echo = FALSE, fig.height = 5.75, fig.width = 5.75, dev = "svg"}
+```{r demand_increase2, echo = FALSE, fig.height = 5.7, fig.width = 5.7, dev = "svg"}
 ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
   scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
   scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
@@ -854,7 +854,7 @@ ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
 class: clear-slide
 
 .center[**A Decrease in Demand**]
-```{r demand_decrease, echo = FALSE, fig.height = 5.75, fig.width = 5.75, dev = "svg"}
+```{r demand_decrease, echo = FALSE, fig.height = 5.7, fig.width = 5.7, dev = "svg"}
 ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
   scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
   scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
@@ -869,7 +869,7 @@ count: false
 class: clear-slide
 
 .center[**A Decrease in Demand**]
-```{r demand_decrease2, echo = FALSE, fig.height = 5.75, fig.width = 5.75, dev = "svg"}
+```{r demand_decrease2, echo = FALSE, fig.height = 5.7, fig.width = 5.7, dev = "svg"}
 ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
   scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
   scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +

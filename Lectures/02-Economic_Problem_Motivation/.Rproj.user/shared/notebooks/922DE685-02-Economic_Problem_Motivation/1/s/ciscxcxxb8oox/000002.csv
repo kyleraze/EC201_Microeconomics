@@ -1,0 +1,6 @@
+"0","income <- read_csv(""income_global.csv"") %>% 
+  filter(entity %in% c(""United Kingdom"", ""United States"", ""China"", ""India""),
+         year >= 1990)
+"
+"2","Error: 'income_global.csv' does not exist in current working directory ('C:/Users/kyler/Documents/GitHub/Intro_Microeconomics_W20/Lectures/02-Economic_Problem_Motivation').
+"

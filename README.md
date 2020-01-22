@@ -18,3 +18,5 @@ The .html versions of the lecture slides allow you to view animations and intera
 3. **Consumer Theory I** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/03-Consumer_Theory/03-Consumer_Theory.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/03-Consumer_Theory/03-Consumer_Theory.pdf)
 
 4. **Consumer Theory II** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/04-Consumer_Theory/04-Consumer_Theory.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/04-Consumer_Theory/04-Consumer_Theory.pdf)
+
+5. **The Market Mechanism** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/05-Market_Mechanism/05-Market_Mechanism.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/05-Market_Mechanism/05-Market_Mechanism.pdf)

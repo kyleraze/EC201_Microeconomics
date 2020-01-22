@@ -238,6 +238,15 @@
   margin-left: 15px;
 }
 
+hr, .title-slide h2::after, .mline h1::after {
+  content: '';
+  display: block;
+  border: none;
+  background-color: #ffffff;
+  color: #ffffff;
+  height: 0px;
+}
+
 .remark-inline-code {
   background: #F5F5F5; /* lighter */
   /* background: #e7e8e2; /* darker */

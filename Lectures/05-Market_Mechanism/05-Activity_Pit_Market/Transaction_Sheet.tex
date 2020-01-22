@@ -1,0 +1,328 @@
+% !TEX TS-program = xelatex
+\documentclass[12pt]{article}
+
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+
+%% FONTS
+\usepackage{marvosym} % For cool symbols.
+\usepackage{fontawesome} % Ditto
+\usepackage{fontspec}
+% See: https://tex.stackexchange.com/a/50593
+\setmainfont[
+BoldFont       = FiraSans-SemiBold.otf,
+ItalicFont     = FiraSans-Italic.otf,
+BoldItalicFont = FiraSans-SemiBoldItalic.otf
+]{FiraSans-Regular.otf} %
+\setmonofont[
+BoldFont       = FiraCode-Bold.ttf
+]{FiraCode-Regular.ttf}
+%\textsc{\setmathfont(Greek){FiraSans-Italic.otf}
+%\setmathfont(Latin,Digits){FiraMath-Regular.otf}}
+\usepackage[mathrm=sym]{unicode-math}
+\setmathfont{Fira Math}
+
+
+%\usepackage{libertine}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{latexsym}
+\usepackage{verbatim}
+\usepackage{xspace}
+\usepackage{setspace}
+\usepackage{blindtext}
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{caption}
+\captionsetup[table]{labelformat=empty}
+\usepackage{enumerate}
+\usepackage{titling}
+\usepackage{textcomp}
+\usepackage{float}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{dcolumn}
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{uo_green}{HTML}{154733}
+\definecolor{forest_green}{HTML}{006241}
+\definecolor{pine_green}{HTML}{007935}
+\definecolor{grass_green}{HTML}{62A70F}
+\definecolor{golden_yellow}{HTML}{FFD200}
+\definecolor{cool_gray}{HTML}{54565B}
+\definecolor{light_cool_gray}{HTML}{A8A8AA}
+\definecolor{medium_blue}{HTML}{157CAE}
+
+\usepackage{listings}
+\lstset{language=R,
+	basicstyle=\small\ttfamily,
+	stringstyle=\color{cool_gray},
+	otherkeywords={0,1,2,3,4,5,6,7,8,9},
+	morekeywords={TRUE,FALSE},
+	deletekeywords={data,frame,length,as,character,},
+	keywordstyle=\color{cool_gray},
+	commentstyle=\color{pine_green},
+}
+
+\usepackage[colorlinks = true,
+linkcolor = pine_green,
+urlcolor  = pine_green,
+citecolor = pine_green,
+anchorcolor = black]{hyperref}
+
+\begin{document}
+	
+	\thispagestyle{empty}
+	
+	\singlespacing 
+	
+	{\centering
+		
+		\Large \texttt{\textbf{Transaction Sheet}}
+
+		\Large \texttt{\textbf{Round 1}}
+
+	}
+	
+	\begin{table}[H]
+		\centering
+		\ra{2.7}
+		\begin{tabular}{@{\extracolsep{0.25cm}} c c c c c c @{}}
+			\toprule
+			\textbf{Transaction} & \textbf{Buyer Team} & \textbf{Buyer Value} & \textbf{Price} & \textbf{Seller Cost} & \textbf{Seller Team} \\ \toprule
+			01 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+			02 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+			03 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+			04 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+			05 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+			06 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+			07 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+			08 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+			09 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+			10 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+			11 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+			12 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\
+			\bottomrule 
+		\end{tabular}
+	\end{table}
+
+\newpage
+
+\thispagestyle{empty}
+
+\singlespacing 
+
+{\centering
+	
+	\Large \texttt{\textbf{Transaction Sheet}}
+	
+	\Large \texttt{\textbf{Round 2}}
+	
+}
+
+\begin{table}[H]
+	\centering
+	\ra{2.7}
+	\begin{tabular}{@{\extracolsep{0.25cm}} c c c c c c @{}}
+		\toprule
+		\textbf{Transaction} & \textbf{Buyer Team} & \textbf{Buyer Value} & \textbf{Price} & \textbf{Seller Cost} & \textbf{Seller Team} \\ \toprule
+		01 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		02 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		03 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		04 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		05 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		06 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		07 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		08 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		09 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		10 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		11 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		12 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\
+		\bottomrule 
+	\end{tabular}
+\end{table}
+
+\newpage
+
+\thispagestyle{empty}
+
+\singlespacing 
+
+{\centering
+	
+	\Large \texttt{\textbf{Transaction Sheet}}
+	
+	\Large \texttt{\textbf{Round 3}}
+	
+}
+
+\begin{table}[H]
+	\centering
+	\ra{2.7}
+	\begin{tabular}{@{\extracolsep{0.25cm}} c c c c c c @{}}
+		\toprule
+		\textbf{Transaction} & \textbf{Buyer Team} & \textbf{Buyer Value} & \textbf{Price} & \textbf{Seller Cost} & \textbf{Seller Team} \\ \toprule
+		01 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		02 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		03 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		04 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		05 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		06 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		07 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		08 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		09 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		10 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		11 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		12 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\
+		\bottomrule 
+	\end{tabular}
+\end{table}
+
+\newpage
+
+\thispagestyle{empty}
+
+\singlespacing 
+
+{\centering
+	
+	\Large \texttt{\textbf{Transaction Sheet}}
+	
+	\Large \texttt{\textbf{Round 4}}
+	
+}
+
+\begin{table}[H]
+	\centering
+	\ra{2.7}
+	\begin{tabular}{@{\extracolsep{0.25cm}} c c c c c c @{}}
+		\toprule
+		\textbf{Transaction} & \textbf{Buyer Team} & \textbf{Buyer Value} & \textbf{Price} & \textbf{Seller Cost} & \textbf{Seller Team} \\ \toprule
+		01 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		02 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		03 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		04 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		05 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		06 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		07 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		08 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		09 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		10 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		11 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		12 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\
+		\bottomrule 
+	\end{tabular}
+\end{table}
+
+\newpage
+
+\thispagestyle{empty}
+
+\singlespacing 
+
+{\centering
+	
+	\Large \texttt{\textbf{Transaction Sheet}}
+	
+	\Large \texttt{\textbf{Round 5}}
+	
+}
+
+\begin{table}[H]
+	\centering
+	\ra{2.7}
+	\begin{tabular}{@{\extracolsep{0.25cm}} c c c c c c @{}}
+		\toprule
+		\textbf{Transaction} & \textbf{Buyer Team} & \textbf{Buyer Value} & \textbf{Price} & \textbf{Seller Cost} & \textbf{Seller Team} \\ \toprule
+		01 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		02 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		03 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		04 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		05 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		06 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		07 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		08 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		09 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		10 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		11 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		12 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\
+		\bottomrule 
+	\end{tabular}
+\end{table}
+
+\newpage
+
+\thispagestyle{empty}
+
+\singlespacing 
+
+{\centering
+	
+	\Large \texttt{\textbf{Transaction Sheet}}
+	
+	\Large \texttt{\textbf{Round 6}}
+	
+}
+
+\begin{table}[H]
+	\centering
+	\ra{2.7}
+	\begin{tabular}{@{\extracolsep{0.25cm}} c c c c c c @{}}
+		\toprule
+		\textbf{Transaction} & \textbf{Buyer Team} & \textbf{Buyer Value} & \textbf{Price} & \textbf{Seller Cost} & \textbf{Seller Team} \\ \toprule
+		01 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		02 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		03 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		04 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		05 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		06 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		07 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		08 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		09 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		10 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		11 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		12 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\
+		\bottomrule 
+	\end{tabular}
+\end{table}
+
+\newpage
+
+\thispagestyle{empty}
+
+\singlespacing 
+
+{\centering
+	
+	\Large \texttt{\textbf{Transaction Sheet}}
+	
+	\Large \texttt{\textbf{Round 7}}
+	
+}
+
+\begin{table}[H]
+	\centering
+	\ra{2.7}
+	\begin{tabular}{@{\extracolsep{0.25cm}} c c c c c c @{}}
+		\toprule
+		\textbf{Transaction} & \textbf{Buyer Team} & \textbf{Buyer Value} & \textbf{Price} & \textbf{Seller Cost} & \textbf{Seller Team} \\ \toprule
+		01 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		02 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		03 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		04 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		05 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		06 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		07 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		08 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		09 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		10 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		11 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\ \midrule
+		12 & $\rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm} \geq$ & $\rule{1.5cm}{0.15mm}$ & $\geq \rule{1.5cm}{0.15mm}$ & $\rule{1.5cm}{0.15mm}$ \\
+		\bottomrule 
+	\end{tabular}
+\end{table}
+
+\end{document}

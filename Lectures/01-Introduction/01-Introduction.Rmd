@@ -176,7 +176,7 @@ class: clear-slide
 
 **Q:** Should the federal government .green[legalize cannabis?]
 
-```{R, echo = FALSE, fig.height = 5.25, dev = "svg"}
+```{R, echo = FALSE, fig.height = 5, dev = "svg"}
 p_load(sf, ggthemes, albersusa)
 
 state_df <- map_data("state")
@@ -216,7 +216,7 @@ class: clear-slide
 
 - New cartels .mono[=>] more competition .mono[=>] more violence
 
-```{R, echo = FALSE, fig.height = 5.25, dev = "svg"}
+```{R, echo = FALSE, fig.height = 5, dev = "svg"}
 homicides <- read_csv("homicides_1990_2017.csv") %>% 
   clean_names() %>% 
   rename(hom_rate = homicide_rate_deaths_per_100_000) %>% 
