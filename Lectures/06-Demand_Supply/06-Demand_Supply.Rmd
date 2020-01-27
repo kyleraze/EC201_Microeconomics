@@ -1,0 +1,1877 @@
+---
+title: "Demand and Supply"
+subtitle: "EC 201: Principles of Microeconomics"
+author: "Kyle Raze"
+date: "Winter 2020"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'metropolis', 'metropolis-fonts', 'my-css.css']
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "https://platform.twitter.com/widgets.js"
+---
+class: inverse, middle
+
+```{r Setup, include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, readxl, viridis, knitr, dslabs, gapminder, extrafont, Ecdat, wooldridge, tidyverse, magrittr, janitor, kableExtra)
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#272822" # metropolis font color 
+purple <- "#9370DB"
+green <- "#007935"
+light_green <- "#7DBA97"
+orange <- "#FD5F00"
+turquoise <- "#44C1C4"
+red <- "#b92e34"
+# Notes directory
+dir_slides <- "~/GitHub/Intro_Microeconomics_W20/Lectures/03-Consumer_Theory/"
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  warning = F,
+  message = F
+)  
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+theme_market <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.title.x = element_text(hjust = 1, size = 17),
+  axis.title.y = element_text(hjust = 1, angle = 0, size = 17),
+  axis.ticks = element_blank()
+)
+theme_gif <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+wrapper <- function(x, ...) paste(strwrap(x, ...), collapse = "\n")
+```
+
+# Prologue
+
+---
+# Demand and Supply
+
+Thomas Carlyle:
+
+> Teach a parrot the terms supply and demand and you've got an economist.
+
+---
+class: inverse, middle
+
+# Market Demand
+
+---
+# Determinants of Demand
+
+**Q:** What determines market demand.super[.pink[<span>&#8224;</span>]] for a particular product?
+
+.footnote[.pink[<span>&#8224;</span>]: *Demand* .mono[=] Entire relationship between *price* and *quantity demanded.*]
+
+--
+
+- Income or wealth.
+
+- Prices of related goods.
+
+- Expectations about future prices or future income.
+
+- Tastes.
+
+- Number of consumers or consumer demographics.
+
+- Quality, advertising, cost of maintaining the good, legality of the good, *etc.*
+
+---
+# Changes in Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 12 - x
+supply <- function(x) 1 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+base <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_1), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_1), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  #geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  #geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  #geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = "S", x = 9.2, y = 9.65, color = purple, family = "Fira Sans", size = 9)
+
+base
+```
+]
+
+.less-right[
+### .pink[Demand Increase]
+
+At every price, consumers are now willing and able to purchase more units than before.
+
+Equilibrium quantity increases.
+
+Equilibrium price increases.
+
+]
+
+---
+count: false
+# Changes in Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 12 - x
+supply <- function(x) 1 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+demand_increase <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_2), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1, alpha = 0.5) +
+  stat_function(fun = demand_2, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(aes(x = 6 + 0.2, y = 4, xend = 8 - 0.2, yend = 4), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 10, y = 2.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = "S", x = 9.2, y = 9.65, color = purple, family = "Fira Sans", size = 9)
+
+demand_increase
+```
+]
+
+.less-right[
+### .pink[Demand Increase]
+
+At every price, consumers are now willing and able to purchase more units than before.
+
+Equilibrium quantity increases.
+
+Equilibrium price increases.
+
+]
+
+---
+# Changes in Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base
+```
+]
+
+.less-right[
+### .pink[Demand Decrease]
+
+At every price, consumers are now willing and able to purchase fewer units than before.
+
+Equilibrium quantity decreases.
+
+Equilibrium price decreases.
+
+]
+
+---
+count: false
+# Changes in Demand
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 8 - x
+supply <- function(x) 1 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+demand_decrease <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_2), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1, alpha = 0.5) +
+  stat_function(fun = demand_2, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(aes(x = 6 - 0.2, y = 4, xend = 4 + 0.2, yend = 4), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 8, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = "S", x = 9.2, y = 9.65, color = purple, family = "Fira Sans", size = 9)
+
+demand_decrease
+```
+]
+
+.less-right[
+### .pink[Demand Decrease]
+
+At every price, consumers are now willing and able to purchase fewer units than before.
+
+Equilibrium quantity decreases.
+
+Equilibrium price decreases.
+
+]
+
+---
+# Changes in Tastes
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base
+```
+]
+
+.less-right[
+**Q:** How would an increase in projected snowfall affect the market for snowboards?
+
+]
+
+---
+count: false
+# Changes in Tastes
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+demand_increase
+```
+]
+
+.less-right[
+**Q:** How would an increase in projected snowfall affect demand for snowboards?
+
+**A:** .pink[Demand would increase.]
+
+]
+
+---
+# Changes in Demographics
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base
+```
+]
+
+.less-right[
+**Q:** In the coming decades, the number of senior citizens will increase. How will this affect demand for mobility scooters?
+
+]
+
+---
+count: false
+# Changes in Demographics
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+demand_increase
+```
+]
+
+.less-right[
+**Q:** In the coming decades, the number of senior citizens will increase. How will this affect demand for mobility scooters?
+
+**A:** .pink[Demand would increase.]
+
+]
+
+---
+# Changes in Income
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base
+```
+]
+
+.less-right[
+### .pink[Normal Good]
+
+> A good for which .pink[demand increases] as .pink[income increases], *all else being equal*.
+
+]
+
+---
+count: false
+# Changes in Income
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+demand_increase
+```
+]
+
+.less-right[
+### .pink[Normal Good]
+
+> A good for which .pink[demand increases] as .pink[income increases], *all else being equal*.
+
+]
+
+---
+# Changes in Income
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base
+```
+]
+
+.less-right[
+### .pink[Inferior Good]
+
+> A good for which .pink[demand decreases] as .pink[income increases], *all else being equal*.
+
+]
+
+---
+count: false
+# Changes in Income
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+demand_decrease
+```
+]
+
+.less-right[
+### .pink[Inferior Good]
+
+> A good for which .pink[demand decreases] as .pink[income increases], *all else being equal*.
+
+]
+
+---
+# Changes in Income
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base
+```
+]
+
+.less-right[
+**Q:** How would a reduction in consumer income affect the market for canned meat?
+
+]
+
+---
+count: false
+# Changes in Income
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+demand_increase
+```
+]
+
+.less-right[
+**Q:** How would a reduction in consumer income affect the market for canned meat?
+
+**A:** .pink[Canned meat .mono[=] inferior good] 
+<br> .pink[.mono[-->] demand increases]
+<br> .pink[.mono[-->] equilibrium price and quantity increase.]
+
+]
+
+---
+# Changes in Income
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base
+```
+]
+
+.less-right[
+**Q:** How would a reduction in consumer income affect the market for wine?
+
+]
+
+---
+count: false
+# Changes in Income
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+demand_decrease
+```
+]
+
+.less-right[
+**Q:** How would a reduction in consumer income affect the market for wine?
+
+**A:** .pink[Wine .mono[=] normal good] 
+<br> .pink[.mono[-->] demand decreases]
+<br> .pink[.mono[-->] equilibrium price and quantity decrease.]
+]
+
+---
+# Changes in Income
+
+## Income elasticity of demand
+
+> A measure of the responsiveness of quantity demanded to changes in income:
+
+> $$\epsilon_Y = \dfrac{\text{% change in quantity demanded}}{\text{% change in income}}$$
+
+--
+
+.hi[Interpretation:] "A one-percent increase in income leads to an $\epsilon_Y$ percent increase in quantity demanded."
+
+- $\epsilon_Y > 0$ .mono[==>] .pink[normal good.] 
+
+- $\epsilon_Y < 0$ .mono[==>] .pink[inferior good.]
+
+---
+class: clear-slide
+
+.center[**Real-World Income Sensitivity**]
+```{R, echo = F, escape = F}
+data.frame(
+  v1 = c("Automobiles", "Restaurant meals", "Owner-occupied housing", "Gasoline", "Rental housing", "Coffee", "Tobacco", "Medical care", "Margarine", "Public transportation"),
+  v2 = c(3.00, 1.40, 1.2, 1.06, 1.00, 0.51, 0.42, 0.22, -0.20, -0.36),
+  v3 = c(rep("Normal", 8), rep("Inferior", 2))
+) %>% kable(
+  escape = F,
+  col.names = c("Good/Service", "Income Elasticity", "Normal or Inferior?"),
+  align = c("l", "c", "c")
+) %>%
+row_spec(1:10, color = met_slate) %>%
+row_spec(1:10, extra_css = "line-height: 110%;") %>% 
+column_spec(1, italic = T, color = met_slate)
+```
+
+---
+# Changes in Prices of Related Goods
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base
+```
+]
+
+.less-right[
+### .pink[Substitutes]
+
+> Two goods for which the .pink[demand of one good increases] as the .pink[price of the other good increases], *all else being equal*.
+
+]
+
+---
+count: false
+# Changes in Prices of Related Goods
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+demand_increase
+```
+]
+
+.less-right[
+### .pink[Substitutes]
+
+> Two goods for which the .pink[demand of one good increases] as the .pink[price of the other good increases], *all else being equal*.
+
+]
+
+---
+# Changes in Prices of Related Goods
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base
+```
+]
+
+.less-right[
+### .pink[Complements]
+
+> Two goods for which the .pink[demand of one good decreases] as the .pink[price of the other good increases], *all else being equal*.
+
+]
+
+---
+count: false
+# Changes in Prices of Related Goods
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+demand_decrease
+```
+]
+
+.less-right[
+### .pink[Complements]
+
+> Two goods for which the .pink[demand of one good decreases] as the .pink[price of the other good increases], *all else being equal*.
+
+]
+
+---
+# Changes in Prices of Related Goods
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base
+```
+]
+
+.less-right[
+**Q:** How would a decrease in the price of margarine affect the market for butter?
+
+]
+
+---
+count: false
+# Changes in Prices of Related Goods
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+demand_decrease
+```
+]
+
+.less-right[
+**Q:** How would a decrease in the price of margarine affect the market for butter?
+
+**A:** .pink[Margarine and butter .mono[=] substitutes] 
+<br> .pink[.mono[-->] demand for butter decreases]
+<br> .pink[.mono[-->] equilibrium price and quantity of butter decrease.]
+]
+
+---
+# Changes in Prices of Related Goods
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base
+```
+]
+
+.less-right[
+**Q:** How would a decrease in the price of coffee makers affect the market for coffee?
+
+]
+
+---
+count: false
+# Changes in Prices of Related Goods
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+demand_increase
+```
+]
+
+.less-right[
+**Q:** How would a decrease in the price of coffee makers affect the market for coffee?
+
+**A:** .pink[Coffee makers and coffee .mono[=] complements] 
+<br> .pink[.mono[-->] demand for coffee increases]
+<br> .pink[.mono[-->] equilibrium price and quantity of coffee increase.]
+]
+
+---
+# Changes in Prices of Related Goods
+
+## Cross-price elasticity of demand
+
+> A measure of the responsiveness of quantity demanded of one good to a change in the price of another:
+
+> $$\epsilon_X = \dfrac{\text{% change in quantity demanded of Good A}}{\text{% change in price of Good B}}$$
+
+--
+
+.hi[Interpretation:] "A one-percent increase in the price of Good B leads to an $\epsilon_X$ percent increase in the quantity demanded of Good A."
+
+- $\epsilon_X > 0$ .mono[==>] .pink[substitute goods.] 
+
+- $\epsilon_X < 0$ .mono[==>] .pink[complementary goods.]
+
+---
+class: clear-slide
+
+.center[**Real-World Cross-Price Sensitivity**]
+```{R, echo = F, escape = F}
+data.frame(
+  v1 = c("Butter", "Electricity", "Coffee", "Hard liquor"),
+  v2 = c("Margarine", "Natural gas", "Tea", "Beer"),
+  v3 = c(1.53, 0.50, 0.15, -0.11),
+  v4 = c(rep("Substitutes", 3), rep("Complements", 1))
+) %>% kable(
+  escape = F,
+  col.names = c("Good A", "Good B", "Cross-Price Elasticity", "Substitutes or Complements?"),
+  align = c("l", "l", "c", "c")
+) %>%
+row_spec(1:4, color = met_slate) %>%
+row_spec(1:4, extra_css = "line-height: 110%;") %>% 
+column_spec(1:2, italic = T, color = met_slate)
+```
+
+---
+class: inverse, middle
+
+# Market Supply
+
+---
+# Determinants of Supply
+
+**Q:** What determines market supply.super[.pink[<span>&#8224;</span>]] of a particular product?
+
+.footnote[.pink[<span>&#8224;</span>]: *Supply* .mono[=] Entire relationship between *price* and *quantity supplied.*]
+
+--
+
+**A:** Anything that affects minimum willingness to accept or the marginal costs of production.
+
+--
+
+- Input prices (*e.g.,* wages).
+
+- Production technology.
+
+- Expectations about future prices.
+
+- Legality of the good.
+
+- Number of sellers.
+
+- Weather (*e.g.,* hurricanes, drought, *etc.*)
+
+---
+# Changes in Supply
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+base_2 <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_1), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_1), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = expression(D), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[1]), x = 9.4, y = 9.65, color = purple, family = "Fira Sans", size = 9)
+
+base_2
+```
+]
+
+.less-right[
+### .purple[Supply Increase]
+
+At every price, producers are now willing and able to sell more units than before.
+
+Equilibrium quantity increases.
+
+Equilibrium price decreases.
+
+]
+
+---
+count: false
+# Changes in Supply
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+supply_2 <- function(x) -1 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand(x) - supply_2(x), range(x))$root
+p_2 <- demand(q_2)
+
+supply_increase <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_2), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  stat_function(fun = supply_2, color = purple, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1, alpha = 0.5) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(aes(x = 6 + 0.2, y = 7, xend = 8 - 0.2, yend = 7), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  annotate("text", label = expression(D), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[2]), x = 9.4, y = 7.65, color = purple, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[1]), x = 9.4, y = 9.65, color = purple, family = "Fira Sans", size = 9, alpha = 0.5)
+
+supply_increase
+```
+]
+
+.less-right[
+### .purple[Supply Increase]
+
+At every price, producers are now willing and able to sell more units than before.
+
+Equilibrium quantity increases.
+
+Equilibrium price decreases.
+
+]
+
+---
+# Changes in Supply
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base_2
+```
+]
+
+.less-right[
+### .purple[Supply Decrease]
+
+At every price, producers are now willing and able to sell fewer units than before.
+
+Equilibrium quantity decreases.
+
+Equilibrium price increases.
+
+]
+
+---
+count: false
+# Changes in Supply
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+supply_2 <- function(x) 3 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand(x) - supply_2(x), range(x))$root
+p_2 <- demand(q_2)
+
+supply_decrease <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_2), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  stat_function(fun = supply_2, color = purple, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1, alpha = 0.5) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(aes(x = 6 - 0.2, y = 7, xend = 4 + 0.2, yend = 7), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  annotate("text", label = expression(D), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[2]), x = 7.4, y = 9.65, color = purple, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[1]), x = 9.4, y = 9.65, color = purple, family = "Fira Sans", size = 9, alpha = 0.5)
+
+supply_decrease
+```
+]
+
+.less-right[
+### .purple[Supply Decrease]
+
+At every price, producers are now willing and able to sell fewer units than before.
+
+Equilibrium quantity decreases.
+
+Equilibrium price increases.
+
+]
+
+---
+# Changes in Input Prices
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base_2
+```
+]
+
+.less-right[
+**Q:** How would an increase in the price of timber affect the market for paper?
+
+]
+
+---
+count: false
+# Changes in Input Prices
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+supply_decrease
+```
+]
+
+.less-right[
+**Q:** How would an increase in the price of timber affect the market for paper?
+
+**A:** .purple[Timber is an input in paper production]
+<br> .purple[.mono[-->] paper supply decreases]
+<br> .purple[.mono[-->] equilibrium price of paper rises and quantity falls.]
+]
+
+---
+# Changes in Production Technology
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base_2
+```
+]
+
+.less-right[
+**Q:** How would the approval a new bovine growth hormone affect the market for milk?
+
+]
+
+---
+count: false
+# Changes in Production Technology
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+supply_increase
+```
+]
+
+.less-right[
+**Q:** How would the approval a new bovine growth hormone affect the market for milk?
+
+**A:** .purple[Same number of cows yield more milk]
+<br> .purple[.mono[-->] milk supply increases]
+<br> .purple[.mono[-->] equilibrium price of milk falls and quantity rises.]
+]
+
+---
+class: clear-slide
+
+**Q:** Which of the following would reduce the supply of oranges?
+
+> **A.** A new technology lowers the cost of orange production.
+
+> **B.** Orange prices plummet.
+
+> **C.** Demand for oranges falls.
+
+> **D.** An ice storm hits Florida.
+
+> **E.** An orange juice commercial goes viral.
+
+---
+count: false
+class: clear-slide
+
+**Q:** Which of the following would reduce the supply of oranges?
+
+> **A.** A new technology lowers the cost of orange production.
+
+> **B.** Orange prices plummet.
+
+> **C.** Demand for oranges falls.
+
+> .pink[**D.** An ice storm hits Florida.]
+
+> **E.** An orange juice commercial goes viral.
+
+---
+class: inverse, middle
+
+# Market Adjustment
+
+---
+class: clear-slide
+
+**Podcast Question:** How does Uber's surge multiplier affect the quantity of rides supplied?
+
+> **A.** Decreases quantity supplied by increasing expected future prices.
+
+> **B.** Decreases quantity supplied by increasing gasoline prices.
+
+> **C.** Decreases quantity supplied by increasing the number of available Uber drivers. 
+
+> **D.** Increases quantity supplied by increasing the number of available Uber drivers.
+
+> **E.** Increases quantity supplied by changing consumer tastes. 
+
+---
+count: false
+class: clear-slide
+
+**Podcast Question:** How does Uber's surge multiplier affect the quantity of rides supplied?
+
+> **A.** Decreases quantity supplied by increasing expected future prices.
+
+> **B.** Decreases quantity supplied by increasing gasoline prices.
+
+> **C.** Decreases quantity supplied by increasing the number of available Uber drivers. 
+
+> .pink[**D.** Increases quantity supplied by increasing the number of available Uber drivers.]
+
+> **E.** Increases quantity supplied by changing consumer tastes. 
+
+---
+class: clear-slide
+
+**Podcast Question:** How does Uber's pricing scheme differ from that of traditional taxis?
+
+> **A.** Uber's prices are always higher than those of traditional taxis.
+
+> **B.** Uber's prices are always lower than those of traditional taxis.
+
+> **C.** Uber's prices adjust to changes in demand immediately, but those of traditional taxis do not.
+
+> **D.** Uber's prices do not adjust to changes in demand immediately, but those of traditional taxis do.
+
+---
+count: false
+class: clear-slide
+
+**Podcast Question:** How does Uber's pricing scheme differ from that of traditional taxis?
+
+> **A.** Uber's prices are always higher than those of traditional taxis.
+
+> **B.** Uber's prices are always lower than those of traditional taxis.
+
+> .pink[**C.** Uber's prices adjust to changes in demand immediately, but those of traditional taxis do not.]
+
+> **D.** Uber's prices do not adjust to changes in demand immediately, but those of traditional taxis do.
+
+---
+class: clear-slide
+
+**Q:** How does Uber's surge pricing work?
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base
+```
+]
+
+.less-right[
+**Step 1:** Demand for rides increases (*e.g.,* concert ends, bars close, New Year's ball drops, *etc.*).
+]
+
+---
+count: false
+class: clear-slide
+
+**Q:** How does Uber's surge pricing work?
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 12 - x
+supply <- function(x) 1 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+qd_2 <- demand_2(p_1)
+q_2 <- uniroot(function(x) demand_2(x) - supply(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+shortage <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_1), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_1), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1, alpha = 0.5) +
+  stat_function(fun = demand_2, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  geom_point(x = qd_2, y = p_1, color = met_slate, size = 2) +
+  # geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = qd_2, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = qd_2, xend = qd_2, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  # geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(aes(x = 7 + 0.2, y = 3, xend = 9 - 0.2, yend = 3), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 10, y = 2.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = "S", x = 9.2, y = 9.65, color = purple, family = "Fira Sans", size = 9)
+
+shortage
+```
+]
+
+.less-right[
+**Step 1:** Demand for rides increases (*e.g.,* concert ends, bars close, New Year's ball drops, *etc.*).
+]
+
+---
+count: false
+class: clear-slide
+
+**Q:** How does Uber's surge pricing work?
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+shortage
+```
+]
+
+.less-right[
+**Step 1:** Demand for rides increases (*e.g.,* concert ends, bars close, New Year's ball drops, *etc.*).
+
+**Step 2:** Temporary shortage!
+
+]
+
+---
+count: false
+class: clear-slide
+
+**Q:** How does Uber's surge pricing work?
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 12 - x
+supply <- function(x) 1 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+qd_2 <- demand_2(p_1)
+q_2 <- uniroot(function(x) demand_2(x) - supply(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_2), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1, alpha = 0.5) +
+  stat_function(fun = demand_2, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = qd_2, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = 0, xend = qd_2, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = qd_2, xend = qd_2, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(aes(x = 7 + 0.2, y = 3, xend = 9 - 0.2, yend = 3), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 10, y = 2.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = "S", x = 9.2, y = 9.65, color = purple, family = "Fira Sans", size = 9)
+```
+]
+
+.less-right[
+**Step 1:** Demand for rides increases (*e.g.,* concert ends, bars close, New Year's ball drops, *etc.*).
+
+**Step 2:** Temporary shortage!
+
+**Step 3:** Uber raises price until Q.sub[D] .mono[=] Q.sub[S].
+
+]
+
+---
+class: inverse, middle
+
+# Simultaneous Changes
+
+---
+class: clear-slide
+
+**Q:** Suppose that drivers and gas station owners expect gas prices to be higher than usual during Memorial Day weekend. How does the expected gas price increase affect the equilibrium price and quantity of gasoline the week *before* Memorial Day?
+
+--
+
+**A.sub[1]:** Demand increases.
+
+- All else being equal, the equilibrium price increases and quantity increases.
+
+**A.sub[2]:** Supply decreases.
+
+- All else being equal, the equilibrium price increases and quantity decreases.
+
+--
+
+**A.sub[Final]:** Price increases unambiguously, but quantity `r emo::ji("shrug")`.
+
+---
+class: clear-slide
+
+**Case 1:** Supply shift .mono[>] demand shift.
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 12 - x
+supply <- function(x) 1 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+base_3 <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_1), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_1), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2) +
+  #geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  #geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1) +
+  #geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[1]), x = 9.4, y = 9.65, color = purple, family = "Fira Sans", size = 9)
+
+base_3
+```
+]
+
+.less-right[
+Equilibrium price increases.
+
+Equilibrium quantity decreases.
+]
+
+---
+count: false
+class: clear-slide
+
+**Case 1:** Supply shift .mono[>] demand shift.
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 12 - x
+supply <- function(x) 1 + x
+supply_2 <- function(x) 5 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply_2(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_2), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1, alpha = 0.5) +
+  stat_function(fun = demand_2, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1, alpha = 0.5) +
+  stat_function(fun = supply_2, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 10, y = 2.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[1]), x = 9.4, y = 9.65, color = purple, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(S[2]), x = 5.4, y = 9.65, color = purple, family = "Fira Sans", size = 9) + geom_segment(aes(x = 6 + 0.2, y = 4, xend = 8 - 0.2, yend = 4), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  geom_segment(aes(x = 8 - 0.2, y = 9, xend = 4 + 0.2, yend = 9), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1)
+```
+]
+
+.less-right[
+Equilibrium price increases.
+
+Equilibrium quantity decreases.
+]
+
+---
+class: clear-slide
+
+**Case 2:** Supply shift .mono[<] demand shift.
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base_3
+```
+]
+
+.less-right[
+Equilibrium price increases.
+
+Equilibrium quantity increases.
+]
+
+---
+count: false
+class: clear-slide
+
+**Case 2:** Supply shift .mono[<] demand shift.
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 14 - x
+supply <- function(x) 1 + x
+supply_2 <- function(x) 3 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply_2(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_2), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1, alpha = 0.5) +
+  stat_function(fun = demand_2, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1, alpha = 0.5) +
+  stat_function(fun = supply_2, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 10, y = 4.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[1]), x = 9.4, y = 9.65, color = purple, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(S[2]), x = 7.4, y = 9.65, color = purple, family = "Fira Sans", size = 9) + geom_segment(aes(x = 6 + 0.2, y = 4, xend = 10 - 0.2, yend = 4), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  geom_segment(aes(x = 8 - 0.2, y = 9, xend = 6 + 0.2, yend = 9), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1)
+```
+]
+
+.less-right[
+Equilibrium price increases.
+
+Equilibrium quantity increases.
+]
+
+---
+class: clear-slide
+
+**Case 3:** Supply shift .mono[=] demand shift.
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base_3
+```
+]
+
+.less-right[
+Equilibrium price increases.
+
+Equilibrium quantity does not change.
+]
+
+---
+count: false
+class: clear-slide
+
+**Case 3:** Supply shift .mono[=] demand shift.
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 12 - x
+supply <- function(x) 1 + x
+supply_2 <- function(x) 3 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply_2(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_2), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1, alpha = 0.5) +
+  stat_function(fun = demand_2, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1, alpha = 0.5) +
+  stat_function(fun = supply_2, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 10, y = 2.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[1]), x = 9.4, y = 9.65, color = purple, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(S[2]), x = 7.4, y = 9.65, color = purple, family = "Fira Sans", size = 9) + geom_segment(aes(x = 6 + 0.2, y = 4, xend = 8 - 0.2, yend = 4), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  geom_segment(aes(x = 8 - 0.2, y = 9, xend = 6 + 0.2, yend = 9), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1)
+```
+]
+
+.less-right[
+Equilibrium price increases.
+
+Equilibrium quantity does not change.
+]
+
+---
+class: clear-slide
+
+**Q:** Suppose that a well-publicized increase in mercury pollution kills 5 percent of tuna in the Pacific and stokes fears about mercury exposure from eating fish. How does those changes affect the equilibrium price and quantity of canned tuna?
+
+--
+
+**A.sub[1]:** Increase in input price .mono[-->] supply decreases.
+
+- All else being equal, the equilibrium price increases and quantity decreases.
+
+**A.sub[2]:** Change in tastes .mono[-->] demand decreases.
+
+- All else being equal, the equilibrium price decreases and quantity decreases.
+
+--
+
+**A.sub[Final]:** Quantity decreases unambiguously, but price `r emo::ji("shrug")`.
+
+---
+class: clear-slide
+
+**Case 1:** Supply shift .mono[>] demand shift.
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base_3
+```
+]
+
+.less-right[
+Equilibrium price increases.
+
+Equilibrium quantity decreases.
+]
+
+---
+count: false
+class: clear-slide
+
+**Case 1:** Supply shift .mono[>] demand shift.
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 8 - x
+supply <- function(x) 1 + x
+supply_2 <- function(x) 5 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply_2(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_2), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1, alpha = 0.5) +
+  stat_function(fun = demand_2, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1, alpha = 0.5) +
+  stat_function(fun = supply_2, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 8, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[1]), x = 9.4, y = 9.65, color = purple, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(S[2]), x = 5.4, y = 9.65, color = purple, family = "Fira Sans", size = 9) + geom_segment(aes(x = 6 - 0.2, y = 4, xend = 4 + 0.2, yend = 4), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  geom_segment(aes(x = 8 - 0.2, y = 9, xend = 4 + 0.2, yend = 9), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1)
+```
+]
+
+.less-right[
+Equilibrium price increases.
+
+Equilibrium quantity decreases.
+]
+
+---
+class: clear-slide
+
+**Case 2:** Supply shift .mono[<] demand shift.
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base_3
+```
+]
+
+.less-right[
+Equilibrium price decreases.
+
+Equilibrium quantity decreases.
+]
+
+---
+count: false
+class: clear-slide
+
+**Case 2:** Supply shift .mono[<] demand shift.
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 6 - x
+supply <- function(x) 1 + x
+supply_2 <- function(x) 3 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply_2(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_2), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1, alpha = 0.5) +
+  stat_function(fun = demand_2, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1, alpha = 0.5) +
+  stat_function(fun = supply_2, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 6, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[1]), x = 9.4, y = 9.65, color = purple, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(S[2]), x = 7.4, y = 9.65, color = purple, family = "Fira Sans", size = 9) + geom_segment(aes(x = 6 - 0.2, y = 4, xend = 2 + 0.2, yend = 4), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  geom_segment(aes(x = 8 - 0.2, y = 9, xend = 6 + 0.2, yend = 9), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1)
+```
+]
+
+.less-right[
+Equilibrium price decreases.
+
+Equilibrium quantity decreases.
+]
+
+---
+class: clear-slide
+
+**Case 3:** Supply shift .mono[=] demand shift.
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+base_3
+```
+]
+
+.less-right[
+Equilibrium price does not change.
+
+Equilibrium quantity decreases.
+]
+
+---
+count: false
+class: clear-slide
+
+**Case 3:** Supply shift .mono[=] demand shift.
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 8 - x
+supply <- function(x) 1 + x
+supply_2 <- function(x) 3 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply_2(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_2), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1, alpha = 0.5) +
+  stat_function(fun = demand_2, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1, alpha = 0.5) +
+  stat_function(fun = supply_2, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 8, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[1]), x = 9.4, y = 9.65, color = purple, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(S[2]), x = 7.4, y = 9.65, color = purple, family = "Fira Sans", size = 9) + geom_segment(aes(x = 6 - 0.2, y = 4, xend = 4 + 0.2, yend = 4), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  geom_segment(aes(x = 8 - 0.2, y = 9, xend = 6 + 0.2, yend = 9), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1)
+```
+]
+
+.less-right[
+Equilibrium price does not change.
+
+Equilibrium quantity decreases.
+]
+
+---
+class: inverse, middle
+
+# Market Spillovers
+
+---
+# Market Spillovers
+
+A change in one market often spills over into other markets.
+
+- Impossible to change just one price!
+
+--
+
+## Example
+
+**Q:** In response to Iraq's invasion of Kuwait in 1990, the United Nations issued sanctions that restricted Iraqi crude oil exports. How did the sanctions affect the global market for crude oil?
+
+--
+
+- **A:** .purple[Global supply of crude oil decreased .mono[-->] equilibrium price increased and quantity decreased.]
+
+--
+
+**Q:** What other markets would respond to an increase in oil prices?
+
+---
+class: clear-slide
+
+**Q:** Does the increase in crude oil price have any effect on the US market for heating oil?
+
+.more-left[
+```{r, echo = FALSE, fig.height = 4.75, fig.width = 5, dev = "svg"}
+base_3
+```
+]
+
+.less-right[
+**A:**
+]
+
+---
+count: false
+class: clear-slide
+
+**Q:** Does the increase in crude oil price have any effect on the US market for heating oil?
+
+.more-left[
+```{r, echo = FALSE, fig.height = 4.75, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+supply_2 <- function(x) 3 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand(x) - supply_2(x), range(x))$root
+p_2 <- demand(q_2)
+
+supply_decrease_2 <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_2), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1) +
+  stat_function(fun = supply_2, color = purple, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1, alpha = 0.5) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(aes(x = 6 - 0.2, y = 7, xend = 4 + 0.2, yend = 7), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[2]), x = 7.4, y = 9.65, color = purple, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[1]), x = 9.4, y = 9.65, color = purple, family = "Fira Sans", size = 9, alpha = 0.5)
+
+supply_decrease_2
+```
+]
+
+.less-right[
+**A:** .purple[Crude oil is an input in the production of heating oil]
+<br> .purple[.mono[-->] supply of heating oil decreases]
+<br> .purple[.mono[-->] equilibrium price of heating oil rises and quantity falls.]
+]
+
+---
+class: clear-slide
+
+**Q:** Does the increase in the price of crude oil have any effect on the US market for coal?
+
+.more-left[
+```{r, echo = FALSE, fig.height = 4.75, fig.width = 5, dev = "svg"}
+base_3
+```
+]
+
+.less-right[
+**A:**
+]
+
+---
+count: false
+class: clear-slide
+
+**Q:** Does the increase in the price of crude oil have any effect on the US market for coal?
+
+.more-left[
+```{r, echo = FALSE, fig.height = 4.75, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 12 - x
+supply <- function(x) 1 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+demand_increase_2 <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_2), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1, alpha = 0.5) +
+  stat_function(fun = demand_2, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(aes(x = 6 + 0.2, y = 4, xend = 8 - 0.2, yend = 4), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 10, y = 2.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[1]), x = 9.4, y = 9.65, color = purple, family = "Fira Sans", size = 9)
+
+demand_increase_2
+```
+]
+
+.less-right[
+**A:** .pink[Coal is a substitute for heating oil for which crude oil is an input]
+<br> .pink[.mono[-->] demand for coal increases]
+<br> .pink[.mono[-->] equilibrium price of coal increases and quantity increases.]
+]
+
+---
+class: clear-slide
+
+**Q:** How does the increase in the price of crude oil affect the US market for gasoline?
+
+.more-left[
+```{r, echo = FALSE, fig.height = 4.75, fig.width = 5, dev = "svg"}
+base_3
+```
+]
+
+.less-right[
+**A:**
+]
+
+---
+count: false
+class: clear-slide
+
+**Q:** How does the increase in the price of crude oil affect the US market for gasoline?
+
+.more-left[
+```{r, echo = FALSE, fig.height = 4.75, fig.width = 5, dev = "svg"}
+supply_decrease_2
+```
+]
+
+.less-right[
+**A:** .purple[Crude oil is a gasoline input]
+<br> .purple[.mono[-->] supply of gasoline decreases]
+<br> .purple[.mono[-->] equilibrium price of gasoline rises and quantity falls.]
+]
+
+---
+class: clear-slide
+
+**Q:** How does the increase in the price of crude oil affect the US market for SUVs?
+
+.more-left[
+```{r, echo = FALSE, fig.height = 4.75, fig.width = 5, dev = "svg"}
+base_3
+```
+]
+
+.less-right[
+**A:**
+]
+
+---
+count: false
+class: clear-slide
+
+**Q:** How does the increase in the price of crude oil affect the US market for SUVs?
+
+.more-left[
+```{r, echo = FALSE, fig.height = 4.75, fig.width = 5, dev = "svg"}
+x <- 0:10
+demand <- function(x) 10 - x
+demand_2 <- function(x) 8 - x
+supply <- function(x) 1 + x
+
+q_1 <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p_1 <- demand(q_1)
+
+q_2 <- uniroot(function(x) demand_2(x) - supply(x), range(x))$root
+p_2 <- demand_2(q_2)
+
+demand_decrease_2 <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q^"*"))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(p_2), labels = c(expression(P^"*"))) +
+  theme_market +
+  labs(x = "Q", y = "P") +
+  stat_function(fun = demand, color = red_pink, size = 1, alpha = 0.5) +
+  stat_function(fun = demand_2, color = red_pink, size = 1) +
+  stat_function(fun = supply, color = purple, size = 1) +
+  geom_point(x = q_1, y = p_1, color = met_slate, size = 2, alpha = 0.5) +
+  geom_point(x = q_2, y = p_2, color = met_slate, size = 2) +
+  geom_segment(x = 0, xend = q_1, y = p_1, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = 0, xend = q_2, y = p_2, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(x = q_1, xend = q_1, y = 0, yend = p_1, color = met_slate, linetype = "dashed", size = 1, alpha = 0.5) +
+  geom_segment(x = q_2, xend = q_2, y = 0, yend = p_2, color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(aes(x = 6 - 0.2, y = 4, xend = 4 + 0.2, yend = 4), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) + 
+  annotate("text", label = expression(D[1]), x = 10, y = 0.65, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 8, y = 0.65, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S[1]), x = 9.4, y = 9.65, color = purple, family = "Fira Sans", size = 9)
+
+demand_decrease_2
+```
+]
+
+.less-right[
+**A:** .pink[Gasoline prices increase]
+<br> .pink[.mono[-->] gasoline and SUVs are complements]
+<br> .pink[.mono[-->] demand for SUVs decreases]
+<br> .pink[.mono[-->] equilibrium price and quantity of SUVs decrease.]
+]
+
+
+
+
