@@ -22,3 +22,5 @@ The .html versions of the lecture slides allow you to view animations and intera
 5. **The Market Mechanism** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/05-Market_Mechanism/05-Market_Mechanism.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/05-Market_Mechanism/05-Market_Mechanism.pdf)
 
 6. **Demand and Supply** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/06-Demand_Supply/06-Demand_Supply.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/06-Demand_Supply/06-Demand_Supply.pdf)
+
+7. **Policy Levers: Taxes & Subsidies** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/07-Policy_Taxes_Subsidies/07-Policy_Taxes_Subsidies.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/07-Policy_Taxes_Subsidies/07-Policy_Taxes_Subsidies.pdf)
