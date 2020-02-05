@@ -1,0 +1,2160 @@
+---
+title: "Policy Levers: Price Controls"
+subtitle: "EC 201: Principles of Microeconomics"
+author: "Kyle Raze"
+date: "Winter 2020"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'metropolis', 'metropolis-fonts', 'my-css.css']
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "https://platform.twitter.com/widgets.js"
+---
+class: inverse, middle
+
+```{r Setup, include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, readxl, viridis, knitr, dslabs, gapminder, extrafont, Ecdat, wooldridge, tidyverse, magrittr, janitor, kableExtra)
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#272822" # metropolis font color 
+purple <- "#9370DB"
+green <- "#007935"
+light_green <- "#7DBA97"
+orange <- "#FD5F00"
+turquoise <- "#44C1C4"
+red <- "#b92e34"
+# Notes directory
+dir_slides <- "~/GitHub/Intro_Microeconomics_W20/Lectures/03-Consumer_Theory/"
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  warning = F,
+  message = F
+)  
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  # axis.text.x = element_text(size = 12),
+  # axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+theme_market <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.title.x = element_text(hjust = 1, size = 17),
+  axis.title.y = element_text(hjust = 1, angle = 0, size = 17),
+  # axis.text.x = element_text(size = 12),
+  # axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+theme_gif <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+wrapper <- function(x, ...) paste(strwrap(x, ...), collapse = "\n")
+```
+
+# Prologue
+
+---
+# Policy Levers
+
+## Price controls
+
+> Policies that impose legal limits on the market prices of particular goods or services.
+
+--
+
+Why do governments impose price controls?
+
+1. Help disadvantaged groups.
+
+2. Manage affordability of certain goods.
+
+3. Curry favor with important interest groups.
+
+---
+# Price Controls
+
+## .pink[Price floor]
+
+Establishes a legal .pink[minimum] price.
+
+- Prices below the floor are illegal.
+
+- .pink[Examples:] Agricultural price supports, minimum wages laws, *etc.*
+
+
+## .purple[Price ceiling]
+
+Establishes a legal .purple[maximum] price.
+
+- Prices above the ceiling are illegal.
+
+- .purple[Examples:] Price-gouging laws, rent control, *etc.*
+
+---
+class: inverse, middle
+
+# Price Floors
+
+---
+# Price Floor
+
+.footnote[.pink[<span>&#8224;</span>]: For price floors, *binding* .mono[=] set above the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+floor <- 7
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - floor, range(x))$root
+q_s <- uniroot(function(x) floor - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+w <- seq(0, q_d, 0.1)
+z <- seq(q_d, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market +
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2) # equilibrium bundle
+```
+]
+
+.less-right[
+
+**Q:** How does a binding.super[.pink[<span>&#8224;</span>]] price floor affect the market price and quantity?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("Q.sub[D]", "Q.sub[S]", "P.sub[Market]"),
+  v2 = c(4.5, 4.5, "$5.50"),
+  v3 = c("", "", "")
+) %>% kable(
+  escape = F,
+  col.names = c("Price Floor", "None", "$7.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+
+]
+
+---
+count: false
+# Price Floor
+
+.footnote[.pink[<span>&#8224;</span>]: For price floors, *binding* .mono[=] set above the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+floor <- 7
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - floor, range(x))$root
+q_s <- uniroot(function(x) floor - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+w <- seq(0, q_d, 0.1)
+z <- seq(q_d, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +# equilibrium bundle
+  geom_hline(yintercept = floor, color = met_slate, size = 1) +
+  annotate("text", label = "Price Floor", x = 9, y = floor + 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = floor, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = floor, xend = q_s, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = floor), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = floor), color = met_slate, size = 2)
+```
+]
+
+.less-right[
+
+**Q:** How does a binding.super[.pink[<span>&#8224;</span>]] price floor affect the market price and quantity?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("Q.sub[D]", "Q.sub[S]", "P.sub[Market]"),
+  v2 = c(4.5, 4.5, "$5.50"),
+  v3 = c(3, 6, "$7.00")
+) %>% kable(
+  escape = F,
+  col.names = c("Price Floor", "None", "$7.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+
+]
+
+---
+# Price Floor
+
+.footnote[.pink[<span>&#8224;</span>]: For price floors, *binding* .mono[=] set above the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+floor <- 7
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - floor, range(x))$root
+q_s <- uniroot(function(x) floor - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+w <- seq(0, q_d, 0.1)
+z <- seq(0, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 1) +
+  
+  geom_ribbon(aes(x = z, ymin = supply(z), ymax = p), fill = purple, alpha = 0.2, linetype = "blank") + # PS
+  annotate("text", label = "PS", x = q/3, y = p - 1.5, color = purple, family = "Fira Sans", size = 6) +
+  geom_ribbon(aes(x = z, ymin = p, ymax = demand(z)), fill = red_pink, alpha = 0.2, linetype = "blank") + # CS
+  annotate("text", label = "CS", x = q/3, y = p + 1.5, color = red_pink, family = "Fira Sans", size = 6) 
+```
+]
+
+.less-right[
+
+**Q:** How does a binding.super[.pink[<span>&#8224;</span>]] price floor affect total surplus in an efficient market?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("CS", "PS", "TS", "DWL"),
+  v2 = c("$10.125", "$10.125", "$20.25", "$0.00"),
+  v3 = c("", "", "\\( \\qquad \\, \\ \\ \\)", "")
+) %>% kable(
+  escape = F,
+  col.names = c("Price Floor", "None", "$7.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+]
+
+---
+count: false
+# Price Floor
+
+.footnote[.pink[<span>&#8224;</span>]: For price floors, *binding* .mono[=] set above the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+floor <- 7
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - floor, range(x))$root
+q_s <- uniroot(function(x) floor - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+w <- seq(0, q_d, 0.1)
+z <- seq(q_d, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  # geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  # geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  # geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +# equilibrium bundle
+  geom_hline(yintercept = floor, color = met_slate, size = 1) +
+  annotate("text", label = "Price Floor", x = 9, y = floor + 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = floor, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = floor, xend = q_s, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = floor), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = floor), color = met_slate, size = 2) +
+  
+  geom_ribbon(aes(x = w, ymin = floor, ymax = demand(w)), fill = red_pink, alpha = 0.2, linetype = "blank") + # CS
+  annotate("text", label = "CS", x = q_d/3, y = floor + 1, color = red_pink, family = "Fira Sans", size = 6) +
+  geom_ribbon(aes(x = w, ymin = supply(w), ymax = mv_gap), fill = purple, alpha = 0.2, linetype = "blank") + # PS
+  geom_ribbon(aes(x = w, ymin = mv_gap, ymax = floor), fill = purple, alpha = 0.2, linetype = "blank") + # PS
+  annotate("text", label = "PS", x = q_d/3, y = p, color = purple, family = "Fira Sans", size = 6) +
+  geom_ribbon(aes(x = z, ymin = supply(z), ymax = p), fill = orange, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = p, ymax = demand(z)), fill = orange, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "DWL", x = (q + q_d)/2 - 0.1, y = p, color = orange, family = "Fira Sans", size = 6)
+```
+]
+
+.less-right[
+
+**Q:** How does a binding.super[.pink[<span>&#8224;</span>]] price floor affect total surplus in an efficient market?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("CS", "PS", "TS", "DWL"),
+  v2 = c("$10.125", "$10.125", "$20.25", "$0.00"),
+  v3 = c("$4.50", "$13.50", "$18.00", "$2.25")
+) %>% kable(
+  escape = F,
+  col.names = c("Price Floor", "None", "$7.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+]
+
+---
+# Price Floor
+
+.footnote[.pink[<span>&#8224;</span>]: For price floors, *non-binding* .mono[=] set below the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+floor <- 3
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market +
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2) # equilibrium bundle
+```
+]
+
+.less-right[
+
+**Q:** How does a non-binding.super[.pink[<span>&#8224;</span>]] price floor affect the market price and quantity?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("Q.sub[D]", "Q.sub[S]", "P.sub[Market]"),
+  v2 = c(4.5, 4.5, "$5.50"),
+  v3 = c("", "", "")
+) %>% kable(
+  escape = F,
+  col.names = c("Price Floor", "None", "$3.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+
+]
+
+---
+count: false
+# Price Floor
+
+.footnote[.pink[<span>&#8224;</span>]: For price floors, *non-binding* .mono[=] set below the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+floor <- 3
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 1) +# equilibrium bundle
+  geom_hline(yintercept = floor, color = met_slate, size = 1) +
+  annotate("text", label = "Price Floor", x = 9, y = floor + 0.3, color = met_slate, family = "Fira Sans", size = 5)
+```
+]
+
+.less-right[
+
+**Q:** How does a non-binding.super[.pink[<span>&#8224;</span>]] price floor affect the market price and quantity?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("Q.sub[D]", "Q.sub[S]", "P.sub[Market]"),
+  v2 = c(4.5, 4.5, "$5.50"),
+  v3 = c(4.5, 4.5, "$5.50")
+) %>% kable(
+  escape = F,
+  col.names = c("Price Floor", "None", "$3.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+
+]
+
+---
+# Price Floor
+
+.footnote[.pink[<span>&#8224;</span>]: For price floors, *non-binding* .mono[=] set below the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+floor <- 3
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+z <- seq(0, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 1) +
+  geom_ribbon(aes(x = z, ymin = supply(z), ymax = p), fill = purple, alpha = 0.2, linetype = "blank") + # PS
+  annotate("text", label = "PS", x = q/3, y = p - 1.5, color = purple, family = "Fira Sans", size = 6) +
+  geom_ribbon(aes(x = z, ymin = p, ymax = demand(z)), fill = red_pink, alpha = 0.2, linetype = "blank") + # CS
+  annotate("text", label = "CS", x = q/3, y = p + 1.5, color = red_pink, family = "Fira Sans", size = 6) 
+```
+]
+
+.less-right[
+
+**Q:** How does a non-binding.super[.pink[<span>&#8224;</span>]] price floor affect total surplus in an efficient market?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("CS", "PS", "TS", "DWL"),
+  v2 = c("$10.125", "$10.125", "$20.25", "$0.00"),
+  v3 = c("", "", "\\( \\qquad \\; \\; \\; \\)", "")
+) %>% kable(
+  escape = F,
+  col.names = c("Price Floor", "None", "$3.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+]
+
+---
+count: false
+# Price Floor
+
+.footnote[.pink[<span>&#8224;</span>]: For price floors, *non-binding* .mono[=] set below the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+floor <- 3
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+z <- seq(0, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 1) + # equilibrium bundle
+  geom_hline(yintercept = floor, color = met_slate, size = 1) +
+  annotate("text", label = "Price Floor", x = 9, y = floor + 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+
+  
+  geom_ribbon(aes(x = z, ymin = supply(z), ymax = p), fill = purple, alpha = 0.2, linetype = "blank") + # PS
+  annotate("text", label = "PS", x = q/3, y = p - 1.5, color = purple, family = "Fira Sans", size = 6) +
+  geom_ribbon(aes(x = z, ymin = p, ymax = demand(z)), fill = red_pink, alpha = 0.2, linetype = "blank") + # CS
+  annotate("text", label = "CS", x = q/3, y = p + 1.5, color = red_pink, family = "Fira Sans", size = 6) 
+```
+]
+
+.less-right[
+
+**Q:** How does a non-binding.super[.pink[<span>&#8224;</span>]] price floor affect total surplus in an efficient market?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("CS", "PS", "TS", "DWL"),
+  v2 = c("$10.125", "$10.125", "$20.25", "$0.00"),
+  v3 = c("$10.125", "$10.125", "$20.25", "$0.00")
+) %>% kable(
+  escape = F,
+  col.names = c("Price Floor", "None", "$3.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+]
+
+---
+# Price Floor
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+floor <- 7
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - floor, range(x))$root
+q_s <- uniroot(function(x) floor - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+p_black <- demand(q_s)
+w <- seq(0, q_d, 0.1)
+z <- seq(q_d, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  # geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  # geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  # geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +# equilibrium bundle
+  geom_hline(yintercept = floor, color = met_slate, size = 1) +
+  annotate("text", label = "Price Floor", x = 9, y = floor + 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = floor, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = floor, xend = q_s, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = floor), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = floor), color = met_slate, size = 2)
+```
+]
+
+.less-right[
+
+**Q:** How can sellers eliminate the surplus of goods?
+
+]
+
+---
+count: false
+# Price Floor
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+floor <- 7
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - floor, range(x))$root
+q_s <- uniroot(function(x) floor - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+p_black <- demand(q_s)
+w <- seq(0, q_d, 0.1)
+z <- seq(q_d, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  # geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  # geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  # geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +# equilibrium bundle
+  geom_hline(yintercept = floor, color = met_slate, size = 1) +
+  annotate("text", label = "Price Floor", x = 9, y = floor + 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = floor, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = floor, xend = q_s, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = 0, y = p_black, xend = q_s, yend = p_black), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = floor), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = floor), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = p_black), color = met_slate, size = 2)
+```
+]
+
+.less-right[
+
+**Q:** How can sellers eliminate the surplus of goods?
+
+**A:** .pink[Sell the surplus goods on the black market for $4 per unit.]
+
+]
+
+---
+# US Dairy Price Supports
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+floor <- 7
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - floor, range(x))$root
+q_s <- uniroot(function(x) floor - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+p_black <- demand(q_s)
+w <- seq(0, q_d, 0.1)
+z <- seq(q_d, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  # geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  # geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  # geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +# equilibrium bundle
+  geom_hline(yintercept = floor, color = met_slate, size = 1) +
+  annotate("text", label = "Price Floor", x = 9, y = floor + 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = floor, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = floor, xend = q_s, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = floor), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = floor), color = met_slate, size = 2)
+```
+]
+
+.less-right[
+
+Historically, the US government set binding price floors for milk.
+
+.green[**Twist:** The government bought the surplus of milk.]
+
+]
+
+---
+count: false
+# US Dairy Price Supports
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+floor <- 7
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - floor, range(x))$root
+q_s <- uniroot(function(x) floor - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+p_black <- demand(q_s)
+w <- seq(q_d, q_s, 0.1)
+z <- seq(q_d, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  # geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  # geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  # geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +# equilibrium bundle
+  geom_hline(yintercept = floor, color = met_slate, size = 1) +
+  annotate("text", label = "Price Floor", x = 9, y = floor + 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = floor, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = floor, xend = q_s, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = floor), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = floor), color = met_slate, size = 2) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = floor), fill = green, alpha = 0.2, linetype = "blank") + # GS
+  annotate("text", label = "GS", x = q, y = p - 2, color = green, family = "Fira Sans Light", size = 6)
+```
+]
+
+.less-right[
+
+Historically, the US government set binding price floors for milk.
+
+.green[**Twist:** The government bought the surplus of milk.]
+
+]
+
+---
+# US Dairy Price Supports
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+floor <- 7
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - floor, range(x))$root
+q_s <- uniroot(function(x) floor - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+p_black <- demand(q_s)
+w <- seq(0, q_s, 0.1)
+z <- seq(0, q_d, 0.1)
+y <- seq(q_d, q_s, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  # geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  # geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  # geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +# equilibrium bundle
+  geom_hline(yintercept = floor, color = met_slate, size = 1) +
+  annotate("text", label = "Price Floor", x = 9, y = floor + 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = floor, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = floor, xend = q_s, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = floor), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = floor), color = met_slate, size = 2) +
+  geom_ribbon(aes(x = w, ymin = supply(w), ymax = floor), fill = purple, alpha = 0.2, linetype = "blank") + # PS
+  annotate("text", label = "PS", x = q_d/3, y = p, color = purple, family = "Fira Sans", size = 6) +
+  geom_ribbon(aes(x = z, ymin = floor, ymax = demand(z)), fill = red_pink, alpha = 0.2, linetype = "blank") + # CS
+  annotate("text", label = "CS", x = q_d/3, y = floor + 1, color = red_pink, family = "Fira Sans", size = 6) +
+  geom_ribbon(aes(x = y, ymin = 0, ymax = supply(y)), fill = orange, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "DWL", x = q + 0.85, y = p, color = orange, family = "Fira Sans", size = 6)
+```
+]
+
+.less-right[
+
+Historically, the US government set binding price floors for milk.
+
+.green[**Twist:** The government bought the surplus of milk.]
+
+.orange[**Consequence:** Additional deadweight loss (*e.g.,* government cheese).]
+
+]
+
+---
+class: inverse, middle
+
+# Price Ceilings
+
+---
+# Price Ceiling
+
+.footnote[.pink[<span>&#8224;</span>]: For price ceilings, *binding* .mono[=] set below the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 3
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - ceiling, range(x))$root
+q_s <- uniroot(function(x) ceiling - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+w <- seq(0, q_s, 0.1)
+z <- seq(q_s, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market +
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2) # equilibrium bundle
+```
+]
+
+.less-right[
+
+**Q:** How does a binding.super[.pink[<span>&#8224;</span>]] price ceiling affect the market price and quantity?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("Q.sub[D]", "Q.sub[S]", "P.sub[Market]"),
+  v2 = c(4.5, 4.5, "$5.50"),
+  v3 = c("", "", "")
+) %>% kable(
+  escape = F,
+  col.names = c("Price ceiling", "None", "$3.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+
+]
+
+---
+count: false
+# Price Ceiling
+
+.footnote[.pink[<span>&#8224;</span>]: For price ceilings, *binding* .mono[=] set below the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 3
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - ceiling, range(x))$root
+q_s <- uniroot(function(x) ceiling - supply(x), range(x))$root
+mv_gap <- supply(q_s)
+w <- seq(0, q_s, 0.1)
+z <- seq(q_s, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +# equilibrium bundle
+  geom_hline(yintercept = ceiling, color = met_slate, size = 1) +
+  annotate("text", label = "Price Ceiling", x = 9, y = ceiling - 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = ceiling, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = ceiling, xend = q_s, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = ceiling), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = ceiling), color = met_slate, size = 2)
+```
+]
+
+.less-right[
+
+**Q:** How does a binding.super[.pink[<span>&#8224;</span>]] price ceiling affect the market price and quantity?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("Q.sub[D]", "Q.sub[S]", "P.sub[Market]"),
+  v2 = c(4.5, 4.5, "$5.50"),
+  v3 = c(7, 2, "$3.00")
+) %>% kable(
+  escape = F,
+  col.names = c("Price ceiling", "None", "$3.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+
+]
+
+---
+# Price Ceiling
+
+.footnote[.pink[<span>&#8224;</span>]: For price ceilings, *binding* .mono[=] set below the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 3
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - ceiling, range(x))$root
+q_s <- uniroot(function(x) ceiling - supply(x), range(x))$root
+mv_gap <- supply(q_s)
+w <- seq(0, q_s, 0.1)
+z <- seq(0, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 1) +
+  
+  geom_ribbon(aes(x = z, ymin = supply(z), ymax = p), fill = purple, alpha = 0.2, linetype = "blank") + # PS
+  annotate("text", label = "PS", x = q/3, y = p - 1.5, color = purple, family = "Fira Sans", size = 6) +
+  geom_ribbon(aes(x = z, ymin = p, ymax = demand(z)), fill = red_pink, alpha = 0.2, linetype = "blank") + # CS
+  annotate("text", label = "CS", x = q/3, y = p + 1.5, color = red_pink, family = "Fira Sans", size = 6) 
+```
+]
+
+.less-right[
+
+**Q:** How does a binding.super[.pink[<span>&#8224;</span>]] price ceiling affect total surplus in an efficient market?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("CS", "PS", "TS", "DWL"),
+  v2 = c("$10.125", "$10.125", "$20.25", "$0.00"),
+  v3 = c("", "", "\\( \\qquad \\, \\ \\ \\)", "")
+) %>% kable(
+  escape = F,
+  col.names = c("Price ceiling", "None", "$3.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+]
+
+---
+count: false
+# Price Ceiling
+
+.footnote[.pink[<span>&#8224;</span>]: For price ceilings, *binding* .mono[=] set below the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 3
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - ceiling, range(x))$root
+q_s <- uniroot(function(x) ceiling - supply(x), range(x))$root
+mv_gap <- supply(q_s)
+p_black <- demand(q_s)
+w <- seq(0, q_s, 0.1)
+z <- seq(q_s, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  # geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  # geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  # geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +# equilibrium bundle
+  geom_hline(yintercept = ceiling, color = met_slate, size = 1) +
+  annotate("text", label = "Price Ceiling", x = 9, y = ceiling - 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = ceiling, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = 0, xend = q_s, yend = p_black), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = ceiling), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = ceiling), color = met_slate, size = 2) +
+  
+  geom_ribbon(aes(x = w, ymin = ceiling, ymax = demand(w)), fill = red_pink, alpha = 0.2, linetype = "blank") + # CS
+  geom_ribbon(aes(x = w, ymin = mv_gap, ymax = ceiling), fill = red_pink, alpha = 0.2, linetype = "blank") + # CS
+  annotate("text", label = "CS", x = q_s/3, y = p, color = red_pink, family = "Fira Sans", size = 6) +
+  geom_ribbon(aes(x = w, ymin = supply(w), ymax = mv_gap), fill = purple, alpha = 0.2, linetype = "blank") + # PS
+  annotate("text", label = "PS", x = q_s/3, y = ceiling - 0.5, color = purple, family = "Fira Sans", size = 6) +
+  geom_ribbon(aes(x = z, ymin = supply(z), ymax = p), fill = orange, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = p, ymax = demand(z)), fill = orange, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "DWL", x = (q + q_s)/2 - 0.1, y = p, color = orange, family = "Fira Sans", size = 6)
+```
+]
+
+.less-right[
+
+**Q:** How does a binding.super[.pink[<span>&#8224;</span>]] price ceiling affect total surplus in an efficient market?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("CS", "PS", "TS", "DWL"),
+  v2 = c("$10.125", "$10.125", "$20.25", "$0.00"),
+  v3 = c("$12.00", "$2.00", "$14.00", "$6.25")
+) %>% kable(
+  escape = F,
+  col.names = c("Price ceiling", "None", "$3.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+]
+
+---
+# Price Ceiling
+
+.footnote[.pink[<span>&#8224;</span>]: For price ceilings, *non-binding* .mono[=] set above the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 8
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market +
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2) # equilibrium bundle
+```
+]
+
+.less-right[
+
+**Q:** How does a non-binding.super[.pink[<span>&#8224;</span>]] price ceiling affect the market price and quantity?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("Q.sub[D]", "Q.sub[S]", "P.sub[Market]"),
+  v2 = c(4.5, 4.5, "$5.50"),
+  v3 = c("", "", "")
+) %>% kable(
+  escape = F,
+  col.names = c("Price ceiling", "None", "$8.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+
+]
+
+---
+count: false
+# Price Ceiling
+
+.footnote[.pink[<span>&#8224;</span>]: For price ceilings, *non-binding* .mono[=] set above the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 8
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 1) +# equilibrium bundle
+  geom_hline(yintercept = ceiling, color = met_slate, size = 1) +
+  annotate("text", label = "Price Ceiling", x = 9, y = ceiling - 0.3, color = met_slate, family = "Fira Sans", size = 5)
+```
+]
+
+.less-right[
+
+**Q:** How does a non-binding.super[.pink[<span>&#8224;</span>]] price ceiling affect the market price and quantity?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("Q.sub[D]", "Q.sub[S]", "P.sub[Market]"),
+  v2 = c(4.5, 4.5, "$5.50"),
+  v3 = c(4.5, 4.5, "$5.50")
+) %>% kable(
+  escape = F,
+  col.names = c("Price ceiling", "None", "$8.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+
+]
+
+---
+# Price Ceiling
+
+.footnote[.pink[<span>&#8224;</span>]: For price ceilings, *non-binding* .mono[=] set above the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 8
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+z <- seq(0, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 1) +
+  geom_ribbon(aes(x = z, ymin = supply(z), ymax = p), fill = purple, alpha = 0.2, linetype = "blank") + # PS
+  annotate("text", label = "PS", x = q/3, y = p - 1.5, color = purple, family = "Fira Sans", size = 6) +
+  geom_ribbon(aes(x = z, ymin = p, ymax = demand(z)), fill = red_pink, alpha = 0.2, linetype = "blank") + # CS
+  annotate("text", label = "CS", x = q/3, y = p + 1.5, color = red_pink, family = "Fira Sans", size = 6) 
+```
+]
+
+.less-right[
+
+**Q:** How does a non-binding.super[.pink[<span>&#8224;</span>]] price ceiling affect total surplus in an efficient market?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("CS", "PS", "TS", "DWL"),
+  v2 = c("$10.125", "$10.125", "$20.25", "$0.00"),
+  v3 = c("", "", "\\( \\qquad \\; \\; \\; \\)", "")
+) %>% kable(
+  escape = F,
+  col.names = c("Price ceiling", "None", "$8.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+]
+
+---
+count: false
+# Price Ceiling
+
+.footnote[.pink[<span>&#8224;</span>]: For price ceilings, *non-binding* .mono[=] set above the equilibrium price.]
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 8
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+z <- seq(0, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 1) + # equilibrium bundle
+  geom_hline(yintercept = ceiling, color = met_slate, size = 1) +
+  annotate("text", label = "Price Ceiling", x = 9, y = ceiling - 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+
+  
+  geom_ribbon(aes(x = z, ymin = supply(z), ymax = p), fill = purple, alpha = 0.2, linetype = "blank") + # PS
+  annotate("text", label = "PS", x = q/3, y = p - 1.5, color = purple, family = "Fira Sans", size = 6) +
+  geom_ribbon(aes(x = z, ymin = p, ymax = demand(z)), fill = red_pink, alpha = 0.2, linetype = "blank") + # CS
+  annotate("text", label = "CS", x = q/3, y = p + 1.5, color = red_pink, family = "Fira Sans", size = 6) 
+```
+]
+
+.less-right[
+
+**Q:** How does a non-binding.super[.pink[<span>&#8224;</span>]] price ceiling affect total surplus in an efficient market?
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("CS", "PS", "TS", "DWL"),
+  v2 = c("$10.125", "$10.125", "$20.25", "$0.00"),
+  v3 = c("$10.125", "$10.125", "$20.25", "$0.00")
+) %>% kable(
+  escape = F,
+  col.names = c("Price ceiling", "None", "$8.00"),
+  align = c("l", "c", "c")
+) %>%
+  kable_styling() %>% 
+  row_spec(1:3, extra_css = "line-height: 110%;")
+tab 
+```
+]
+
+---
+# Price Ceiling
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 3
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - ceiling, range(x))$root
+q_s <- uniroot(function(x) ceiling - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+p_black <- demand(q_s)
+w <- seq(0, q_d, 0.1)
+z <- seq(q_s, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  # geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  # geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  # geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +# equilibrium bundle
+  geom_hline(yintercept = ceiling, color = met_slate, size = 1) +
+  annotate("text", label = "Price Ceiling", x = 9, y = ceiling - 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = ceiling, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = ceiling, xend = q_s, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = ceiling), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = ceiling), color = met_slate, size = 2)
+```
+]
+
+.less-right[
+
+**Q:** How can buyers cope with the shortage?
+
+]
+
+---
+count: false
+# Price Ceiling
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 3
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - ceiling, range(x))$root
+q_s <- uniroot(function(x) ceiling - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+p_black <- demand(q_s)
+w <- seq(0, q_d, 0.1)
+z <- seq(q_s, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  # geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  # geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  # geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +# equilibrium bundle
+  geom_hline(yintercept = ceiling, color = met_slate, size = 1) +
+  annotate("text", label = "Price Ceiling", x = 9, y = ceiling - 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = ceiling, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = ceiling, xend = q_s, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = p_black, xend = q_s, yend = ceiling), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = 0, y = p_black, xend = q_s, yend = p_black), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = ceiling), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = ceiling), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = p_black), color = met_slate, size = 2)
+```
+]
+
+.less-right[
+
+**Q:** How can buyers cope with the shortage?
+
+**A.sub[1]:** .pink[Wait.]
+
+**A.sub[2]:** .pink[Buy goods on the black market for $8 per unit]
+<br> .pink[.mono[-->] Only those with relatively high marginal values will pay the black market price.]
+]
+
+---
+count: false
+# Price Ceiling
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 3
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - ceiling, range(x))$root
+q_s <- uniroot(function(x) ceiling - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+p_black <- demand(q_s)
+w <- seq(0, q_s, 0.1)
+z <- seq(q_s, q, 0.1)
+
+my_label <- "Scalper Profit"
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  # geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  # geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  # geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +# equilibrium bundle
+  geom_hline(yintercept = ceiling, color = met_slate, size = 1) +
+  annotate("text", label = "Price Ceiling", x = 9, y = ceiling - 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = ceiling, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = ceiling, xend = q_s, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = p_black, xend = q_s, yend = ceiling), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = 0, y = p_black, xend = q_s, yend = p_black), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = ceiling), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = ceiling), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = p_black), color = met_slate, size = 2) +
+  geom_ribbon(aes(x = w, ymin = ceiling, ymax = p_black), fill = purple, alpha = 0.2, linetype = "blank") + # GS
+  annotate("text", label = wrapper(my_label, width = 1), x = 1, y = p, color = purple, family = "Fira Sans", size = 5)
+```
+]
+
+.less-right[
+
+**Q:** How can buyers cope with the shortage?
+
+**A.sub[1]:** .pink[Wait.]
+
+**A.sub[2]:** .pink[Buy goods on the black market for $8 per unit]
+<br> .pink[.mono[-->] Only those with relatively high marginal values will pay the black market price.]
+]
+
+---
+# Price-Gouging Laws
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 7
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1, alpha = 1) + # demand function
+  annotate("text", label = expression(D[1]), x = 8.5, y = 2.2, color = red_pink, family = "Fira Sans", size = 9, alpha = 1) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 1) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 1) +# equilibrium bundle
+  
+  geom_hline(yintercept = ceiling, color = met_slate, size = 1) +
+  annotate("text", label = "Price Ceiling", x = 1.5, y = ceiling - 0.3, color = met_slate, family = "Fira Sans", size = 5)
+```
+]
+
+.less-right[
+
+**Objective:**  Keep necessities and survival goods affordable during times of crisis.
+
+**Policy:** 35 US states have price ceilings that bind only in times of crisis.
+]
+
+---
+count: false
+# Price-Gouging Laws
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 7
+
+demand <- function(x) 10 - x
+demand2 <- function(x) 16 - x
+
+supply <- function(x) 1 + x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+q_2 <- uniroot(function(x) demand2(x) - supply(x), range(x))$root
+p <- supply(q)
+p_2 <- supply(q_2)
+
+q_d <- uniroot(function(x) demand2(x) - ceiling, range(x))$root
+q_s <- uniroot(function(x) ceiling - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = seq(0, 10, 1)) +
+  labs(x = "Q", y = "P") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1, alpha = 0.5) + # demand function
+  stat_function(aes(x), fun = demand2, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D[1]), x = 8.5, y = 2.2, color = red_pink, family = "Fira Sans", size = 9, alpha = 0.5) +
+  annotate("text", label = expression(D[2]), x = 8.5, y = 8.2, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +# equilibrium bundle
+  
+  geom_hline(yintercept = ceiling, color = met_slate, size = 1) +
+  annotate("text", label = "Price Ceiling", x = 1.5, y = ceiling - 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = ceiling, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = ceiling, xend = q_s, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = ceiling), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = ceiling), color = met_slate, size = 2) +
+  geom_segment(aes(x = 1 + 0.2, y = 9, xend = 7 - 0.2, yend = 9), arrow = arrow(angle = 20, length = unit(0.4,"cm"), type = "closed"), color = met_slate, size = 1) 
+
+```
+]
+
+.less-right[
+
+**Objective:** Keep necessities and survival goods affordable during times of crisis.
+
+**Policy:** 35 US states have price ceilings that bind only in times of crisis.
+
+**Consequence:** Shortage of survival goods during disasters.
+
+]
+
+
+---
+class: inverse, middle
+
+# Housing
+
+---
+class: clear-slide
+
+**Podcast Question:** According to Jenny Schuetz, which of the following is the main cause of the housing affordability crisis?
+
+> **A.** Policy failure.
+
+> **B.** Market failure.
+
+---
+count: false
+class: clear-slide
+
+**Podcast Question:** According to Jenny Schuetz, which of the following is the main cause of the housing affordability crisis?
+
+> .pink[**A.** Policy failure.]
+
+> **B.** Market failure.
+
+---
+# A Tale of Two Prosperous Cities
+
+.pull-left[
+.pink[**San Francisco**]
+
+- Median home price (metro): $860,000.
+]
+
+.pull-right[
+.purple[**Houston**]
+
+- Median home price (metro): $178,000.
+]
+
+**Q:** What explains the difference?
+
+--
+
+- Climate? Geography? Amenities? Architecture? 
+
+--
+
+**A:** Many factors contribute, but a growing body of evidence suggests that differences in policy explain a significant part of the difference.
+
+- The Bay Area has some of the strictest zoning regulations in the country; Houston literally has none.
+
+---
+# Zoning
+
+Zoning policies restrict the type and intensity of development in certain areas.
+
+**Examples** 
+
+- Minimum and maximum lot sizes.
+
+- Height restrictions.
+
+- Historical preservation
+
+- Urban growth boundaries.
+
+- Industrial zones away from residential areas.
+
+---
+# Zoning
+
+**Q:** Why do cities adopt zoning policies?
+
+--
+
+**A.sub[1]:** Reduce or prevent disamenities. 
+
+- Some types of development impose external costs on neighbors.
+- Suburban sprawl can worsen air quality and increase the cost of providing public services.
+
+**A.sub[2]:** Appease neighborhood activists.
+
+- Many homeowners desire to "preserve the character" of their neighborhoods.
+- Development restrictions can increase home prices .mono[-->] wealth transfer to homeowners.
+
+---
+# Zoning
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+demand <- function(x) 10 - x
+supply <- function(x) 1 + 1.2*x
+tax <- 2
+supply_tax <- function(x) supply(x) + tax*x
+x <- 0:10
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+q_2 <- uniroot(function(x) demand(x) - supply_tax(x), range(x))$root
+p <- supply(q)
+ps_2 <- supply(q_2)
+pd_2 <- demand(q_2)
+z <- seq(q_2, q, 0.01)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q[Zoning]))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  labs(x = "Q of Housing", y = "P") +
+  theme_market +
+  stat_function(aes(x), fun = supply, color = purple, size = 1, alpha = 1) + # supply function
+  stat_function(aes(x), fun = supply_tax, color = purple, size = 1) + # supply function (tax)
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 7.55, y = 9.5, color = purple, family = "Fira Sans", size = 9, alpha = 1) +
+  annotate("text", label = expression(S[Zoning]), x = 3.9, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  # geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  # geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  # geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +
+  
+  geom_segment(aes(x = q_2, y = ps_2, xend = q_2, yend = pd_2), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = 0, y = pd_2, xend = q_2, yend = pd_2), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_2, y = pd_2), color = met_slate, size = 2) +
+  
+  geom_segment(aes(x = q_2, y = 0, xend = q_2, yend = ps_2), linetype  = "dashed", color = met_slate, size = 1) +
+  geom_ribbon(aes(x = z, ymin = supply(z), ymax = p), fill = orange, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = p, ymax = demand(z)), fill = orange, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "DWL", x = (q + q_2)/2 - 0.2, y = p, color = orange, family = "Fira Sans", size = 6) 
+```
+]
+
+.less-right[
+
+**Consequences** 
+
+1. Higher prices and less housing.
+
+2. In the absence of externalities, deadweight loss.
+
+]
+
+---
+# Rent Control
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 3.5
+
+demand <- function(x) 10 - x
+supply <- function(x) 1 + 1.2*x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - ceiling, range(x))$root
+q_s <- uniroot(function(x) ceiling - supply(x), range(x))$root
+mv_gap <- supply(q_d)
+p_black <- demand(q_s)
+w <- seq(0, q_s, 0.1)
+z <- seq(q_s, q, 0.1)
+
+label1 <- "Renter Surplus"
+label2 <- "Landlord Surplus"
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_s, q_d), labels = c(expression(Q[S]), expression(Q[D]))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  labs(x = "Q of Rental Units", y = "Rent") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 7.55, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_hline(yintercept = ceiling, color = met_slate, size = 1) +
+  annotate("text", label = "Rent Cap", x = 9, y = ceiling - 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = ceiling, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = ceiling, xend = q_s, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = p_black, xend = q_s, yend = ceiling), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = 0, y = p_black, xend = q_s, yend = p_black), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = ceiling), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = ceiling), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = p_black), color = met_slate, size = 2) +
+  geom_ribbon(aes(x = z, ymin = supply(z), ymax = p), fill = orange, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = p, ymax = demand(z)), fill = orange, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "DWL", x = (q + q_s)/2 - 0.1, y = p, color = orange, family = "Fira Sans", size = 6) 
+```
+]
+
+.less-right[
+**Objective:** Make rent more affordable.
+
+**Policy:** Price ceiling for rental units.
+
+**Consequences** 
+
+1. Rental shortage.
+
+2. Deadweight loss.
+]
+
+---
+# Rent Control
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+demand <- function(x) 10 - x
+supply <- function(x) 1 + 1.2*x
+tax <- 2
+supply_tax <- function(x) supply(x) + tax*x
+x <- 0:10
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+q_2 <- uniroot(function(x) demand(x) - supply_tax(x), range(x))$root
+p <- supply(q)
+ps_2 <- supply(q_2)
+pd_2 <- demand(q_2)
+z <- seq(q_2, q, 0.01)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_2), labels = c(expression(Q[D]==Q[S]))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  labs(x = "Q of Rental Units", y = "Rent") +  
+  theme_market +
+  stat_function(aes(x), fun = supply, color = purple, size = 1, alpha = 1) + # supply function
+  stat_function(aes(x), fun = supply_tax, color = purple, size = 1) + # supply function (tax)
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 7.55, y = 9.5, color = purple, family = "Fira Sans", size = 9, alpha = 1) +
+  annotate("text", label = expression(S[Zoning]), x = 4, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_segment(aes(x = q_2, y = ps_2, xend = q_2, yend = pd_2), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = 0, y = pd_2, xend = q_2, yend = pd_2), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_2, y = pd_2), color = met_slate, size = 2) +
+  
+  geom_segment(aes(x = q_2, y = 0, xend = q_2, yend = ps_2), linetype  = "dashed", color = met_slate, size = 1) +
+  geom_ribbon(aes(x = z, ymin = supply(z), ymax = p), fill = orange, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = p, ymax = demand(z)), fill = orange, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "DWL", x = (q + q_2)/2 - 0.2, y = p + 0.5, color = orange, family = "Fira Sans", size = 6) 
+```
+]
+
+.less-right[
+**Q:** Can rent control remedy zoning inefficiencies?
+
+]
+
+---
+count: false
+# Rent Control
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+demand <- function(x) 10 - x
+supply <- function(x) 1 + 1.2*x
+tax <- 2
+supply_tax <- function(x) supply(x) + tax*x
+x <- 0:10
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+q_2 <- uniroot(function(x) demand(x) - supply_tax(x), range(x))$root
+p <- supply(q)
+ps_2 <- supply(q_2)
+pd_2 <- demand(q_2)
+q_s <- uniroot(function(x) p - supply_tax(x), range(x))$root
+q_d <- uniroot(function(x) p - demand(x), range(x))$root
+p_black <- demand(q_s)
+z <- seq(q_s, q, 0.01)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_s, q), labels = c(expression(Q[S]), expression(Q[D]))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  labs(x = "Q of Rental Units", y = "Rent") +
+  theme_market +
+  stat_function(aes(x), fun = supply, color = purple, size = 1, alpha = 1) + # supply function
+  stat_function(aes(x), fun = supply_tax, color = purple, size = 1) + # supply function (tax)
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 7.55, y = 9.5, color = purple, family = "Fira Sans", size = 9, alpha = 1) +
+  annotate("text", label = expression(S[Zoning]), x = 4, y = 9.5, color = purple, family = "Fira Sans", size = 9) +
+  geom_hline(yintercept = p, color = met_slate, size = 1) +
+  annotate("text", label = "Rent Cap", x = 9, y = p - 0.3, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_2, y = ps_2, xend = q_2, yend = pd_2), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + 
+  geom_segment(aes(x = 0, y = pd_2, xend = q_2, yend = pd_2), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + 
+  geom_point(aes(x = q_2, y = pd_2), color = met_slate, size = 2, alpha = 0.5) +
+  
+  geom_segment(aes(x = q_2, y = 0, xend = q_2, yend = ps_2), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) +
+  
+  geom_segment(aes(x = q_s, y = 0, xend = q_s, yend = p_black), linetype  = "dashed", color = met_slate, size = 1) +
+  geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1) +
+  geom_point(aes(x = q, y = p), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = p), color = met_slate, size = 2) +
+  geom_ribbon(aes(x = z, ymin = supply(z), ymax = p), fill = orange, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = p, ymax = demand(z)), fill = orange, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "DWL", x = (q + q_2)/2 - 0.2, y = p + 0.5, color = orange, family = "Fira Sans", size = 6) 
+```
+]
+
+.less-right[
+**Q:** Can rent control remedy zoning inefficiencies?
+
+**A:** .pink[No. Deadweight loss increases!]
+]
+
+---
+# Rent Control
+
+## Consequences
+
+1. Fewer available rental units.
+
+    - Less new construction
+    - Landlords convert some existing units to condos.
+    - Current tenants move less frequently.
+
+2. Illegal subletting.
+
+    - Units rationed based on willingness to pay, not need.
+    - Black market prices exceed both regulated and free market prices.
+    
+3. Other unintended consequences.
+
+    - *e.g.,* quality downgrading.
+
+---
+# Rent Control
+
+## Consensus
+
+Assar Lindbeck, Swedish economist and ardent socialist:
+
+> In many cases rent control appears to be the most efficient technique presently known to destroy a city&mdash;except for bombing.
+
+--
+
+Why such consensus?
+
+- Binding rent control policies intend to help impoverished tenants, but do the opposite! .mono[-->] .pink[inefficient] and .pink[poorly targeted].
+
+--
+
+.center[.hi[Impossible to change just one price <br> .mono[==>] <br> Impossible to change just one behavior!]]
+
+---
+class: clear-slide
+
+**Q:** In 2019, the Oregon Legislature passed statewide rent control that limited rent increases to 7% per year. How will this policy affect the availability of rental housing in Portland?
+
+> **A.** It will reduce the number of available rental units.
+
+> **B.** It will have no effect on the number of available rental units.
+
+> **C.** If the unregulated price increases by less than 7%, it will reduce the number of available rental units.
+
+> **D.** If the unregulated price increases by more than 7%, it will have no effect on the number of available rental units.
+
+> **E.** None of the above.
+
+---
+count: false
+class: clear-slide
+
+**Q:** In 2019, the Oregon Legislature passed statewide rent control that limited rent increases to 7% per year. How will this policy affect the availability of rental housing in Portland?
+
+> **A.** It will reduce the number of available rental units.
+
+> **B.** It will have no effect on the number of available rental units.
+
+> **C.** If the unregulated price increases by less than 7%, it will reduce the number of available rental units.
+
+> **D.** If the unregulated price increases by more than 7%, it will have no effect on the number of available rental units.
+
+> .pink[**E.** None of the above.]
+
+---
+class: clear-slide
+
+**Q:** All else being equal, how would a binding rent control policy affect the market for rental housing in the long run?.super[<span>&#8224;</span>]
+
+> **A.** The rental housing shortage would decrease.
+
+> **B.** The rental housing shortage would increase.
+
+> **C.** The rental housing shortage would not change.
+
+.footnote[.pink[<span>&#8224;</span>]: *Long run* .mono[=] period of time that allows consumers and producers to fully adjust their behavior.]
+
+---
+count: false
+class: clear-slide
+
+**Q:** All else being equal, how would a binding rent control policy affect the market for rental housing in the long run?.super[<span>&#8224;</span>]
+
+> **A.** The rental housing shortage would decrease.
+
+> .pink[**B.** The rental housing shortage would increase.]
+
+> **C.** The rental housing shortage would not change.
+
+.footnote[.pink[<span>&#8224;</span>]: *Long run* .mono[=] period of time that allows consumers and producers to fully adjust their behavior.]
+
+---
+class: clear-slide
+
+**Podcast Question:** Which of the following best describes the likely outcome of a subsidy for renters in relatively affluent metro areas?
+
+> **A.** Renters would absorb most of the subsidy and the rent they pay would increase.
+
+> **B.** Renters would absorb most of the subsidy and the rent they pay would decrease.
+
+> **C.** Landlords would absorb most of the subsidy and the rent they receive would increase.
+
+> **D.** Landlords would absorb most of the subsidy and the rent they receive would decrease.
+
+---
+count: false
+class: clear-slide
+
+**Podcast Question:** Which of the following best describes the likely outcome of a subsidy for renters in relatively affluent metro areas?
+
+> **A.** Renters would absorb most of the subsidy and the rent they pay would increase.
+
+> **B.** Renters would absorb most of the subsidy and the rent they pay would decrease.
+
+> .pink[**C.** Landlords would absorb most of the subsidy and the rent they receive would increase.]
+
+> **D.** Landlords would absorb most of the subsidy and the rent they receive would decrease.
+
+---
+class: inverse, middle
+
+# Minimum Wage
+
+---
+# Minimum Wage
+
+**Objective:** Increase the living standards of the working poor.
+
+**Policy:** Price floor for wage labor.
+
+**Examples**
+
+- Federal minimum wage: $7.25 per hour.
+
+- As of 2018, Oregon has a tiered minimum wage:
+    
+    - Portland metro counties: $12.50 per hour.
+    - Other urban counties: $11.25 per hour.
+    - Rural counties: $11.00 per hour.
+    
+- Seattle minimum wage: up to $16.39 per hour.
+
+---
+# Minimum Wage
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- 0:10
+ceiling <- 6.5
+
+demand <- function(x) 10 - x
+supply <- function(x) x
+
+q <- uniroot(function(x) demand(x) - supply(x), range(x))$root
+p <- supply(q)
+
+q_d <- uniroot(function(x) demand(x) - ceiling, range(x))$root
+q_s <- uniroot(function(x) ceiling - supply(x), range(x))$root
+mv_gap <- supply(q_s)
+p_black <- demand(q_s)
+w <- seq(0, q_d, 0.1)
+z <- seq(q_d, q, 0.1)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = c(q_d, q_s), labels = c(expression(Q[D]), expression(Q[S]))) +
+  scale_y_continuous(limits = c(0, 10.5), expand = c(0, 0), breaks = NULL) +
+  labs(x = "L", y = "W") +
+  theme_market + 
+  stat_function(aes(x), fun = supply, color = purple, size = 1) + # supply function
+  stat_function(aes(x), fun = demand, color = red_pink, size = 1) + # demand function
+  annotate("text", label = expression(D), x = 9, y = 1.6, color = red_pink, family = "Fira Sans", size = 9) +
+  annotate("text", label = expression(S), x = 9, y = 8.5, color = purple, family = "Fira Sans", size = 9) +
+  # geom_segment(aes(x = q, y = 0, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # Q*
+  # geom_segment(aes(x = 0, y = p, xend = q, yend = p), linetype  = "dashed", color = met_slate, size = 1, alpha = 0.5) + # P*
+  # geom_point(aes(x = q, y = p), color = met_slate, size = 2, alpha = 0.5) +# equilibrium bundle
+  geom_hline(yintercept = ceiling, color = met_slate, size = 1) +
+  annotate("text", label = "Minimum Wage", x = 8.75, y = ceiling + 0.35, color = met_slate, family = "Fira Sans", size = 5) +
+  geom_segment(aes(x = q_d, y = ceiling, xend = q_d, yend = 0), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_segment(aes(x = q_s, y = 0, xend = q_s, yend = ceiling), linetype  = "dashed", color = met_slate, size = 1) + 
+  geom_point(aes(x = q_d, y = ceiling), color = met_slate, size = 2) +
+  geom_point(aes(x = q_s, y = ceiling), color = met_slate, size = 2) +
+  
+  geom_ribbon(aes(x = w, ymin = ceiling, ymax = demand(w)), fill = red_pink, alpha = 0.2, linetype = "blank") + # CS
+  geom_ribbon(aes(x = w, ymin = mv_gap, ymax = ceiling), fill = red_pink, alpha = 0.2, linetype = "blank") + # CS
+  annotate("text", label = wrapper("Employer Surplus", width = 10), x = q_d/3, y = ceiling + 0.75, color = red_pink, family = "Fira Sans", size = 5) +
+  geom_ribbon(aes(x = w, ymin = supply(w), ymax = mv_gap), fill = purple, alpha = 0.2, linetype = "blank") + # PS
+  annotate("text", label = wrapper("Worker Surplus", width = 10), x = q_d/3, y = p, color = purple, family = "Fira Sans", size = 5) +
+  geom_ribbon(aes(x = z, ymin = supply(z), ymax = p), fill = orange, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = p, ymax = demand(z)), fill = orange, alpha = 0.2, linetype = "blank") +
+  annotate("text", label = "DWL", x = (q + q_d)/2 - 0.1, y = p, color = orange, family = "Fira Sans", size = 5)
+```
+]
+
+.less-right[
+## Predictions
+
+1. Unemployment.
+
+2. Workers who keep job better off.
+
+3. Workers who lose job worse off.
+
+]
+
+---
+# Minimum Wage
+
+## Evidence
+
+**Q:** Do binding minimum wages lead to job losses?
+
+**A:** No consensus, but employment effects appear small.
+
+- Most studies: no effect or small negative effect on employment.
+
+- .hi[Seattle:] Small reduction in hours, but not jobs.
+
+---
+# Minimum Wage
+
+## Evidence
+
+**Q:** How do businesses respond to increases in binding minimum wages?
+
+**A:** In addition to reducing hours, they often increase prices.
+
+- .hi[Seattle:] Self-reported price increases by business owners, observed increase in price of child care, but no observed change in prices or quality of supermarket food.  
+
+---
+# Minimum Wage
+
+## Evidence
+
+**Q:** Do binding minimum wages improve the livelihoods of low-skilled workers?
+
+**A:** No consensus, but recent evidence suggests...yes?
+
+- .hi[Seattle:] Increase in wage either outweighs or offsets reduction in hours .mono[-->] increase or no change in earnings.
