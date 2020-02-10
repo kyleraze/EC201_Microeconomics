@@ -26,3 +26,5 @@ The .html versions of the lecture slides allow you to view animations and intera
 7. **Policy Levers: Taxes & Subsidies** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/07-Policy_Taxes_Subsidies/07-Policy_Taxes_Subsidies.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/07-Policy_Taxes_Subsidies/07-Policy_Taxes_Subsidies.pdf)
 
 8. **Policy Levers: Price Controls** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/08-Policy_Price_Controls/08-Policy_Price_Controls.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/08-Policy_Price_Controls/08-Policy_Price_Controls.pdf)
+
+9. **How Economists Learn from Data I** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/09-Data_Learning/09-Data_Learning.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/09-Data_Learning/09-Data_Learning.pdf)

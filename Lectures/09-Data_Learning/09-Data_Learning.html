@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>How Economists Learn from Data</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kyle Raze" />
+    <link href="09-Data_Learning_files/remark-css/default.css" rel="stylesheet" />
+    <link href="09-Data_Learning_files/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="09-Data_Learning_files/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <script src="09-Data_Learning_files/htmlwidgets/htmlwidgets.js"></script>
+    <script src="09-Data_Learning_files/jquery/jquery.min.js"></script>
+    <link href="09-Data_Learning_files/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="09-Data_Learning_files/datatables-binding/datatables.js"></script>
+    <link href="09-Data_Learning_files/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="09-Data_Learning_files/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="09-Data_Learning_files/dt-core/js/jquery.dataTables.min.js"></script>
+    <link href="09-Data_Learning_files/crosstalk/css/crosstalk.css" rel="stylesheet" />
+    <script src="09-Data_Learning_files/crosstalk/js/crosstalk.min.js"></script>
+    <script src="09-Data_Learning_files/kePrint/kePrint.js"></script>
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# How Economists Learn from Data
+## EC 201: Principles of Microeconomics
+### Kyle Raze
+### Winter 2020
+
+---
+
+class: inverse, middle
+
+
+
+# Prologue
+
+---
+class: clear-slide
+
+.center[**The Fading *American Dream***]
+&lt;img src="09-Data_Learning_files/figure-html/unnamed-chunk-1-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# Why is the *American Dream* Fading?
+
+**Policy Question:** Why are children's chances of climbing the income ladder falling in America?
+
+- What can we do to reverse this trend?
+
+Difficult to answer with historical data on macroeconomic trends.
+
+- Numerous coinciding changes over time make it difficult to test between alternative explanations.
+
+- Only a handful of data points.
+
+---
+# Theoretical Social Science
+
+Historically, the social sciences had limited data to study important policy questions.
+
+**Result:** Social sciences were .pink[theoretical] fields.
+
+- Economists developed .pink[mathematical models].
+- Sociologists developed .pink[qualitative theories].
+- Both used their theories to make policy recommendations (*e.g.,* to improve upward mobility).
+
+--
+
+**Problem:** Untested theories!
+
+- Five economists often have five different answers to the same question.
+- Leads to a politicization of questions that, in principle, have scientific answers (*e.g.,* would universal healthcare make Americans healthier?).
+
+---
+# The Rise of Empirical Evidence
+
+Today, the social sciences are increasingly .pink[empirical] thanks to the growing availability of data.
+
+- Ability to test and improve theories using real-world data.
+
+- Analogous to the natural sciences.
+
+---
+class: clear-slide
+
+.center[**Empirical Articles in Leading Economics Journals**]
+&lt;img src="09-Data_Learning_files/figure-html/unnamed-chunk-2-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# What are Data?
+
+.more-left[
+
+<div id="htmlwidget-8d9910dc7b1b3720d8e3" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8d9910dc7b1b3720d8e3">{"x":{"filter":"none","caption":"<caption>Sample of US workers (1976)<\/caption>","fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161","162","163","164","165","166","167","168","169","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199","200","201","202","203","204","205","206","207","208","209","210","211","212","213","214","215","216","217","218","219","220","221","222","223","224","225","226","227","228","229","230","231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250","251","252","253","254","255","256","257","258","259","260","261","262","263","264","265","266","267","268","269","270","271","272","273","274","275","276","277","278","279","280","281","282","283","284","285","286","287","288","289","290","291","292","293","294","295","296","297","298","299","300","301","302","303","304","305","306","307","308","309","310","311","312","313","314","315","316","317","318","319","320","321","322","323","324","325","326","327","328","329","330","331","332","333","334","335","336","337","338","339","340","341","342","343","344","345","346","347","348","349","350","351","352","353","354","355","356","357","358","359","360","361","362","363","364","365","366","367","368","369","370","371","372","373","374","375","376","377","378","379","380","381","382","383","384","385","386","387","388","389","390","391","392","393","394","395","396","397","398","399","400","401","402","403","404","405","406","407","408","409","410","411","412","413","414","415","416","417","418","419","420","421","422","423","424","425","426","427","428","429","430","431","432","433","434","435","436","437","438","439","440","441","442","443","444","445","446","447","448","449","450","451","452","453","454","455","456","457","458","459","460","461","462","463","464","465","466","467","468","469","470","471","472","473","474","475","476","477","478","479","480","481","482","483","484","485","486","487","488","489","490","491","492","493","494","495","496","497","498","499","500","501","502","503","504","505","506","507","508","509","510","511","512","513","514","515","516","517","518","519","520","521","522","523","524","525","526"],[3.1,3.24,3,6,5.3,8.75,11.25,5,3.6,18.18,6.25,8.13,8.77,5.5,22.2,17.33,7.5,10.63,3.6,4.5,6.88,8.48,6.33,0.53,6,9.56,7.78,12.5,12.5,3.25,13,4.5,9.68,5,4.68,4.27,6.15,3.51,3,6.25,7.81,10,4.5,4,6.38,13.7,1.67,2.93,3.65,2.9,1.63,8.6,5,6,2.5,3.25,3.4,10,21.63,4.38,11.71,12.39,6.25,3.71,7.78,19.98,6.25,10,5.71,2,5.71,13.08,4.91,2.91,3.75,11.9,4,3.1,8.45,7.14,4.5,4.65,2.9,6.67,3.5,3.26,3.25,8,9.85,7.5,5.91,11.76,3,4.81,6.5,4,3.5,13.16,4.25,3.5,5.13,3.75,4.5,7.63,15,6.85,13.33,6.67,2.53,9.8,3.37,24.98,5.4,6.11,4.2,3.75,3.5,3.64,3.8,3,5,4.63,3,3.2,3.91,6.43,5.48,1.5,2.9,5,8.92,5,3.52,2.9,4.5,2.25,5,10,3.75,10,10.95,7.9,4.72,5.84,3.83,3.2,2,4.5,11.55,2.14,2.38,3.75,5.52,6.5,3.1,10,6.63,10,2.31,6.88,2.83,3.13,8,4.5,8.65,2,4.75,6.25,6,15.38,14.58,12.5,5.25,2.17,7.14,6.22,9,10,5.77,4,8.75,6.53,7.6,5,5,21.86,8.64,3.3,4.44,4.55,3.5,6.25,3.85,6.18,2.91,6.25,6.25,9.05,10,11.11,6.88,8.75,10,3.05,3,5.8,4.1,8,6.15,2.7,2.75,3,3,7.36,7.5,3.5,8.1,3.75,3.25,5.83,3.5,3.33,4,3.5,6.25,2.95,5.71,3,22.86,9,8.33,3,5.75,6.76,10,3,3.5,3.25,4,2.92,3.06,3.2,4.75,3,18.16,3.5,4.11,1.96,4.29,3,6.45,5.2,4.5,3.88,3.45,10.91,4.1,3,5.9,18,4,3,3.55,3,8.75,2.9,6.26,3.5,4.6,6,2.89,5.58,4,6,4.5,2.92,4.33,18.89,4.28,4.57,6.25,2.95,8.75,8.5,3.75,3.15,5,6.46,2,4.79,5.78,3.18,4.68,4.1,2.91,6,3.6,3.95,7,3,6.08,8.63,3,3.75,2.9,3,6.25,3.5,3,3.24,8.02,3.33,5.25,6.25,3.5,2.95,3,4.69,3.73,4,4,2.9,3.05,5.05,13.95,18.16,6.25,5.25,4.79,3.35,3,8.43,5.7,11.98,3.5,4.24,7,6,12.22,4.5,3,2.9,15,4,5.25,4,3.3,5.05,3.58,5,4.57,12.5,3.45,4.63,10,2.92,4.51,6.5,7.5,3.54,4.2,3.51,4.5,3.35,2.91,5.25,4.05,3.75,3.4,3,6.29,2.54,4.5,3.13,6.36,4.68,6.8,8.53,4.17,3.75,11.1,3.26,9.13,4.5,3,8.75,4.14,2.87,3.35,6.08,3,4.2,5.6,10,12.5,3.76,3.1,4.29,10.92,7.5,4.05,4.65,5,2.9,8,8.43,2.92,6.25,6.25,5.11,4,4.44,6.88,5.43,3,2.9,6.25,4.34,3.25,7.26,6.35,5.63,8.75,3.2,3,3,12.5,2.88,3.35,6.5,10.38,4.5,10,3.81,8.8,9.42,6.33,4,2.9,20,11.25,3.5,6,14.38,6.36,3.55,3,4.5,6.63,9.3,3,3.25,1.5,5.9,8,2.9,3.29,6.5,4,6,4.08,3.75,3.05,3.5,2.92,4.5,3.35,5.95,8,3,5,5.5,2.65,3,4.5,17.5,8.18,9.09,11.82,3.25,4.5,4.5,3.71,6.5,2.9,5.6,2.23,5,8.33,2.9,6.25,4.55,3.28,2.3,3.3,3.15,12.5,5.15,3.13,7.25,2.9,1.75,2.89,2.9,17.71,6.25,2.6,6.63,3.5,6.5,3,4.38,10,4.95,9,1.43,3.08,9.33,7.5,4.75,5.65,15,2.27,4.67,11.56,3.5],[11,12,11,8,12,16,18,12,12,17,16,13,12,12,12,16,12,13,12,12,12,12,16,12,11,16,16,16,15,8,14,14,13,12,12,16,12,4,14,12,12,12,14,11,13,15,10,12,14,12,12,16,12,12,12,15,16,8,18,16,13,14,10,10,14,14,16,12,16,12,16,17,12,12,12,13,12,12,12,18,9,16,10,12,12,12,12,12,8,12,12,14,12,12,12,9,13,12,14,12,15,12,12,12,14,15,12,12,12,17,11,18,12,14,14,10,14,12,15,8,16,14,15,12,18,16,10,8,10,11,18,15,12,11,12,12,14,16,2,14,16,12,12,13,12,15,10,12,16,13,9,12,13,12,12,14,16,16,9,18,10,10,13,12,18,13,12,13,13,13,18,12,12,13,12,12,12,14,10,12,16,16,12,14,12,12,12,12,12,12,12,16,16,14,11,16,12,12,17,12,12,16,8,12,12,12,16,12,12,9,13,16,14,8,14,13,12,18,9,8,8,12,14,12,16,8,13,9,16,12,15,11,14,12,12,12,18,12,12,12,12,12,12,14,16,12,14,11,12,10,12,6,13,12,10,12,14,13,12,18,12,12,12,12,12,8,13,13,14,12,10,16,12,16,12,14,18,17,13,14,15,14,12,8,12,12,8,12,9,12,16,12,16,12,12,13,10,6,12,12,16,12,8,12,6,4,11,11,7,12,18,12,16,12,14,12,10,10,9,10,12,12,12,10,16,16,16,12,12,7,8,16,16,18,13,10,16,14,16,12,9,11,11,12,11,12,12,12,12,14,14,18,12,12,12,11,12,17,16,13,13,12,14,14,11,10,8,14,12,10,17,9,12,12,14,16,12,10,0,14,15,16,12,11,11,12,13,12,13,16,15,16,15,12,18,6,6,12,12,16,9,12,11,10,12,8,9,17,16,11,10,8,13,14,13,11,7,16,12,13,14,16,14,11,8,14,17,10,12,12,18,14,18,12,16,14,12,9,12,12,17,12,15,17,16,12,15,16,12,15,12,12,12,12,16,11,14,14,13,14,12,12,8,12,3,11,15,11,12,4,9,12,12,11,12,16,13,15,16,12,12,12,9,10,12,11,8,6,16,12,12,16,12,10,13,13,14,16,10,12,12,11,0,5,16,16,9,15,12,12,12,13,12,7,17,12,12,14,12,13,12,16,10,15,16,14],[1,1,0,0,0,0,0,1,1,0,1,1,0,0,0,0,1,1,1,1,1,0,1,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,1,0,1,1,1,0,0,0,0,1,0,1,0,1,0,0,1,0,0,1,0,0,1,1,0,0,1,1,0,1,1,0,0,0,0,1,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,1,0,0,1,0,0,0,0,0,1,0,1,0,0,1,1,1,0,1,0,1,1,0,1,0,0,0,0,1,0,1,0,0,0,1,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,0,0,0,1,0,0,1,0,1,1,1,1,1,0,0,1,0,1,1,1,1,1,0,0,1,0,1,1,0,1,0,0,0,0,0,1,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,1,0,0,0,1,0,0,1,0,1,1,1,0,1,1,1,0,0,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,1,0,1,1,0,0,0,1,0,1,0,1,0,0,1,0,0,1,1,0,1,1,1,1,0,1,0,1,0,1,0,0,0,1,1,1,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,1,0,0,1,0,0,0,1,0,0,0,1,1,1,1,1,0,0,0,0,1,0,1,0,1,1,1,1,0,0,0,0,1,1,0,0,0,0,1,0,1,1,0,0,1,0,0,0,0,0,1,1,0,0,0,0,1,1,0,1,0,0,0,1,1,1,0,1,0,0,0,1,1,1,0,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0,1,1,1,0,0,1,1,0,0,0,1,1,0,1,1,0,0,1,1,0,1,1,1,0,1,0,0,0,1,1,0,1,1,0,1,0,0,0,1,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0,0,1,1,0,0,1,0,0,1,0,1,1,1,1,0,1,0,0,1,0,1,1,1,1,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,1,0,1,0,0,1,1,1,1,0,1,0,0,1,0,1,1,0,0,0,1,1,0,1,0,0,0,1,1,0,0,0,0,0,1,1,0,0,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">Wage<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">Education<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">Female?<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'color':'#9370DB'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'color':'#9370DB'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'color':'#9370DB'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#e64173'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+
+]
+
+.less-right[
+
+.pink[Rows] represent .hi-pink[observations].
+
+.green[Columns] represent .hi-green[variables].
+
+Each .purple[value] is associated with an .pink[observation] and a .green[variable].
+
+]
+
+---
+class: inverse, middle
+
+# Making Comparisons
+
+---
+class: clear-slide
+
+**Policy:** In 2017, the University of Oregon started requiring first-year students to live on campus.
+
+**Rationale:** First-year students who live on campus fare better than those who live off campus.
+
+- _80 percent more likely_ to graduate in four years.
+- Second-year retention rate _5 percentage points higher_.
+- GPAs _0.13 points higher_, on average. 
+
+--
+
+**Q:** .pink[Do these comparisons suggest that the policy will improve student outcomes?]
+
+--
+
+**Q:** .pink[Do they describe the effect of living on campus?]
+
+**Q:** .pink[Do they describe *something else?*]
+
+---
+# Other Things Equal
+
+The UO's interpretation of those comparisons warrants skepticism.
+
+- The decision to live on campus is probably related to family wealth and interest in school.
+
+- Family wealth and interest in school are also related to academic achievement.
+
+--
+
+__Why?__ The difference in outcomes between those on and off campus is not an *other things equal* comparison.
+
+__Upshot:__ We can't attribute the difference in outcomes solely to living on campus.
+
+---
+# Other Things Equal
+
+## A high bar
+
+When all other factors are held constant, statistical comparisons detect causal relationships.
+
+--
+
+(Micro)economics has developed a comparative advantage in understanding where .hi-purple[other things equal] comparisons can and cannot be made.
+
+- Anyone can retort "_correlation doesn't necessarily imply causation_."
+
+- Understanding _why_ is difficult, but useful for learning from data.
+
+---
+# Causal Identification
+
+## Goal 
+
+Identify the effect of a .hi[treatment] on an .hi[outcome].
+
+--
+
+## Ideal comparison
+
+Ideally, we could calculate the .hi[treatment effect] *for each individual* as
+
+`$$Y_{1,i} - Y_{0,i}$$`
+
+- `\(Y_{1,i}\)` is the outcome for person `\(i\)` when she receives the treatment.
+- `\(Y_{0,i}\)` is the outcome for person `\(i\)` when she does not receive the treatment.
+- Known as .pink[potential outcomes].
+
+---
+# Causal Identification
+
+## Ideal data
+
+.pull-left[
+The *ideal* data for 10 people
+
+```
+#&gt;     i treat Y_1i Y_0i
+#&gt; 1   1     1 5.01 4.56
+#&gt; 2   2     1 8.85 4.53
+#&gt; 3   3     1 6.31 4.67
+#&gt; 4   4     1 5.97 4.79
+#&gt; 5   5     1 7.61 6.34
+#&gt; 6   6     0 7.63 4.15
+#&gt; 7   7     0 4.75 0.56
+#&gt; 8   8     0 5.77 3.52
+#&gt; 9   9     0 7.47 4.49
+#&gt; 10 10     0 7.79 1.40
+```
+]
+
+--
+
+.pull-right[
+Calculate the causal effect of treatment.
+$$
+`\begin{align}
+  \tau_i = Y_{1,i} -  Y_{0,i}
+\end{align}`
+$$
+for each individual `\(i\)`.
+]
+
+---
+count: false
+# Causal Identification
+
+## Ideal data
+
+.pull-left[
+The *ideal* data for 10 people
+
+```
+#&gt;     i treat Y_1i Y_0i effect_i
+#&gt; 1   1     1 5.01 4.56     0.45
+#&gt; 2   2     1 8.85 4.53     4.32
+#&gt; 3   3     1 6.31 4.67     1.64
+#&gt; 4   4     1 5.97 4.79     1.18
+#&gt; 5   5     1 7.61 6.34     1.27
+#&gt; 6   6     0 7.63 4.15     3.48
+#&gt; 7   7     0 4.75 0.56     4.19
+#&gt; 8   8     0 5.77 3.52     2.25
+#&gt; 9   9     0 7.47 4.49     2.98
+#&gt; 10 10     0 7.79 1.40     6.39
+```
+]
+
+.pull-right[
+Calculate the causal effect of treatment.
+$$
+`\begin{align}
+  \tau_i = Y_{1,i} -  Y_{0,i}
+\end{align}`
+$$
+for each individual `\(i\)`.
+]
+---
+count: false
+# Causal Identification
+
+## Ideal data
+
+.pull-left[
+The *ideal* data for 10 people
+
+```
+#&gt;     i treat Y_1i Y_0i effect_i
+#&gt; 1   1     1 5.01 4.56     0.45
+#&gt; 2   2     1 8.85 4.53     4.32
+#&gt; 3   3     1 6.31 4.67     1.64
+#&gt; 4   4     1 5.97 4.79     1.18
+#&gt; 5   5     1 7.61 6.34     1.27
+#&gt; 6   6     0 7.63 4.15     3.48
+#&gt; 7   7     0 4.75 0.56     4.19
+#&gt; 8   8     0 5.77 3.52     2.25
+#&gt; 9   9     0 7.47 4.49     2.98
+#&gt; 10 10     0 7.79 1.40     6.39
+```
+]
+
+.pull-right[
+Calculate the causal effect of treatment.
+$$
+`\begin{align}
+  \tau_i = Y_{1,i} -  Y_{0,i}
+\end{align}`
+$$
+for each individual `\(i\)`.
+
+The mean of `\(\tau_i\)` is the&lt;br&gt;.hi[average treatment effect].
+
+Thus, `\(\color{#e64173}{\overline{\tau}}\)` .mono[=] 2.82
+]
+
+---
+# Causal Identification
+
+## Ideal comparison
+$$
+`\begin{align}
+  \tau_i = \color{#e64173}{Y_{1,i}} &amp;- \color{#9370DB}{Y_{0,i}}
+\end{align}`
+$$
+
+Highlights a fundamental problem.
+
+--
+
+## The problem
+
+- If we observe `\(\color{#e64173}{Y_{1,i}}\)`, then we cannot observe `\(\color{#9370DB}{Y_{0,i}}\)`.
+
+- If we observe `\(\color{#9370DB}{Y_{0,i}}\)`, then we cannot observe `\(\color{#e64173}{Y_{1,i}}\)`.
+
+- Can only observe what actually happened; cannot observe the **counterfactual**.
+
+---
+# Causal Identification
+
+A dataset that we can observe for 10 people looks something like
+.pull-left[
+
+```
+#&gt;     i treat Y_1i Y_0i
+#&gt; 1   1     1 5.01   NA
+#&gt; 2   2     1 8.85   NA
+#&gt; 3   3     1 6.31   NA
+#&gt; 4   4     1 5.97   NA
+#&gt; 5   5     1 7.61   NA
+#&gt; 6   6     0   NA 4.15
+#&gt; 7   7     0   NA 0.56
+#&gt; 8   8     0   NA 3.52
+#&gt; 9   9     0   NA 4.49
+#&gt; 10 10     0   NA 1.40
+```
+]
+
+--
+
+.pull-right[
+We can't observe `\(\color{#e64173}{Y_{1,i}}\)` and `\(\color{#9370DB}{Y_{0,i}}\)` at the same time.
+
+But, we do observe
+- `\(\color{#e64173}{Y_{1,i}}\)` for the first 5 observations.
+- `\(\color{#9370DB}{Y_{0,i}}\)` for the last 5 observations.
+
+]
+
+---
+# Making Comparisons
+
+**Q:** How can we estimate the average treatment effect using the available data?
+
+--
+
+**Idea:** What if we compare the outcome means of each group?
+
+- Take the average of `\(\color{#e64173}{Y_{1,i}}\)` for people who actually received the treatment (.pink[treatment group mean]).
+
+- Take the average of `\(\color{#9370DB}{Y_{0,i}}\)` for people who didn't receive the treatment (.purple[control group mean]).
+
+--
+
+**Q:** Does .pink[treatment group mean] .mono[-] .purple[control group mean] isolate the causal effect of the treatment?
+
+---
+# Making Comparisons
+
+.pull-left[
+
+```
+#&gt;     i treat Y_1i Y_0i
+#&gt; 1   1     1 5.01   NA
+#&gt; 2   2     1 8.85   NA
+#&gt; 3   3     1 6.31   NA
+#&gt; 4   4     1 5.97   NA
+#&gt; 5   5     1 7.61   NA
+#&gt; 6   6     0   NA 4.15
+#&gt; 7   7     0   NA 0.56
+#&gt; 8   8     0   NA 3.52
+#&gt; 9   9     0   NA 4.49
+#&gt; 10 10     0   NA 1.40
+```
+]
+
+.pull-right[
+.pink[Treatment group mean] .mono[=] 6.75
+
+.purple[Control group mean] .mono[=] 2.82
+
+Difference-in-means .mono[=] 3.93
+]
+
+--
+
+Difference-in-means .mono[=] .hi-green[average treatment effect] .mono[+] .hi-orange[selection bias]
+--
+&lt;br&gt; `\(\quad\)` .mono[=] .green[2.82] .mono[+] .orange[(3.93 .mono[-] 2.82)]
+--
+ .mono[=] .green[2.82] .mono[+] .orange[1.11]
+
+--
+
+.orange[Selection bias] .mono[!=] 0 .mono[==&gt;] people who select into treatment are different than those who do not.
+
+---
+class: clear-slide
+
+**Podcast Question:** According to Emily Oster, 
+
+&gt; **A.** Any amount of alcohol consumption during pregnancy can harm a fetus.
+
+&gt; **B.** Large amounts of alcohol consumption during pregnancy do not necessarily harm a fetus.
+
+&gt; **C.** Small amounts of alcohol consumption during pregnancy do not necessarily harm a fetus.
+
+---
+count: false
+class: clear-slide
+
+**Podcast Question:** According to Emily Oster, 
+
+&gt; **A.** Any amount of alcohol consumption during pregnancy can harm a fetus.
+
+&gt; **B.** Large amounts of alcohol consumption during pregnancy do not necessarily harm a fetus.
+
+&gt; .pink[**C.** Small amounts of alcohol consumption during pregnancy do not necessarily harm a fetus.]
+
+---
+class: inverse, middle
+
+# Randomized Control Trials 
+
+---
+# Overcoming Selection Bias
+
+**Problem:** Existence of selection bias precludes *other things equal* comparisons.
+
+- To make valid comparisons that yield causal effects, we need to shut down the bias term.
+
+--
+
+**Solution:** Conduct an experiment.
+
+- How? Assign treatment at .pink[random].
+
+- Hence the name, .pink[*randomized* control trial] (RCT).
+---
+# Randomized Control Trials 
+
+## Example: Effect of de-worming on attendance
+
+**Motivation:** Intestinal worms are common among children in less-developed countries. The symptoms of these parasites can keep school-aged children at home, disrupting human capital accumulation.
+
+**Policy Question:** Do school-based de-worming interventions provide a cost-effective way to increase school attendance? 
+
+---
+# Randomized Control Trials 
+
+## Example: Effect of de-worming on attendance
+
+**Research Question:** How much do de-worming interventions increase school attendance?
+
+**Q:** Could we simply compare average attendance among children with and without access to de-worming medication?
+--
+&lt;br&gt;**A:** If we're after the causal effect, probably not.
+--
+&lt;br&gt;&lt;br&gt;**Q:** Why not?
+--
+&lt;br&gt;**A:** Selection bias: Families with access to de-worming medication probably have healthier children for other reasons, too (wealth, access to clean drinking water, *etc.*).&lt;br&gt;.pink[Can't make an *all else equal* comparison. Biased and/or spurious results.]
+
+---
+# Randomized Control Trials 
+
+## Example: Effect of de-worming on attendance
+
+**Solution:** Run an experiment.
+
+--
+
+Imagine an RCT where we have two groups:
+
+- .hi-slate[Treatment:] Villages that where children get de-worming medication in school.
+- .hi-slate[Control:] Villages that where children don't get de-worming medication in school (status quo).
+
+--
+
+By randomizing villages into .hi-slate[treatment] or .hi-slate[control], we will, on average, include all kinds of villages (poor _vs._ less poor, access to clean water _vs._ contaminated water, hospital _vs._ no hospital, *etc.*) in both groups.
+
+--
+
+*All else equal*!
+
+---
+class: clear-slide
+
+.hi-slate[54 villages] 
+&lt;br&gt;
+&lt;br&gt;
+&lt;img src="09-Data_Learning_files/figure-html/plot1-1.svg" style="display: block; margin: auto;" /&gt;
+---
+class: clear-slide
+count: false
+
+.hi-slate[54 villages] .hi[of varying levels of development]
+&lt;br&gt;
+&lt;br&gt;
+&lt;img src="09-Data_Learning_files/figure-html/plot2-1.svg" style="display: block; margin: auto;" /&gt;
+---
+class: clear-slide
+count: false
+
+.hi-slate[54 villages] .hi[of varying levels of development] .mono[+] .hi-orange[randomly assigned treatment]
+&lt;img src="09-Data_Learning_files/figure-html/plot3_1-1.svg" style="display: block; margin: auto;" /&gt;
+---
+class: clear-slide
+count: false
+
+.hi-slate[54 villages] .hi[of varying levels of development] .mono[+] .hi-orange[randomly assigned treatment]
+&lt;img src="09-Data_Learning_files/figure-html/plot3_2-1.svg" style="display: block; margin: auto;" /&gt;
+---
+class: clear-slide
+count: false
+
+.hi-slate[54 villages] .hi[of varying levels of development] .mono[+] .hi-orange[randomly assigned treatment]
+&lt;img src="09-Data_Learning_files/figure-html/plot3_3-1.svg" style="display: block; margin: auto;" /&gt;
+---
+class: clear-slide
+count: false
+
+.hi-slate[54 villages] .hi[of varying levels of development] .mono[+] .hi-orange[randomly assigned treatment]
+&lt;img src="09-Data_Learning_files/figure-html/plot3_4-1.svg" style="display: block; margin: auto;" /&gt;
+---
+class: clear-slide
+count: false
+
+.hi-slate[54 villages] .hi[of varying levels of development] .mono[+] .hi-orange[randomly assigned treatment]
+&lt;img src="09-Data_Learning_files/figure-html/plot3_5-1.svg" style="display: block; margin: auto;" /&gt;
+---
+class: clear-slide
+count: false
+
+.hi-slate[54 villages] .hi[of varying levels of development] .mono[+] .hi-orange[randomly assigned treatment]
+&lt;img src="09-Data_Learning_files/figure-html/plot3_6-1.svg" style="display: block; margin: auto;" /&gt;
+---
+class: clear-slide
+count: false
+
+.hi-slate[54 villages] .hi[of varying levels of development] .mono[+] .hi-orange[randomly assigned treatment]
+&lt;img src="09-Data_Learning_files/figure-html/plot3_7-1.svg" style="display: block; margin: auto;" /&gt;
+---
+class: clear-slide
+count: false
+
+.hi-slate[54 villages] .hi[of varying levels of development] .mono[+] .hi-orange[randomly assigned treatment]
+&lt;img src="09-Data_Learning_files/figure-html/plot3_8-1.svg" style="display: block; margin: auto;" /&gt;
+---
+class: clear-slide
+count: false
+
+.hi-slate[54 villages] .hi[of varying levels of development] .mono[+] .hi-orange[randomly assigned treatment]
+&lt;img src="09-Data_Learning_files/figure-html/plot3_9-1.svg" style="display: block; margin: auto;" /&gt;
+---
+class: clear-slide
+count: false
+
+.hi-slate[54 villages] .hi[of varying levels of development] .mono[+] .hi-orange[randomly assigned treatment]
+&lt;img src="09-Data_Learning_files/figure-html/plot3_10-1.svg" style="display: block; margin: auto;" /&gt;
+---
+class: clear-slide
+count: false
+
+.hi-slate[54 villages] .hi[of varying levels of development] .mono[+] .hi-orange[randomly assigned treatment]
+&lt;img src="09-Data_Learning_files/figure-html/plot3_11-1.svg" style="display: block; margin: auto;" /&gt;
+---
+class: clear-slide
+count: false
+
+.hi-slate[54 villages] .hi[of varying levels of development] .mono[+] .hi-orange[randomly assigned treatment]
+&lt;img src="09-Data_Learning_files/figure-html/plot3_12-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# Randomized Control Trials 
+
+## Example: Effect of de-worming on attendance
+
+We can estimate the .hi[causal effect] of de-worming on school attendance by .purple[comparing] the average attendance rates in the treatment group (💊) with those in the control group (no 💊):
+
+.center[.purple[Treatment group attendance rate .mono[-] Control group attendance rate]]
+
+
+--
+
+**Result:** [Attendance increases](https://www.povertyactionlab.org/case-study/deworming-schools-improves-attendance-and-benefits-communities-over-long-term) &amp;#8230; by a lot.
+
+--
+
+- 25 percent decrease in absenteeism at a cost of $0.60 per child.
+- Long term cost effectiveness: additional 11.91 years of schooling per $100 spent on de-worming in Kenya.
+
+---
+# Randomized Control Trials 
+
+## Example: Effect of de-worming on attendance
+
+We can estimate the .hi[causal effect] of de-worming on school attendance by .purple[comparing] the average attendance rates in the treatment group (💊) with those in the control group (no 💊):
+
+.center[.purple[Treatment group attendance rate .mono[-] Control group attendance rate]]
+
+**Q:** Should we trust the results of the comparison? Why?
+
+--
+
+**A:** We probably should. On average, randomly assigning treatment balances the treatment and control groups across other dimensions that affect school attendance.
+
+---
+class: clear-slide
+
+.hi[Randomization can go wrong!]
+&lt;br&gt;
+&lt;br&gt;
+&lt;img src="09-Data_Learning_files/figure-html/fertilizer_plot3_bad-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# Interpreting Results
+
+## .pink[Internal Validity]
+
+Addresses the question, .pink[*should we believe the study?*]
+
+A study has high .pink[internal validity] if we are confident that one variable has a .pink[causal] influence on another variable within the context of the study (*e.g.,* .pink[no selection bias]).
+
+--
+
+## .purple[External Validity]
+
+Addresses the question, .purple[*how far can we generalize the results of the study?*]
+
+A study has high .purple[external validity] to the extent that the results .purple[apply to other contexts] (not just the local environment that generated the results).
+
+--
+
+- Requires internal validity!
+
+---
+class: inverse, middle
+
+# Creating Moves to Opportunity
+
+---
+# Creating Moves to Opportunity
+
+## Background
+
+**Policy Question:** How can we lift people out of poverty? 
+
+**Research Agenda:** What kinds of social assistance programs have lasting effects on upward mobility?
+
+Economists study a variety of state and federal social assistance programs.
+
+- .purple[Medicaid], .purple[SNAP] (food stamps), .purple[TANF] (cash welfare), .purple[WIC] (benefits for mothers and infants), .purple[National School Lunch Program], .purple[public housing], .pink[Section 8] (housing vouchers), *etc.*
+
+- Considerable variation in benefits and incentive structures.
+
+--
+
+- Today: .pink[Section 8].
+
+---
+# Creating Moves to Opportunity
+
+## Background
+
+Neighborhoods matter a great deal for later-in-life outcomes.
+
+Previous research shows that children who move to better neighborhoods are
+
+1. More likely to go college.
+2. More likely to earn higher incomes as adults.
+3. Less likely to go prison.
+
+--
+
+**Problem:** Low-income families tend to live in neighborhoods with limited upward income mobility.
+
+- Those who receive Section 8 vouchers usually don't move to better neighborhoods.
+
+---
+# Creating Moves to Opportunity
+
+## Experiment
+
+**Research Question:** Why do voucher holders stay in low-opportunity neighborhoods? Do they prefer those neighborhoods or do they face barriers to moving?
+
+--
+
+**Social Experiment:** [Creating Moves to Opportunity (CMTO)](https://opportunityinsights.org/paper/cmto/)
+
+274 low-income families in King County, WA randomly assigned to one of two groups:
+
+- .hi-purple[Control group:] Housing voucher for any neighborhood in King County.
+
+- .hi-pink[Treatment group:] Housing voucher for any neighborhood in King County .mono[+] counseling .mono[+] landlord engagement .mono[+] one-time moving cost assistance.
+
+---
+class: clear-slide
+
+High-opportunity areas are neighborhoods with
+
+1. High upward social mobility (*i.e.,* children of low-income parents move up in the income distribution as adults).
+2. Relatively low rent.
+
+.center[**King County, WA**]
+&lt;img src="seattle_cmto_map.png" width="589" style="display: block; margin: auto;" /&gt;
+
+---
+class: clear-slide
+
+.center[**Creating Moves to Opportunity: Experimental Results**]
+&lt;table&gt;
+&lt;caption&gt;Outcome: Share Moving to Opportunity Area (%)&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Subgroup &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Control Mean &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Treatment Mean &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Treatment Effect &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Standard Error &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; N &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; All Families &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 14.3 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 54.3 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 40.0 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 5.2 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 274 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Black Non-Hispanic &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 12.3 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 46.2 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 33.9 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 7.3 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 134 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; White Non-Hispanic &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 10.3 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 65.9 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 55.6 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 10.2 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 64 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Started in High Opportunity Tract &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 22.2 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 85.3 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 63.1 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 15.9 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 21 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Didn't Start in High Opportunity Tract &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 12.5 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 49.9 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 37.4 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 6.0 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 193 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; No College &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 9.1 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 56.9 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 47.8 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 7.0 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 139 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Some College or More &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 22.6 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 52.6 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 30.0 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 8.1 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 132 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="https://platform.twitter.com/widgets.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
