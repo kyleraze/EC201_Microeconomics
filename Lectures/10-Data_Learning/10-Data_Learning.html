@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>How Economists Learn from Data</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kyle Raze" />
+    <link href="10-Data_Learning_files/remark-css/default.css" rel="stylesheet" />
+    <link href="10-Data_Learning_files/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="10-Data_Learning_files/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <script src="10-Data_Learning_files/kePrint/kePrint.js"></script>
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# How Economists Learn from Data
+## EC 201: Principles of Microeconomics
+### Kyle Raze
+### Winter 2020
+
+---
+
+class: inverse, middle
+
+
+
+# Prologue
+
+---
+# Learning from Data
+
+## Last Time
+
+1. Why bother learning from data?
+
+    - Figure out whether policies work or don't work.
+    
+    - Test theories.
+
+2. Why does correlation .mono[!=] causation?
+
+    - Selection bias!
+
+3. When can correlation .mono[==&gt;] causation?
+
+    - Randomized contrial trials (experiments).
+
+---
+# Learning from Data
+
+## Today
+
+1. Regression analysis.
+
+    - The workhorse of data science.
+    
+2. Natural experiments.
+
+    - Sometimes we get lucky.
+
+---
+class: inverse, middle
+
+# Regression
+
+---
+# Correlation
+
+## Correlation coefficient
+
+.pull-left[
+
+&gt; A measure of the strength of a relationship between two variables, denoted by `\(\rho\)`.
+
+-1 .mono[&lt;=] `\(\rho\)` .mono[&lt;] 0 .mono[==&gt;] .pink[negative correlation].
+
+`\(\rho\)` .mono[=] 0 .mono[==&gt;] .green[no correlation] (unrelated).
+
+0 .mono[&lt;] `\(\rho\)` .mono[&lt;=] 1 .mono[==&gt;] .purple[positive correlation].
+
+]
+
+.pull-right[
+
+
+
+.center[Correlation coefficient .mono[=] -0.56]
+
+&lt;img src="10-Data_Learning_files/figure-html/unnamed-chunk-2-1.svg" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+count: false
+# Correlation
+
+## Correlation coefficient
+
+.pull-left[
+
+&gt; A measure of the strength of a relationship between two variables, denoted by `\(\rho\)`.
+
+-1 .mono[&lt;=] `\(\rho\)` .mono[&lt;] 0 .mono[==&gt;] .pink[negative correlation].
+
+`\(\rho\)` .mono[=] 0 .mono[==&gt;] .green[no correlation] (unrelated).
+
+0 .mono[&lt;] `\(\rho\)` .mono[&lt;=] 1 .mono[==&gt;] .purple[positive correlation].
+
+]
+
+.pull-right[
+
+
+
+.center[Correlation coefficient .mono[=] -1]
+
+&lt;img src="10-Data_Learning_files/figure-html/unnamed-chunk-4-1.svg" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+count: false
+# Correlation
+
+## Correlation coefficient
+
+.pull-left[
+
+&gt; A measure of the strength of a relationship between two variables, denoted by `\(\rho\)`.
+
+-1 .mono[&lt;=] `\(\rho\)` .mono[&lt;] 0 .mono[==&gt;] .pink[negative correlation].
+
+`\(\rho\)` .mono[=] 0 .mono[==&gt;] .green[no correlation] (unrelated).
+
+0 .mono[&lt;] `\(\rho\)` .mono[&lt;=] 1 .mono[==&gt;] .purple[positive correlation].
+
+]
+
+.pull-right[
+
+
+
+.center[Correlation coefficient .mono[=] -0.1]
+
+&lt;img src="10-Data_Learning_files/figure-html/unnamed-chunk-6-1.svg" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+count: false
+# Correlation
+
+## Correlation coefficient
+
+.pull-left[
+
+&gt; A measure of the strength of a relationship between two variables, denoted by `\(\rho\)`.
+
+-1 .mono[&lt;=] `\(\rho\)` .mono[&lt;] 0 .mono[==&gt;] .pink[negative correlation].
+
+`\(\rho\)` .mono[=] 0 .mono[==&gt;] .green[no correlation] (unrelated).
+
+0 .mono[&lt;] `\(\rho\)` .mono[&lt;=] 1 .mono[==&gt;] .purple[positive correlation].
+
+]
+
+.pull-right[
+
+
+
+.center[Correlation coefficient .mono[=] 0.58]
+
+&lt;img src="10-Data_Learning_files/figure-html/unnamed-chunk-8-1.svg" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+# Regression
+
+**Goal:** Identify the effect of a treatment variable `\(X\)` on an outcome variable `\(Y\)` while .hi[controlling] .pink[for potential confounders].
+
+Economists often rely on regression analysis for statistical comparisons.
+
+- Regression analysis facilitates *other things equal* comparisons by explicitly controlling for certain variables.
+
+- Failure to control for confounding variables leads to .hi[omitted-variable bias], a close cousin of selection bias.
+
+---
+# Simple Linear Regression
+
+
+
+.more-left[
+.center[.purple[Y.sub[*i*] .mono[=] 6.43 .mono[+] 2.64 X.sub[*i*]]]
+&lt;img src="10-Data_Learning_files/figure-html/unnamed-chunk-10-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+.less-right[
+
+## Model
+
+`\(Y_i = \beta_1 + \beta_2 X_i + e_i\)`
+
+- `\(\beta_1\)` .mono[=] intercept
+
+- `\(\beta_2\)` .mono[=] slope 
+
+- `\(e_i\)` .mono[=] error term
+
+]
+
+---
+# Simple Linear Regression
+
+
+
+.more-left[
+.center[.purple[Crime.sub[*i*] .mono[=] 18.41 .mono[+] 1.76 Police.sub[*i*]]]
+&lt;img src="10-Data_Learning_files/figure-html/unnamed-chunk-12-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+.less-right[
+
+**Q:** Do 👮 *cause* crime!?
+
+]
+
+---
+count: false
+# Simple Linear Regression
+
+
+
+.more-left[
+.center[.purple[Crime.sub[*i*] .mono[=] 18.41 .mono[+] 1.76 Police.sub[*i*]]]
+&lt;img src="10-Data_Learning_files/figure-html/unnamed-chunk-14-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+.less-right[
+
+**Q:** Do 👮 *cause* crime!?
+
+**A:** .pink[Probably not]
+&lt;br&gt; .pink[.mono[--&gt;] Colleges experiencing high crime rates probably respond by hiring more police.]
+
+]
+
+---
+# Causality
+
+## Example: Returns to Education 
+
+The optimal investment in education by students, parents, and legislators depends in part on the monetary *return to education*.
+
+--
+
+.hi-purple[Thought experiment:]
+- Randomly select an individual.
+- Give her an additional year of education.
+- How much do her earnings increase?
+
+The change in her earnings describes the .hi-slate[causal effect] of education on earnings.
+
+
+---
+# Causality
+
+## Example: Returns to Education 
+
+
+
+.more-left[
+.center[.purple[Earnings.sub[*i*] .mono[=] 146.95 .mono[+] 60.21 Schooling.sub[*i*]]]
+&lt;img src="10-Data_Learning_files/figure-html/unnamed-chunk-16-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+.less-right[
+
+**Q:** Does the slope isolate the causal effect of an additional year of education on weekly earnings?
+
+]
+
+---
+count: false
+# Causality
+
+## Example: Returns to Education 
+
+
+
+.more-left[
+.center[.purple[Earnings.sub[*i*] .mono[=] 146.95 .mono[+] 60.21 Schooling.sub[*i*]]]
+&lt;img src="10-Data_Learning_files/figure-html/unnamed-chunk-18-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+.less-right[
+
+**Q:** Does the slope isolate the causal effect of an additional year of education on weekly earnings?
+
+**A:** .pink[Probably not] 
+&lt;br&gt; .pink[.mono[--&gt;] There could be other variables that influence earnings and schooling.]
+]
+
+---
+# Omitted Variables
+
+.more-left[
+&lt;img src="10-Data_Learning_files/figure-html/venn2-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+.less-right[
+
+.pink[**Y**] .mono[=] Outcome
+
+.green[**X**] .mono[=] Treatment
+
+.orange[**W**] .mono[=] Omitted variable
+
+If .orange[**W**] is correlated with both .green[**X**] and .pink[**Y**] .mono[--&gt;] omitted variable bias .mono[--&gt;] regression fails to isolate the causal effect of .green[**X**] on .pink[**Y**].
+
+]
+
+---
+count: false
+# Omitted Variables
+
+.more-left[
+&lt;img src="10-Data_Learning_files/figure-html/unnamed-chunk-19-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+.less-right[
+
+.pink[**Y**] .mono[=] Outcome
+
+.green[**X**] .mono[=] Treatment
+
+.orange[**W**] .mono[=] Omitted variable
+
+If .orange[**W**] is correlated with both .green[**X**] and .pink[**Y**] .mono[--&gt;] omitted variable bias .mono[--&gt;] regression fails to isolate the causal effect of .green[**X**] on .pink[**Y**].
+
+]
+
+---
+# Controlling for Confounders
+
+Economists can control for a confounder `\(W\)` by including it in the regression model:
+
+`$$Y_i = \beta_0 + \beta_1 X_i + \beta_2 W_i + e_i$$`
+
+- `\(W_i\)` is a **control variable**.
+
+- By including `\(W_i\)`, adjusts the data to account for confounding effects of `\(W\)`.
+
+- **Note:** The model doesn't care whether a right-hand side variable is a treatment or control variable, but we do.
+
+---
+# Controlling for Confounders
+
+
+
+.center[![Control](control.gif)]
+
+---
+# Controlling for Confounders
+
+## Example: Returns to Education
+
+Two regressions of earnings on schooling. The second regression controls for IQ score, a proxy for ability.
+
+.pull-left[
+&lt;table&gt;
+&lt;caption&gt;Outcome: Weekly Earnings&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Parameter &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 1 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 2 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Intercept &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;font-weight: bold;"&gt; 146.95 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; -128.89 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;color: #c2bebe !important;line-height: 110%;font-style: italic;color: black !important;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;color: #c2bebe !important;line-height: 110%;font-weight: bold;"&gt; (77.72) &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;color: #c2bebe !important;line-height: 110%;"&gt; (92.18) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Schooling (Years) &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;font-weight: bold;"&gt; 60.21 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 42.06 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;color: #c2bebe !important;line-height: 110%;font-style: italic;color: black !important;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;color: #c2bebe !important;line-height: 110%;font-weight: bold;"&gt; (5.70) &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;color: #c2bebe !important;line-height: 110%;"&gt; (6.55) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; IQ Score (Points) &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 5.14 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;color: #c2bebe !important;line-height: 110%;font-style: italic;color: black !important;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;color: #c2bebe !important;line-height: 110%;font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;color: #c2bebe !important;line-height: 110%;"&gt; (0.96) &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+.center[*Standard errors in parentheses.*]
+]
+
+.pull-right[
+
+]
+---
+count: false
+# Controlling for Confounders
+
+## Example: Returns to Education
+
+Two regressions of earnings on schooling. The second regression controls for IQ score, a proxy for ability.
+
+.pull-left[
+&lt;table&gt;
+&lt;caption&gt;Outcome: Weekly Earnings&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Parameter &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 1 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 2 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Intercept &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 146.95 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;font-weight: bold;"&gt; -128.89 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;color: #c2bebe !important;line-height: 110%;font-style: italic;color: black !important;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;color: #c2bebe !important;line-height: 110%;"&gt; (77.72) &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;color: #c2bebe !important;line-height: 110%;font-weight: bold;"&gt; (92.18) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Schooling (Years) &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 60.21 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;font-weight: bold;"&gt; 42.06 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;color: #c2bebe !important;line-height: 110%;font-style: italic;color: black !important;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;color: #c2bebe !important;line-height: 110%;"&gt; (5.70) &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;color: #c2bebe !important;line-height: 110%;font-weight: bold;"&gt; (6.55) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; IQ Score (Points) &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;font-weight: bold;"&gt; 5.14 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;color: #c2bebe !important;line-height: 110%;font-style: italic;color: black !important;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;color: #c2bebe !important;line-height: 110%;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;color: #c2bebe !important;line-height: 110%;font-weight: bold;"&gt; (0.96) &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+.center[*Standard errors in parentheses.*]
+]
+
+--
+
+.pull-right[
+.orange[Bias] from omitting IQ score 
+&lt;br&gt; `\(\quad\)` .mono[=] .pink["short"] .mono[-] .purple["long"]
+&lt;br&gt; `\(\quad\)` .mono[=] .pink[60.21] .mono[-] .purple[42.06]
+&lt;br&gt; `\(\quad\)` .mono[=] .orange[18.15]
+
+The first regression mistakenly attributes some of the influence of intelligence to education.
+]
+---
+class: inverse, middle
+
+# Natural Experiments
+
+---
+# Causality
+
+**Q:** Given that selection bias and omitted variables are ubiquitous, how can economists estimate the returns to education and other causal effects of other interventions?
+
+--
+
+.hi-slate[Option 1:] Run an .hi[experiment].
+
+--
+
+- Randomly .pink[assign education] (might be difficult/unethical).
+- Randomly .pink[encourage education] (might work).
+- Randomly .pink[assign programs] that affect education (*e.g.*, mentoring).
+
+--
+
+.hi-slate[Option 2:] Look for a .hi-purple[natural experiment] (*e.g.,* a policy or accident in society that arbitrarily increased education for one subset of people).
+
+--
+
+- Admissions .purple[cutoffs].
+- .purple[Lottery] enrollment and/or capacity .purple[constraints].
+
+---
+# Oregon Medicaid Experiment
+
+## Background
+
+As of 2016, 27 million Americans do not have health insurance.
+
+- Down from 46.5 million in 2010.
+
+- US is the only developed country without universal coverage.
+
+--
+
+Healthcare spending accounts for a growing share of the economy.
+
+- Almost 18% of GDP or $10,000 per person per year! 
+
+- US spends more on healthcare than any other developed country.
+
+---
+# Oregon Medicaid Experiment
+
+## Background
+
+**Medicaid:** A social assistance program that provides health insurance to families on welfare, the disabled, other children from low-income families, and low-income pregnant women.
+
+- Federal program run by states.
+
+--
+
+**Policy Question:** Should we expand Medicaid to cover more of the uninsured?
+
+--
+
+**Research Questions**
+
+- Would Medicaid expansion reduce costly emergency room visits?
+
+- Would Medicaid expansion improve health?
+
+---
+# Oregon Medicaid Experiment
+
+## Natural Experiment
+
+In 2008, Oregon decided to expand its version of Medicaid, called Oregon Health Plan (OHP).
+
+- **Problem:** 75,000 applicants, but only 30,000 spots!
+
+- **Solution:** Ration spots by lottery.
+
+--
+
+Lottery .mono[=] random assignment!
+
+- .pink[**Treatment group:**] 30,000 lottery winners.
+
+- .purple[**Control group:**] 45,000 people who did not win medicaid lottery.
+
+---
+class: clear-slide
+
+.center[**Effect of OHP on Coverage and Healthcare Use**]
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Outcome &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Control Mean &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Treatment Effect &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Standard Error &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; N &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Ever on Medicaid? &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.141 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.256 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.004 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 74922 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Any hospital admissions? &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.067 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.005 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.002 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 74922 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Any emergency room visits? &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.345 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.017 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.006 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 24646 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Emergency room visits &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 1.020 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.101 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.029 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 24646 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Outpatient visits &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 1.910 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.314 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.054 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 23741 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Any prescriptions? &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.637 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.025 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.008 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 23741 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+**Informal Rule:** Estimate of treatment effect more than twice its standard error .mono[==&gt;] effect is statistically distinguishable from zero.
+
+---
+class: clear-slide
+
+.center[**Effect of OHP on Health and Personal Finances**]
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Outcome &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Control Mean &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Treatment Effect &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Standard Error &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; N &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Good Health? &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.548 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.039 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.008 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 23741 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Physical health index &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 45.500 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.290 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.210 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 12229 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Mental health index &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 44.400 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.470 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.240 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 12229 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Cholesterol &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 204.000 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.530 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.690 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 12229 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Systolic blood pressure &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 119.000 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; -0.130 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.300 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 12229 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Big medical expenditures? &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.055 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; -0.011 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.005 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 12229 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;color: #272822 !important;line-height: 110%;font-style: italic;color: black !important;"&gt; Any medical debt? &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.568 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; -0.032 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 0.010 &lt;/td&gt;
+   &lt;td style="text-align:center;color: #272822 !important;line-height: 110%;"&gt; 12229 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+**Informal Rule:** Estimate of treatment effect more than twice its standard error .mono[==&gt;] effect is statistically distinguishable from zero.
+
+---
+class: inverse, middle
+
+# Differences-in-Differences
+
+---
+# Minimum Wage
+
+**Research Question:** Do binding minimum wage laws cause unemployment?
+
+- Theory predicts that binding minimum wage laws reduce employment levels.
+
+- **Q:** How could we test this prediction?
+
+--
+
+**Idea 1:** Compare employment levels in states with binding minimum wage laws to those without.
+
+- **Q:** Is this a good idea? Would it isolate the causal effect?
+
+--
+
+- **A:** Probably not. States with binding minimum wages laws are different than those without .mono[--&gt;] selection bias!
+
+---
+# Minimum Wage
+
+**Research Question:** Do binding minimum wage laws cause unemployment?
+
+- Theory predicts that binding minimum wage laws reduce employment levels.
+
+- **Q:** How could we test this prediction?
+
+**Idea 2:** Compare employment levels in a state before and after it increases the minimum wage?
+
+- **Q:** Is this a good idea? Would it isolate the causal effect?
+
+--
+
+- **A:** Probably not. Other things might coincide with the policy change (*e.g.,* a recession) .mono[--&gt;] omitted variable bias!
+
+---
+# Minimum Wage
+
+**Research Question:** Do binding minimum wage laws cause unemployment?
+
+- Theory predicts that binding minimum wage laws reduce employment levels.
+
+- **Q:** How could we test this prediction?
+
+**Idea 3:** Two wrongs make a right?
+
+- Compare employment levels in a state that raises its minimum wage with a state that doesn't, before and after the policy change.
+
+- A .pink[difference-in-differences] comparison.
+
+---
+# Differences-in-Differences 
+
+## Card and Krueger (1994)
+
+Influential study of the impact of minimum wage laws on fast-food workers.
+
+--
+
+**Natural Experiment:** New Jersey increased its minimum wage in 1992, but neighboring Pennsylvania did not.
+
+- .purple[**Control group:**] Fast food restaurants in Pennsylvania.
+
+- .pink[**Treatment group:**] Fast food restaurants in New Jersey.
+
+---
+# Differences-in-Differences 
+
+## Card and Krueger (1994)
+
+.center[**Effect of Minimum Wage on Employment**]
+&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+&lt;caption&gt;Outcome: Number Full-Time Workers&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Group &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; After &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Before &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Difference &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;line-height: 110%;"&gt; .pink[Treatment (NJ)] &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; 21.03 &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; 20.44 &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;line-height: 110%;"&gt; .purple[Control (PA)] &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; 21.17 &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; 23.33 &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Difference-in-differences .mono[=]
+
+---
+count: false
+# Differences-in-Differences 
+
+## Card and Krueger (1994)
+
+.center[**Effect of Minimum Wage on Employment**]
+&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+&lt;caption&gt;Outcome: Number Full-Time Workers&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Group &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; After &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Before &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Difference &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;line-height: 110%;"&gt; .pink[Treatment (NJ)] &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; 21.03 &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; 20.44 &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; 0.59 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;line-height: 110%;"&gt; .purple[Control (PA)] &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; 21.17 &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; 23.33 &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; -2.16 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Difference-in-differences .mono[=]
+
+---
+count: false
+# Differences-in-Differences 
+
+## Card and Krueger (1994)
+
+.center[**Effect of Minimum Wage on Employment**]
+&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+&lt;caption&gt;Outcome: Number Full-Time Workers&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Group &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; After &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Before &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Difference &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;line-height: 110%;"&gt; .pink[Treatment (NJ)] &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; 21.03 &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; 20.44 &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; 0.59 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;line-height: 110%;"&gt; .purple[Control (PA)] &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; 21.17 &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; 23.33 &lt;/td&gt;
+   &lt;td style="text-align:center;line-height: 110%;"&gt; -2.16 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Difference-in-differences .mono[=] .pink[0.59] .mono[-] .purple[-2.16]
+--
+&lt;br&gt; `\(\quad\)` .mono[=] 2.75.
+
+--
+
+**Result:** Increasing the minimum wage did not reduce employment!
+
+---
+# Differences-in-Differences 
+
+.more-left[
+&lt;img src="10-Data_Learning_files/figure-html/unnamed-chunk-28-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+.less-right[
+## Internal Validity
+
+**Q:** When should we trust a difference-in-differences comparison?
+
+**A:** When we believe that the comparison groups exhibit .hi-green[parallel trends] in the absence of the policy change.
+
+]
+
+---
+class: inverse, middle
+
+# Podcast
+
+---
+class: clear-slide
+
+**Podcast Question:** According to Raj Chetty,
+
+&gt; **A.** No social assistance program pays for itself in the long run, on average.
+
+&gt; **B.** All social assistance programs pay for themselves in the long run, on average.
+
+&gt; **C.** Social assistance programs that target adults tend to pay for themselves in the long run, but those targeted toward children do not, on average.
+
+&gt; **D.** Social assistance programs that target children tend to pay for themselves in the long run, but those targeted toward adults do not, on average.
+
+---
+count: false
+class: clear-slide
+
+**Podcast Question:** According to Raj Chetty,
+
+&gt; **A.** No social assistance program pays for itself in the long run, on average.
+
+&gt; **B.** All social assistance programs pay for themselves in the long run, on average.
+
+&gt; **C.** Social assistance programs that target adults tend to pay for themselves in the long run, but those targeted toward children do not, on average.
+
+&gt; .pink[**D.** Social assistance programs that target children tend to pay for themselves in the long run, but those targeted toward adults do not, on average.]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="https://platform.twitter.com/widgets.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
