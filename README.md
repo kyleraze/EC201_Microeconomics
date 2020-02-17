@@ -31,4 +31,4 @@ The .html versions of the lecture slides allow you to view animations and intera
 
 10. **How Economists Learn from Data II** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/10-Data_Learning/10-Data_Learning.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/10-Data_Learning/10-Data_Learning.pdf)
 
-11. **Market Failure: Externalities** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/11-Externalities.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/10-Data_Learning/11-Externalities.pdf)
+11. **Market Failure: Externalities** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/11-Externalities/11-Externalities.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/11-Externalities/11-Externalities.pdf)
