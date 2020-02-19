@@ -1,0 +1,1871 @@
+---
+title: "Game Theory"
+subtitle: "EC 201: Principles of Microeconomics"
+author: "Kyle Raze"
+date: "Winter 2020"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'metropolis', 'metropolis-fonts', 'my-css.css']
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "https://platform.twitter.com/widgets.js"
+---
+class: inverse, middle
+
+```{r Setup, include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, readxl, viridis, knitr, dslabs, gapminder, extrafont, Ecdat, wooldridge, tidyverse, magrittr, janitor, kableExtra)
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#272822" # metropolis font color 
+purple <- "#9370DB"
+green <- "#007935"
+light_green <- "#7DBA97"
+orange <- "#FD5F00"
+turquoise <- "#44C1C4"
+red <- "#b92e34"
+# Notes directory
+dir_slides <- "~/GitHub/Intro_Microeconomics_W20/Lectures/03-Consumer_Theory/"
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  warning = F,
+  message = F
+)  
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  # axis.text.x = element_text(size = 12),
+  # axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+theme_market <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.title.x = element_text(hjust = 1, size = 17),
+  axis.title.y = element_text(hjust = 1, angle = 0, size = 17),
+  # axis.text.x = element_text(size = 12),
+  # axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+theme_gif <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+theme_game <- theme_bw() + theme(
+  axis.line = element_line(),
+  panel.grid = element_blank(),
+  rect = element_rect(size = 1),
+  strip.text = element_blank(),
+  text = element_text(size = 17, family = "Fira Sans"), 
+  axis.text.x = element_text(size = 17, color = purple),
+  axis.text.y = element_text(size = 17, angle = 90, color = red_pink, hjust = 0.5),
+  axis.title.x = element_text(color = purple, size = 19),
+  axis.title.y = element_text(color = red_pink, size = 19),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  legend.position = "none"
+)
+game_box_1 <- function(x) 5 - x
+game_box_2 <- function(x) 10 - x
+game_box_3 <- function(x) 15 - x
+w <- seq(0, 5, 0.01)
+z <- seq(5, 10, 0.01)
+wrapper <- function(x, ...) paste(strwrap(x, ...), collapse = "\n")
+```
+
+# Prologue
+
+---
+# Agenda
+
+## Game Theory
+
+- How can we model strategic interactions?
+
+- Last topic for Midterm 2.
+
+## Midterm 2 Overview
+
+- One week from today!
+
+---
+class: inverse, middle
+
+# Game Theory
+
+---
+# Game Theory
+
+## What is it?
+
+> A framework of analysis in which two or more players compete for payoffs.
+
+--
+
+A player's payoff depends on
+
+1. Her decisions.
+
+2. All other players' decisions.
+
+--
+
+Useful for understanding a variety of "games" people play.
+
+- .pink[Competitive scenarios:] Politics, collective bargaining, war, sports, *etc.*
+
+- .purple[Cooperative scenarios:] Resource management, public goods, *etc.*
+
+---
+# What defines a game?
+
+.pink[Who are the **players**?]
+
+.smallest[
+- Pete Buttigieg and Bernie Sanders.
+- Saudi Arabia, Venezuela, and other OPEC countries.
+- USA and USSR.
+]
+
+--
+
+.purple[What are the **strategies** available to each player?]
+
+.smallest[
+- Focus on early primary states or Super Tuesday states.
+- Collude (restrict oil output) or compete (increase oil output).
+- Develop nuclear arsenal or not.
+]
+
+--
+
+.green[What are the **payoffs** associated with each combination of strategies?]
+
+.smallest[
+- Democratic nominee or just another rank-and-file progressive.
+- Split higher revenues or lower revenues.
+- Continue to exist or total annihilation.
+]
+
+---
+# The Prisoner's Dilemma
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Accuse", "Deny")
+strategies_p2 <- c("Deny", "Accuse")
+
+pd_1 <- ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Prisoner 2", y = "Prisoner 1") +
+  # Player 1 payoffs
+  annotate("text", label = wrapper(expression("Short Jail Sentence"), 12), x = 1.75, y = 6, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = wrapper(expression("Longest Jail Sentence"), 14), x = 6.75, y = 6, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = wrapper(expression("No Jail Sentence"), 12), x = 1.75, y = 1, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = wrapper(expression("Long Jail Sentence"), 12), x = 6.75, y = 1, family = "Fira Sans", size = 5, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = wrapper(expression("Short Jail Sentence"), 12), x = 3.25, y = 9, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = wrapper(expression("No Jail Sentence"), 12), x = 8.25, y = 9, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = wrapper(expression("Longest Jail Sentence"), 14), x = 3.25, y = 4, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = wrapper(expression("Long Jail Sentence"), 12), x = 8.25, y = 4, family = "Fira Sans", size = 5, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+pd_1
+```
+]
+
+.pull-right[
+
+## Story
+
+An interrogator keeps .pink[Prisoner 1] and .purple[Prisoner 2] in separate cells and interviews them separately.
+
+Each prisoner can either deny the charges or accuse the other prisoner.
+
+]
+
+---
+# The Prisoner's Dilemma
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+pd_1
+```
+]
+
+.pull-right[
+
+## Analysis
+
+**Step 1:** Quantify the payoffs.
+
+]
+
+---
+count: false
+# The Prisoner's Dilemma
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Accuse", "Deny")
+strategies_p2 <- c("Deny", "Accuse")
+
+pd_2 <- ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Prisoner 2", y = "Prisoner 1") +
+  # Player 1 payoffs
+  annotate("text", label = expression(-3), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-12), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(0), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-8), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = expression(-3), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(0), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-12), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-8), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+pd_2 
+```
+]
+
+.pull-right[
+
+## Analysis
+
+**Step 1:** Quantify the payoffs.
+
+]
+
+---
+count: false
+# The Prisoner's Dilemma
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+pd_2
+```
+]
+
+.pull-right[
+
+## Analysis
+
+**Step 1:** Quantify the payoffs.
+
+**Step 2:** Find each prisoner's *best response* for each strategy the other could play.
+
+]
+
+---
+count: false
+# The Prisoner's Dilemma
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Accuse", "Deny")
+strategies_p2 <- c("Deny", "Accuse")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Prisoner 2", y = "Prisoner 1") +
+  # Player 1 payoffs
+  annotate("text", label = expression(-3), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-12), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink, alpha = 0.2) +
+  annotate("text", label = expression(0), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-8), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink, alpha = 0.2) +
+  # Player 2 payoffs
+  annotate("text", label = expression(-3), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  annotate("text", label = expression(0), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  annotate("text", label = expression(-12), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  annotate("text", label = expression(-8), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+
+```
+]
+
+.pull-right[
+
+## Analysis
+
+**Step 1:** Quantify the payoffs.
+
+**Step 2:** Find each prisoner's *best response* for each strategy the other could play.
+]
+
+---
+count: false
+# The Prisoner's Dilemma
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Accuse", "Deny")
+strategies_p2 <- c("Deny", "Accuse")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Prisoner 2", y = "Prisoner 1") +
+  # Player 1 payoffs
+  annotate("text", label = expression(-3), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-12), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink, alpha = 0.2) +
+  annotate("label", label = expression(0), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-8), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink, alpha = 0.2) +
+  # Player 2 payoffs
+  annotate("text", label = expression(-3), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  annotate("text", label = expression(0), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  annotate("text", label = expression(-12), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  annotate("text", label = expression(-8), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+
+```
+]
+
+.pull-right[
+
+## Analysis
+
+**Step 1:** Quantify the payoffs.
+
+**Step 2:** Find each prisoner's *best response* for each strategy the other could play.
+]
+
+---
+count: false
+# The Prisoner's Dilemma
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Accuse", "Deny")
+strategies_p2 <- c("Deny", "Accuse")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Prisoner 2", y = "Prisoner 1") +
+  # Player 1 payoffs
+  annotate("text", label = expression(-3), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink, alpha = 0.2) +
+  annotate("text", label = expression(-12), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(0), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink, alpha = 0.2) +
+  annotate("label", label = expression(-8), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = expression(-3), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  annotate("text", label = expression(0), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  annotate("text", label = expression(-12), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  annotate("text", label = expression(-8), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+
+```
+]
+
+.pull-right[
+
+## Analysis
+
+**Step 1:** Quantify the payoffs.
+
+**Step 2:** Find each prisoner's *best response* for each strategy the other could play.
+]
+
+---
+count: false
+# The Prisoner's Dilemma
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Accuse", "Deny")
+strategies_p2 <- c("Deny", "Accuse")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Prisoner 2", y = "Prisoner 1") +
+  # Player 1 payoffs
+  annotate("text", label = expression(-3), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink, alpha = 0.2) +
+  annotate("text", label = expression(-12), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink, alpha = 0.2) +
+  annotate("text", label = expression(0), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink, alpha = 0.2) +
+  annotate("text", label = expression(-8), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink, alpha = 0.2) +
+  # Player 2 payoffs
+  annotate("text", label = expression(-3), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression(0), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-12), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  annotate("text", label = expression(-8), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+
+```
+]
+
+.pull-right[
+
+## Analysis
+
+**Step 1:** Quantify the payoffs.
+
+**Step 2:** Find each prisoner's *best response* for each strategy the other could play.
+]
+
+---
+count: false
+# The Prisoner's Dilemma
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Accuse", "Deny")
+strategies_p2 <- c("Deny", "Accuse")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Prisoner 2", y = "Prisoner 1") +
+  # Player 1 payoffs
+  annotate("text", label = expression(-3), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink, alpha = 0.2) +
+  annotate("text", label = expression(-12), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink, alpha = 0.2) +
+  annotate("text", label = expression(0), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink, alpha = 0.2) +
+  annotate("text", label = expression(-8), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink, alpha = 0.2) +
+  # Player 2 payoffs
+  annotate("text", label = expression(-3), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  annotate("text", label = expression(0), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple, alpha = 0.2) +
+  annotate("text", label = expression(-12), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression(-8), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+
+```
+]
+
+.pull-right[
+
+## Analysis
+
+**Step 1:** Quantify the payoffs.
+
+**Step 2:** Find each prisoner's *best response* for each strategy the other could play.
+]
+
+---
+count: false
+# The Prisoner's Dilemma
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Accuse", "Deny")
+strategies_p2 <- c("Deny", "Accuse")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Prisoner 2", y = "Prisoner 1") +
+  # Player 1 payoffs
+  annotate("text", label = expression(-3), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-12), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("label", label = expression(0), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("label", label = expression(-8), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = expression(-3), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression(0), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-12), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression(-8), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+
+```
+]
+
+.pull-right[
+
+## Analysis
+
+**Step 1:** Quantify the payoffs.
+
+**Step 2:** Find each prisoner's *best response* for each strategy the other could play.
+
+- Both players have a *dominant strategy* to accuse.
+]
+
+---
+count: false
+# The Prisoner's Dilemma
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Accuse", "Deny")
+strategies_p2 <- c("Deny", "Accuse")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Prisoner 2", y = "Prisoner 1") +
+  # Player 1 payoffs
+  annotate("text", label = expression(-3), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-12), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("label", label = expression(0), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("label", label = expression(-8), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = expression(-3), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression(0), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-12), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression(-8), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+
+```
+]
+
+.pull-right[
+
+## Analysis
+
+**Step 1:** Quantify the payoffs.
+
+**Step 2:** Find each prisoner's *best response* for each strategy the other could play.
+
+- Both players have a *dominant strategy* to accuse.
+
+**Step 3:** Find the *Nash equilibrium*.
+
+- Equilibrium .mono[=] (.pink[Accuse], .purple[Accuse])
+]
+
+---
+# Nash Equilibrium
+
+## Definition
+
+>  A set of strategies such that no player has the incentive to deviate unilaterally from her chosen strategy.
+
+--
+
+**Q:** What logic supports the (.pink[Accuse], .purple[Accuse]) equilibrium?
+
+--
+
+- Given that .pink[Prisoner 1] decided to .pink[Accuse], .purple[Prisoner 2] is better off having played .purple[Accuse].
+
+- Given that .purple[Prisoner 2] decided to .purple[Accuse], .pink[Prisoner 1] is better off having played .pink[Accuse].
+
+---
+class: clear-slide
+
+**Q:** Cooperate or defect?
+
+- If everyone chooses to cooperate, then everyone will receive 2 bonus participation points.
+
+- If everyone chooses to cooperate, but one person defects, then the person who defects will receive 6 bonus participation points and everyone else will receive 0 bonus participation points.
+
+- If more than one person chooses to defect, then everyone will receive 0 bonus participation points.
+
+> **A.** Cooperate.
+
+> **B.** Defect.
+
+---
+# Cournot Game
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Low Price", "High Price")
+strategies_p2 <- c("High Price", "Low Price")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Nike", y = "Adidas") +
+  # Player 1 payoffs
+  annotate("text", label = wrapper(expression("High Profits"), 12), x = 1.75, y = 6, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = wrapper(expression("Lowest Profits"), 14), x = 6.75, y = 6, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = wrapper(expression("Highest Profits"), 12), x = 1.75, y = 1, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = wrapper(expression("Low Profits"), 12), x = 6.75, y = 1, family = "Fira Sans", size = 5, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = wrapper(expression("High Profits"), 12), x = 3.25, y = 9, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = wrapper(expression("Highest Profits"), 12), x = 8.25, y = 9, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = wrapper(expression("Lowest Profits"), 14), x = 3.25, y = 4, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = wrapper(expression("Low Profits"), 12), x = 8.25, y = 4, family = "Fira Sans", size = 5, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+```
+]
+
+.pull-right[
+
+**Q:** What are the equilibrium strategies?
+
+]
+
+---
+count: false
+# Cournot Game
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Low Price", "High Price")
+strategies_p2 <- c("High Price", "Low Price")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Nike", y = "Adidas") +
+  # Player 1 payoffs
+  annotate("text", label = expression(35), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(5), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(50), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(20), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = expression(35), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(50), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(5), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(20), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+```
+]
+
+.pull-right[
+
+**Q:** What are the equilibrium strategies?
+
+]
+
+---
+count: false
+# Cournot Game
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Low Price", "High Price")
+strategies_p2 <- c("High Price", "Low Price")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Nike", y = "Adidas") +
+  # Player 1 payoffs
+  annotate("text", label = expression(35), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(5), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("label", label = expression(50), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("label", label = expression(20), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = expression(35), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression(50), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(5), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression(20), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+```
+]
+
+.pull-right[
+
+**Q:** What are the equilibrium strategies?
+
+**A:** Equilibrium .mono[=] (.pink[Low Price], .purple[Low Price]), even though a bilateral deviation would be mutually beneficial!
+
+- Another dilemma!
+
+]
+
+---
+# Prisoner's Dilemma 2.0
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Accuse", "Deny")
+strategies_p2 <- c("Deny", "Accuse")
+
+pd_1 <- ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Prisoner 2", y = "Prisoner 1") +
+  # Player 1 payoffs
+  annotate("text", label = wrapper(expression("Short Jail Sentence"), 12), x = 1.75, y = 6, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = wrapper(expression("Longest Jail Sentence"), 14), x = 6.75, y = 6, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = wrapper(expression("Compensate Prisoner 2"), 12), x = 1.75, y = 1, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = wrapper(expression("Long Jail Sentence"), 12), x = 6.75, y = 1, family = "Fira Sans", size = 5, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = wrapper(expression("Short Jail Sentence"), 12), x = 3.25, y = 9, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = wrapper(expression("Compensate Prisoner 1"), 12), x = 8.25, y = 9, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = wrapper(expression("Longest Jail Sentence"), 14), x = 3.25, y = 4, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = wrapper(expression("Long Jail Sentence"), 12), x = 8.25, y = 4, family = "Fira Sans", size = 5, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+pd_1
+```
+]
+
+.pull-right[
+
+## Story
+
+An interrogator keeps .pink[Prisoner 1] and .purple[Prisoner 2] in separate cells and interviews them separately.
+
+Each prisoner can either deny the charges or accuse the other prisoner.
+
+**Twist:** Pre-heist contract.
+
+]
+
+---
+count: false
+# Prisoner's Dilemma 2.0
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Accuse", "Deny")
+strategies_p2 <- c("Deny", "Accuse")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Prisoner 2", y = "Prisoner 1") +
+  # Player 1 payoffs
+  annotate("text", label = expression(-3), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-12), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-4), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-8), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = expression(-3), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-4), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-12), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-8), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+```
+]
+
+.pull-right[
+
+## Story
+
+An interrogator keeps .pink[Prisoner 1] and .purple[Prisoner 2] in separate cells and interviews them separately.
+
+Each prisoner can either deny the charges or accuse the other prisoner.
+
+**Twist:** Pre-heist contract.
+
+]
+
+---
+# Prisoner's Dilemma 2.0
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Accuse", "Deny")
+strategies_p2 <- c("Deny", "Accuse")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Prisoner 2", y = "Prisoner 1") +
+  # Player 1 payoffs
+  annotate("text", label = expression(-3), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-12), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-4), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-8), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = expression(-3), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-4), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-12), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-8), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+```
+]
+
+.pull-right[
+
+**Q:** What are the equilibrium strategies?
+
+]
+
+---
+count: false
+# Prisoner's Dilemma 2.0
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Accuse", "Deny")
+strategies_p2 <- c("Deny", "Accuse")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Prisoner 2", y = "Prisoner 1") +
+  # Player 1 payoffs
+  annotate("label", label = expression(-3), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-12), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-4), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("label", label = expression(-8), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("label", label = expression(-3), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-4), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-12), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression(-8), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+```
+]
+
+.pull-right[
+
+**Q:** What are the equilibrium strategies?
+
+**A:** There are two equilibria!
+
+- (.pink[Accuse], .purple[Accuse])
+
+- (.pink[Deny], .purple[Deny])
+
+No longer a prisoner's dilemma.
+
+- Now a coordination game.
+
+]
+
+---
+class: clear-slide
+
+<iframe width="900" height="600" src="https://www.youtube.com/embed/p3Uos2fzIJ0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+---
+# Split or Steal?
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Steal", "Split")
+strategies_p2 <- c("Split", "Steal")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Stephen", y = "Sarah") +
+  # Player 1 payoffs
+  annotate("text", label = expression("50k"), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(0), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression("100k"), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(0), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = expression("50k"), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression("100k"), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(0), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(0), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+```
+]
+
+.pull-right[
+
+**Observed outcome:** (.pink[Steal], .purple[Split])
+
+**Q:** What are the equilibrium strategies?
+
+]
+
+---
+count: false
+# Split or Steal?
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Steal", "Split")
+strategies_p2 <- c("Split", "Steal")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Stephen", y = "Sarah") +
+  # Player 1 payoffs
+  annotate("text", label = expression("50k"), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("label", label = expression(0), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("label", label = expression("100k"), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("label", label = expression(0), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = expression("50k"), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression("100k"), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression(0), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression(0), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+```
+]
+
+.pull-right[
+
+**Observed outcome:** (.pink[Steal], .purple[Split])
+
+**Q:** What are the equilibrium strategies?
+
+**A:** Three equilibria.
+
+- (.pink[Steal], .purple[Split])
+
+- (.pink[Split], .purple[Steal])
+
+- (.pink[Steal], .purple[Steal])
+
+]
+
+---
+# Chicken
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Straight", "Swerve")
+strategies_p2 <- c("Swerve", "Straight")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Driver 2", y = "Driver 1") +
+  # Player 1 payoffs
+  annotate("text", label = expression("Tie"), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression("Lose"), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression("Win"), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression("Crash"), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = expression("Tie"), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression("Win"), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression("Lose"), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression("Crash"), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+```
+]
+
+.pull-right[
+
+**Q:** What are the equilibrium strategies?
+
+]
+
+---
+count: false
+# Chicken
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Straight", "Swerve")
+strategies_p2 <- c("Swerve", "Straight")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Driver 2", y = "Driver 1") +
+  # Player 1 payoffs
+  annotate("text", label = expression("Tie"), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("label", label = expression("Lose"), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("label", label = expression("Win"), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression("Crash"), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = expression("Tie"), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression("Win"), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression("Lose"), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression("Crash"), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+```
+]
+
+.pull-right[
+
+**Q:** What are the equilibrium strategies
+
+**A:** Two equilibria.
+
+- (.pink[Swerve], .purple[Straight])
+
+- (.pink[Straight], .purple[Swerve])
+
+]
+
+---
+# Matching Pennies
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Tails", "Heads")
+strategies_p2 <- c("Heads", "Tails")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Roommate 2", y = "Roommate 1") +
+  # Player 1 payoffs
+  annotate("text", label = expression(+1), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-1), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-1), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(+1), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = expression(-1), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(+1), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(+1), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-1), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+```
+]
+
+.pull-right[
+
+**Q:** What are the equilibrium strategies?
+
+]
+
+---
+count: false
+# Matching Pennies
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Tails", "Heads")
+strategies_p2 <- c("Heads", "Tails")
+
+ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Roommate 2", y = "Roommate 1") +
+  # Player 1 payoffs
+  annotate("label", label = expression(+1), x = 1.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-1), x = 6.75, y = 6, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression(-1), x = 1.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("label", label = expression(+1), x = 6.75, y = 1, family = "Fira Sans", size = 6, color = red_pink) +
+  # Player 2 payoffs
+  annotate("text", label = expression(-1), x = 3.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression(+1), x = 8.25, y = 9, family = "Fira Sans", size = 6, color = purple) +
+  annotate("label", label = expression(+1), x = 3.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  annotate("text", label = expression(-1), x = 8.25, y = 4, family = "Fira Sans", size = 6, color = purple) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 0, y = 10, xend = 10, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 10, xend = 10, yend = 5), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 0, y = 5, xend = 5, yend = 0), linetype  = "dashed", size = 0.5) +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = game_box_1(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = 5, ymax = game_box_2(w)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 5, ymax = game_box_3(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = game_box_2(z)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_1(w), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = w, ymin = game_box_2(w), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_3(z), ymax = 10), fill = purple, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = game_box_2(z), ymax = 5), fill = purple, alpha = 0.2, linetype = "blank")
+```
+]
+
+.pull-right[
+
+**Q:** What are the equilibrium strategies
+
+**A:** No mutual best responses!
+
+- The only equilibrium strategy is to randomize.
+
+]
+
+---
+# Pascal's Wager
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 5.5, fig.width = 4.5, dev = "svg"}
+strategies_p1 <- c("Live as if No God", "Live as if God")
+strategies_p2 <- c("God", "No God")
+
+pascal <- ggplot() + 
+  scale_x_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p2, position = "top")+
+  scale_y_continuous(limits = c(0, 10), expand = c(0,0), breaks = c(2.5, 7.5), labels = strategies_p1) +
+  labs(x = "Nature", y = "Pascal") +
+  # Player 1 payoffs
+  annotate("text", label = expression("Heaven"), x = 2.5, y = 7.5, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression("A"), x = 7.5, y = 7.5, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression("Hell"), x = 2.5, y = 2.5, family = "Fira Sans", size = 6, color = red_pink) +
+  annotate("text", label = expression("B"), x = 7.7, y = 2.5, family = "Fira Sans", size = 6, color = red_pink) +
+  # theme stuff
+  theme_game +
+  geom_segment(aes(x = 5, y = 0, xend = 5, yend = 10), linetype  = "solid", size = 1) +
+  geom_segment(aes(x = 0, y = 5, xend = 10, yend = 5), linetype  = "solid", size = 1) +
+  geom_ribbon(aes(x = w, ymin = 0, ymax = 10), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = z, ymin = 0, ymax = 10), fill = red_pink, alpha = 0.2, linetype = "blank")
+pascal
+```
+]
+
+--
+
+.pull-right[
+## Analysis
+
+Pr[G] .mono[=] Probability that God exists.
+
+Expected payoff from belief
+<br> $\quad$ .mono[=] Pr[G] &times; Heaven + (1 .mono[-] Pr[G]) &times; A
+
+Expected payoff from non-belief
+<br> $\quad$ .mono[=] Pr[G] &times; Hell + (1 .mono[-] Pr[G]) &times; B
+
+]
+
+---
+count: false
+# Pascal's Wager
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 5.5, fig.width = 4.5, dev = "svg"}
+pascal
+```
+]
+
+.pull-right[
+## Analysis
+
+Pr[G] .mono[=] Probability that God exists.
+
+Expected payoff from belief
+<br> $\quad$ .mono[=] Pr[G] &times; Heaven + (1 .mono[-] Pr[G]) &times; A
+
+Expected payoff from non-belief
+<br> $\quad$ .mono[=] Pr[G] &times; Hell + (1 .mono[-] Pr[G]) &times; B
+
+.pink[**Pascal's Conclusion:**] If Pr[G] .mono[>] 0, Heaven .mono[>] Hell, and A is at least as good as B, .pink[belief dominates non-belief].
+
+]
+
+---
+class: inverse, middle
+
+# Brinkmanship
+
+---
+# Brinkmanship
+
+A **threat** provides a way to make a strategic move. 
+
+- But, you often only have one large threat available.
+
+--
+ 
+Some threats are so big that your opponent doesn't believe you'll carry it out. 
+
+- *e.g.,* "give me $50 or I will kill myself" is unlikely to provide a credible threat.
+
+---
+# Brinkmanship
+
+A **credible threat** is costly enough, but not too costly, for opponents to take you seriously.
+
+- *e.g.,* "give me $50 or I will run across the road with my eyes closed" is more likely to induce other player to fork over money.
+
+    - Probability of death is positive, but less than one.
+
+---
+# Brinkmanship
+
+Brinkmanship requires that  process is at least partially out of control.
+
+- *e.g.,* if the threatener hears traffic, then the threat wouldn't work.
+
+    - All parties would know the threatener wouldn't run if there were a vehicle coming.
+
+- The probability of the threat actually being carried out must be outside the threatener's control.
+
+---
+# Brinkmanship
+
+## Cuban Missile Crisis
+
+A striking example of successful brinkmanship?
+
+- JFK took the world to the brink of nuclear war, and by doing so persuaded Khrushchev to remove missiles from Cuba.
+
+--
+
+But it seems as if game theory cannot explain this.
+
+- Why didn't Khrushchev apply backward induction, figure out the final outcome, and decide not to start the whole process?
+
+---
+# Brinkmanship
+
+## George Bush *vs.* Saddam Hussein
+
+Bush played a similar strategy against Hussein: .pink[he gambled].
+
+- **Preferred outcome:** Compliance or removal of Hussein as a response to Bush's threat.
+
+--
+
+- So...Bush lost.
+
+--
+
+Bush and JFK played essentially the same brinkmanship strategy.
+
+- Why didn’t Hussein employ backward induction and quit before the war?
+
+---
+# Brinkmanship
+
+We can't say Bush played the game better or worse than JFK.
+
+- Brinkmanship necessarily involves taking risks. There is a chance of success and failure.
+
+- Something went wrong in the Persian gulf that didn't in the Cuban missile crisis, but what was it?
+
+---
+# Brinkmanship
+
+## Simple Threat Model
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+iraq_1 <- ggplot() + 
+  theme_void() +
+  # Node 1
+  geom_segment(aes(x = 0, y = 0, xend = 1, yend = 1), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Don't Threat", x = 0.5, y = 0.5, family = "Fira Sans", size = 5, color = red_pink) +
+  geom_segment(aes(x = 0, y = 0, xend = 1, yend = -1), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Threat", x = 0.5, y = -0.5, family = "Fira Sans", size = 5, color = red_pink) +
+  geom_point(aes(x = 0, y = 0), size = 3, color = red_pink) +
+  annotate("text", label = "GWB", x = -0.15, y = 0, family = "Fira Sans", size = 5, color = red_pink) +
+  # Subgame 1
+  geom_segment(aes(x = 1, y = 1, xend = 2, yend = 1), linetype  = "solid", size = 1, color = met_slate) +
+  geom_point(aes(x = 1, y = 1), size = 3, color = purple) +
+  annotate("text", label = "SH", x = 1, y = 1.15, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = "-2", x = 2.1, y = 1.07, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = "2", x = 2.12, y = 0.93, family = "Fira Sans", size = 5, color = purple) +
+  # Subgame 2
+  geom_segment(aes(x = 1, y = -1, xend = 2, yend = 0), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Quit", x = 1.5, y = -0.5, family = "Fira Sans", size = 5, color = purple) +
+  geom_segment(aes(x = 1, y = -1, xend = 2, yend = -2), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Stay", x = 1.5, y = -1.5, family = "Fira Sans", size = 5, color = purple) +
+  geom_point(aes(x = 1, y = -1), size = 3, color = purple) +
+  annotate("text", label = "SH", x = 1, y = -1.15, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = "1", x = 2.11, y = 0.07, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = "-4", x = 2.1, y = -0.07, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = "-10", x = 2.1, y = -1.93, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = "-8", x = 2.1, y = -2.07, family = "Fira Sans", size = 5, color = purple)
+iraq_1
+```
+]
+
+--
+
+.less-right[
+**Problem:** Backward induction tells that .pink[GWB] always .pink[threats] and .purple[SH] always .purple[quits].
+
+- But SH didn't quit!
+
+]
+
+---
+count: false
+# Brinkmanship
+
+## Simple Threat Model
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+iraq_1
+```
+]
+
+.less-right[
+**Problem:** Backward induction tells that .pink[GWB] always .pink[threats] and .purple[SH] always .purple[quits].
+
+- But SH didn't quit!
+
+- Maybe we have the payoffs wrong?
+
+- Maybe SH values defying the US and simply prefers not to quit?
+
+]
+
+---
+# Brinkmanship
+
+## Take 2
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+ggplot() + 
+  theme_void() +
+  # Node 1
+  geom_segment(aes(x = 0, y = 0, xend = 1, yend = 1), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Don't Threat", x = 0.5, y = 0.5, family = "Fira Sans", size = 5, color = red_pink) +
+  geom_segment(aes(x = 0, y = 0, xend = 1, yend = -1), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Threat", x = 0.5, y = -0.5, family = "Fira Sans", size = 5, color = red_pink) +
+  geom_point(aes(x = 0, y = 0), size = 3, color = red_pink) +
+  annotate("text", label = "GWB", x = -0.15, y = 0, family = "Fira Sans", size = 5, color = red_pink) +
+  # Subgame 1
+  geom_segment(aes(x = 1, y = 1, xend = 2, yend = 1), linetype  = "solid", size = 1, color = met_slate) +
+  geom_point(aes(x = 1, y = 1), size = 3, color = purple) +
+  annotate("text", label = "SH", x = 1, y = 1.15, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = "-2", x = 2.1, y = 1.07, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = "2", x = 2.12, y = 0.93, family = "Fira Sans", size = 5, color = purple) +
+  # Subgame 2
+  geom_segment(aes(x = 1, y = -1, xend = 2, yend = 0), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Quit", x = 1.5, y = -0.5, family = "Fira Sans", size = 5, color = purple) +
+  geom_segment(aes(x = 1, y = -1, xend = 2, yend = -2), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Stay", x = 1.5, y = -1.5, family = "Fira Sans", size = 5, color = purple) +
+  geom_point(aes(x = 1, y = -1), size = 3, color = purple) +
+  annotate("text", label = "SH", x = 1, y = -1.15, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = "1", x = 2.11, y = 0.07, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = "-8", x = 2.1, y = -0.07, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = "-10", x = 2.1, y = -1.93, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = "-4", x = 2.1, y = -2.07, family = "Fira Sans", size = 5, color = purple)
+```
+]
+
+--
+
+.less-right[
+**Problem:** Backward induction tells that .purple[SH] always .purple[stays] and .pink[GWB] .pink[doesn't threat].
+
+- But GWB didn't quit!
+
+]
+
+---
+# Brinkmanship
+
+At least two elements are missing in our analysis:
+
+1. GWB didn't know SH's payoffs: "Am I in game 1 or game 2?"
+
+    - Expensive intel to know how SH valued defying the US.
+
+2. Neither SH nor GWB was sure GWB would invade.
+
+    - Many unkowns (*e.g.,* opposition to GWB's plans in the UN by France, Germany, and Russia).
+
+--
+
+Suppose that SH is tough with probability p $\in$ (0, 1) and GB is committed to his threat with probability q $\in$ (0, 1) 
+
+- New game, similar to Cuban missile crisis.
+
+---
+class: clear-slide
+
+.more-left[
+```{r, echo = FALSE, fig.height = 6, fig.width = 5, dev = "svg"}
+iraq_2 <- ggplot() + 
+  scale_x_continuous(limits = c(-1, 2.5)) +
+  theme_void() +
+  geom_segment(aes(x = 0, y = -1, xend = 0, yend = 2), linetype  = "dashed", size = 1, color = met_slate) +
+  # Nature
+  geom_segment(aes(x = -0.5, y = 0.5, xend = 0, yend = -1), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Pr[Soft SH] = 1 - p", x = -0.5, y = -0.1, family = "Fira Sans", size = 5, color = met_slate) +
+  geom_segment(aes(x = -0.5, y = 0.5, xend = 0, yend = 2), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Pr[Tough SH] = p", x = -0.5, y = 1.1, family = "Fira Sans", size = 5, color = met_slate) +
+  geom_point(aes(x = -0.5, y = 0.5), size = 3, color = met_slate) +
+  annotate("text", label = "Nature", x = -0.85, y = 0.5, family = "Fira Sans", size = 5, color = met_slate) +
+  # Game 1
+  geom_segment(aes(x = 0, y = -1, xend = 1, yend = 0), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Don't Threat", x = 0.5, y = -0.5, family = "Fira Sans", size = 5, color = red_pink) +
+  geom_segment(aes(x = 0, y = -1, xend = 1, yend = -2), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Threat", x = 0.5, y = -1.5, family = "Fira Sans", size = 5, color = red_pink) +
+  geom_point(aes(x = 0, y = -1), size = 3, color = red_pink) +
+  annotate("text", label = "GWB", x = -0.25, y = -1, family = "Fira Sans", size = 5, color = red_pink) +
+  # Subgame 1
+  geom_segment(aes(x = 1, y = 0, xend = 2, yend = 0), linetype  = "solid", size = 1, color = met_slate) +
+  geom_point(aes(x = 1, y = 0), size = 3, color = purple) +
+  annotate("text", label = "SH", x = 1, y = 0.25, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = "-2", x = 2.1, y = 0.15, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = "2", x = 2.13, y = -0.15, family = "Fira Sans", size = 5, color = purple) +
+  # Subgame 2
+  geom_segment(aes(x = 1, y = -2, xend = 2, yend = -1), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Quit", x = 1.5, y = -1.5, family = "Fira Sans", size = 5, color = purple) +
+  geom_segment(aes(x = 1, y = -2, xend = 2, yend = -3), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Stay", x = 1.5, y = -2.5, family = "Fira Sans", size = 5, color = purple) +
+  geom_point(aes(x = 1, y = -2), size = 3, color = purple) +
+  annotate("text", label = "SH", x = 1, y = -2.25, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = "1", x = 2.13, y = -0.85, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = "-4", x = 2.1, y = -1.15, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = "-2 - 8q", x = 2.3, y = -2.85, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = "2 - 10q", x = 2.35, y = -3.15, family = "Fira Sans", size = 5, color = purple) +
+  # Game 2
+  geom_segment(aes(x = 0, y = 2, xend = 1, yend = 3), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Don't Threat", x = 0.5, y = 2.5, family = "Fira Sans", size = 5, color = red_pink) +
+  geom_segment(aes(x = 0, y = 2, xend = 1, yend = 1), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Threat", x = 0.5, y = 1.5, family = "Fira Sans", size = 5, color = red_pink) +
+  geom_point(aes(x = 0, y = 2), size = 3, color = red_pink) +
+  annotate("text", label = "GWB", x = -0.25, y = 2, family = "Fira Sans", size = 5, color = red_pink) +
+  # Subgame 1
+  geom_segment(aes(x = 1, y = 3, xend = 2, yend = 3), linetype  = "solid", size = 1, color = met_slate) +
+  geom_point(aes(x = 1, y = 3), size = 3, color = purple) +
+  annotate("text", label = "SH", x = 1, y = 3.25, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = "-2", x = 2.1, y = 3.15, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = "2", x = 2.13, y = 2.85, family = "Fira Sans", size = 5, color = purple) +
+  # Subgame 2
+  geom_segment(aes(x = 1, y = 1, xend = 2, yend = 2), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Quit", x = 1.5, y = 1.5, family = "Fira Sans", size = 5, color = purple) +
+  geom_segment(aes(x = 1, y = 1, xend = 2, yend = 1), linetype  = "solid", size = 1, color = met_slate) +
+  annotate("label", label = "Stay", x = 1.5, y = 1, family = "Fira Sans", size = 5, color = purple) +
+  geom_point(aes(x = 1, y = 1), size = 3, color = purple) +
+  annotate("text", label = "SH", x = 1, y = 0.75, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = "1", x = 2.12, y = 2.15, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = "-8", x = 2.1, y = 1.85, family = "Fira Sans", size = 5, color = purple) +
+  annotate("text", label = "−2 − 8q", x = 2.3, y = 1.15, family = "Fira Sans", size = 5, color = red_pink) +
+  annotate("text", label = "2 − 6q", x = 2.33, y = 0.85, family = "Fira Sans", size = 5, color = purple)
+iraq_2
+```
+]
+
+--
+
+.less-right[
+
+## Backward induction
+
+Tough SH won't quit for any q.
+
+- Since −8 .mono[>] 2 .mono[−] 6q.
+
+Soft SH quits if q .mono[>] 0.6
+
+- *i.e.,* 2 .mono[−] 10q .mono[<] −4.
+
+]
+
+---
+class: clear-slide
+
+.more-left[
+```{r, echo = FALSE, fig.height = 6, fig.width = 5, dev = "svg"}
+iraq_2
+```
+]
+
+.less-right[
+
+## GWB's options
+
+Threaten and get <br> p(−2 .mono[−] 8q) .mono[+] (1 .mono[−] p)(1)
+
+Don't threaten and get <br> p(−2) .mono[+] (1 .mono[−] p)(-2) .mono[=] -2
+
+Will threaten if <br> p .mono[<] 3/[3 .mono[+] 8q]
+
+]
+
+---
+# Brinkmanship
+
+.more-left[
+```{r, echo = FALSE, fig.height = 5, fig.width = 5, dev = "svg"}
+x <- seq(0, 1, 0.0001)
+
+data <- tibble(
+  x = seq(0, 1, 0.0001)
+) %>% 
+  mutate(y = case_when(x >= 3/11 ~ -(3*(-1 + x))/(8*x),
+                       TRUE ~ 1))
+
+gwb_mixed <- function(x) -(3*(-1 + x))/(8*x)
+a <- seq(0, 3/11, 0.0001)
+b <- seq(3/11, 0.3846, 0.0001)
+c <- seq(0.3846, 1, 0.0001)
+
+ggplot() +
+  scale_x_continuous(limits = c(0, 1.05), expand = c(0, 0), breaks = c(0, 0.3846, 1), labels = c(0, 0.38, 1)) +
+  scale_y_continuous(limits = c(0, 1.05), expand = c(0, 0), breaks = c(0, 0.6, 1), labels = c(0, 0.6, 1)) +
+  theme_market +
+  labs(x = "p", y = "q") +
+  geom_line(data = data, mapping = aes(x = x, y = y), size = 1, color = met_slate) +
+  geom_ribbon(aes(x = c, ymin = 0, ymax = gwb_mixed(c)), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = a, ymin = 0, ymax = 0.6), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = b, ymin = 0, ymax = 0.6), fill = red_pink, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = a, ymin = 0.6, ymax = 1), fill = green, alpha = 0.2, linetype = "blank") +
+  geom_ribbon(aes(x = b, ymin = 0.6, ymax = gwb_mixed(b)), fill = green, alpha = 0.2, linetype = "blank") +
+  geom_segment(aes(x = 0, xend = 3/11, y = 1), yend = 1, color = met_slate, size = 1) +
+  geom_point(aes(x = 0.3846, y = 0.6), color = met_slate, size = 2) +
+  geom_segment(aes(x = 0, xend = 0.3846, y = 0.6, yend = 0.6), color = met_slate, linetype = "dashed", size = 1) +
+  geom_segment(aes(x = 0.3846, xend = 0.3846, y = 0, yend = 0.6), color = met_slate, linetype = "dashed", size = 1) +
+  annotate("text", label = wrapper("Zone where GWB would not threaten.", 20), x = 0.75, y = 0.75, family = "Fira Sans", size = 3, color = met_slate) +
+  annotate("text", label = wrapper("Zone where GWB should not threaten. Either type of SH would not quit.", 25), x = 0.2, y = 0.35, family = "Fira Sans", size = 3, color = red_pink) +
+  annotate("text", label = wrapper("Zone where GWB threatens. Soft SH quits. Tough SH stays.", 25), x = 0.175, y = 0.75, family = "Fira Sans", size = 3, color = green)
+
+```
+]
+
+--
+
+.less-right[
+
+GWB tries a q .mono[<] 0.6. If this doesn't work and doesn't trigger conflict, he tries a slightly higher q.
+
+Either GWB reaches q = 0.6 and a soft SH quits or we're going to war.
+
+No different from JFK and Khrushchev, except for the outcome.
+]
+
+---
+class: inverse, middle
+
+# Midterm 2
+
+---
+# Midterm Topics
+
+.green[Anything from lectures or discussions (weeks 5 through 7 only)] .hi-green[is fair game!]
+
+1. Policy Levers: Taxes & Subsidies
+
+2. Policy Levers: Price Controls
+
+3. How Economists Learn from Data I
+
+4. How Economists Learn from Data II
+
+5. Market Failure: Externalities
+
+6. Game Theory
+
+---
+# Midterm Structure
+
+## Multiple Choice
+
+- 50 questions
+
+- 1 point per question
+
+- Multiple groups of sequential questions (*e.g.,* about graphs or tables)
+
+---
+# Midterm Protocol
+
+## Materials
+
+- Writing utensil
+- 3-inch-by-5-inch note card
+- Basic or scientific calculator (no graphing or programming capabilities)
+- UO ID card
+- .hi[Nothing else]
+
+--
+
+## Procedure
+
+- **Randomized** seating chart
+- 80 minutes from *"you may begin"* to *"pencils down"*
+- First 30 minutes: .hi[quiet period] (no questions, no getting up)
+- Last 50 minutes: ask lots of questions
+- Show your UO ID card as you turn-in your exam
+
+---
+# Midterm Preparation
+
+1. Lecture slides
+
+2. Discussion worksheets
+
+3. Practice midterm questions
+
+    - No solutions posted, but you can ask about the questions in office hours.
+
+4. Extended office hours
+
+    - Time and location TBA
+
+5. Prepare your note card
