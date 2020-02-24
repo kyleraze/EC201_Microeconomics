@@ -34,3 +34,6 @@ The .html versions of the lecture slides allow you to view animations and intera
 11. **Market Failure: Externalities** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/11-Externalities/11-Externalities.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/11-Externalities/11-Externalities.pdf)
 
 12. **Game Theory** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/12-Game_Theory/12-Game_Theory.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/12-Game_Theory/12-Game_Theory.pdf)
+
+13. **Market Failure: Public Goods** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/13-Public_Goods/13-Public_Goods.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/13-Public_Goods/13-Public_Goods.pdf)
+
