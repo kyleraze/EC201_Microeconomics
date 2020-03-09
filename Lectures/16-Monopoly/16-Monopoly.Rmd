@@ -191,7 +191,7 @@ class: inverse, middle
 
 --
 
-**A:** .purple[Not a monopolist, but has market power.]
+**A:** .pink[Not a monopolist, but has market power.]
 
 ---
 # Monopoly
@@ -208,7 +208,7 @@ class: inverse, middle
 
 --
 
-**A:** .pink[Depending on where you live, yes.]
+**A:** .purple[Depending on where you live, yes.]
 
 ---
 # Monopoly
@@ -225,7 +225,7 @@ class: inverse, middle
 
 --
 
-**A:** .pink[Yes, provided that there sufficiently few indirect competitors.]
+**A:** .purple[Yes, provided that there sufficiently few indirect competitors.]
 
 ---
 # Sources of Monopoly Power
@@ -1564,7 +1564,7 @@ class: inverse, middle
 
 1. Mandate marginal cost pricing?
 
-    - Make monopolist choose Q.sub[M] where P .mono[=] MC.
+    - Make monopolist choose quantity where price equals marginal cost.
 
 2. Have the government take over the monopoly?
 
