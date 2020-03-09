@@ -152,7 +152,7 @@ class: inverse, middle
 
 ## Result
 
-**No market power:** Firms have no control control over the market price.
+**No market power:** Firms have no control over the market price.
 
 - Each firm is a **price taker**.
 

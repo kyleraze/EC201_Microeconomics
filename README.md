@@ -40,3 +40,5 @@ The .html versions of the lecture slides allow you to view animations and intera
 14. **Producer Theory I** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/14-Producer_Theory/14-Producer_Theory.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/14-Producer_Theory/14-Producer_Theory.pdf)
 
 15. **Producer Theory II** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/15-Producer_Theory/15-Producer_Theory.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/15-Producer_Theory/15-Producer_Theory.pdf)
+
+16. **Monopoly** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/16-Monopoly/16-Monopoly.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/16-Monopoly/16-Monopoly.pdf)
