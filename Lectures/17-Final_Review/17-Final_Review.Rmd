@@ -1,0 +1,695 @@
+---
+title: "Final Review"
+subtitle: "EC 201: Principles of Microeconomics"
+author: "Kyle Raze"
+date: "Winter 2020"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'metropolis', 'metropolis-fonts', 'my-css.css']
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "https://platform.twitter.com/widgets.js"
+---
+class: inverse, middle
+
+```{r Setup, include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, readxl, viridis, knitr, dslabs, gapminder, extrafont, Ecdat, wooldridge, tidyverse, magrittr, janitor, kableExtra, scales)
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#272822" # metropolis font color 
+purple <- "#9370DB"
+green <- "#007935"
+light_green <- "#7DBA97"
+orange <- "#FD5F00"
+turquoise <- "#44C1C4"
+red <- "#b92e34"
+# Notes directory
+dir_slides <- "~/GitHub/Intro_Microeconomics_W20/Lectures/03-Consumer_Theory/"
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  warning = F,
+  message = F
+)  
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  # axis.text.x = element_text(size = 12),
+  # axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+theme_market <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.title.x = element_text(hjust = 1, size = 17),
+  axis.title.y = element_text(hjust = 1, angle = 0, size = 17),
+  axis.ticks = element_blank()
+)
+theme_gif <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 17),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank()
+)
+theme_goods <- theme_bw() + theme(
+  axis.line = element_line(),
+  panel.grid = element_blank(),
+  rect = element_rect(size = 1),
+  strip.text = element_blank(),
+  text = element_text(size = 17, family = "Fira Sans"), 
+  axis.text.x = element_text(size = 17),
+  axis.text.y = element_text(size = 17, angle = 90, hjust = 0.5),
+  axis.title.x = element_text(color = purple, size = 19),
+  axis.title.y = element_text(color = red_pink, size = 19),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  legend.position = "none"
+)
+theme_game <- theme_bw() + theme(
+  axis.line = element_line(),
+  panel.grid = element_blank(),
+  rect = element_rect(size = 1),
+  strip.text = element_blank(),
+  text = element_text(size = 20, family = "Fira Sans"), 
+  axis.text.x = element_text(size = 20, color = met_slate),
+  axis.text.y = element_text(size = 20, angle = 90, color = met_slate, hjust = 0.5),
+  axis.title.x = element_text(color = met_slate, size = 20),
+  axis.title.y = element_text(color = met_slate, size = 20),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  legend.position = "none"
+)
+theme_histogram <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.border = element_blank(),
+  panel.grid.minor = element_blank(),
+  plot.caption = element_text(hjust = 0),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 20),
+  legend.text = element_text(family = "Fira Sans", color = met_slate, size = 20)
+)
+shift_axis <- function(p, y=0){
+  g <- ggplotGrob(p)
+  dummy <- data.frame(y=y)
+  ax <- g[["grobs"]][g$layout$name == "axis-b"][[1]]
+  p + annotation_custom(grid::grobTree(ax, vp = grid::viewport(y=1, height=sum(ax$height))), 
+                        ymax=y, ymin=y) +
+    geom_hline(aes(yintercept=y), data = dummy, size = 0.5, color = met_slate) +
+    theme(axis.text.x = element_blank(), 
+          axis.ticks.x = element_blank())
+}
+wrapper <- function(x, ...) paste(strwrap(x, ...), collapse = "\n")
+```
+
+# Prologue
+
+---
+# Today
+
+## Grades
+
+- What do they mean?
+
+- How does the curve work?
+
+--
+
+## Final Exam Review
+
+- Topics, structure, protocol, preparation, *etc.*
+
+--
+
+## Q & A
+
+- Ask me anything!
+
+---
+# Finals Week
+
+## Office Hours
+
+- Monday 10:00-12:00 in 412 PLC.
+
+- Tuesday 14:00-16:00 in 412 PLC.
+
+--
+
+## Final Exam
+
+- .pink[Wednesday 10:15-12:15] in Pacific 123.
+
+--
+
+- If you show up after 10:30, I won't let you take the exam!
+
+---
+class: inverse, middle
+
+# Grades
+
+---
+class: clear-slide
+.center[**Pre-Final Grades**]
+```{r, echo = FALSE, fig.height = 7, dev = "svg"}
+histogram_data <- read_csv("../../Emails/Data/grade_histogram_data_pre-final.csv")
+histogram_data %>%
+    ggplot(aes(x = s_combined_points, fill = s_letter_grade, color = s_letter_grade)) +
+    scale_y_continuous(expand = c(0, 0), breaks = pretty_breaks()) +
+    expand_limits(x = 0) +
+    scale_x_continuous(expand = c(0, 0), limits = c(0, 100), breaks = pretty_breaks()) +
+    geom_histogram(position = "identity", alpha = 0.65, binwidth = 1) +
+    geom_hline(yintercept = 0) +
+    scale_color_viridis(discrete = TRUE, option = "viridis") +
+    scale_fill_viridis(discrete = TRUE, option = "viridis") +
+    labs(x = "Midterm 1 + Midterm 2 Combined Score (out of 100)",
+         y = "Number of Students", color = "", fill = "") +
+    theme_histogram
+```
+
+---
+# Grades
+
+I will re-curve the class after the final.
+
+```{R, echo = F, escape = F}
+tab <- data.frame(
+  v1 = c("Midterm Exam 1", "Midterm Exam 2", "Final Exam", "Participation", "Optional Short Essays"),
+  v2 = c("25%", "25%", "40%", "10%", "up to 4% extra credit")
+) %>% kable(
+  escape = F,
+  col.names = c("Assignment Group", "Weight"),
+  align = c("l", "c")
+) %>%
+  kable_styling(full_width = T) %>% 
+  row_spec(1:5, extra_css = "line-height: 110%;")
+tab 
+```
+
+--
+
+**Note.sub[1]:** I have dropped your lowest three paricipation scores.
+
+--
+
+**Note.sub[2]:** The "Total" percentage you see in Canvas is misleading until everything is graded.
+
+---
+class: inverse, middle
+
+# Final Exam
+
+---
+# Exam Topics
+
+**Cumulative:** Anything we've covered is fair game.
+
+- Midterm 1 material: weeks 1-4
+
+- Midterm 2 material: weeks 5-7.
+
+- New material: weeks 8-10.
+
+---
+# Exam Topics
+
+## 1. What is Economics?
+
+**A:** The study of how humans coordinate their wants.
+
+- Why do we need to coordinate? .pink[Scarcity!]
+
+--
+
+What role should economists play?
+
+- Positive *vs.* normative statements.
+
+--
+
+People respond to incentives.
+
+---
+# Exam Topics
+
+## 2. Motivating the Economic Problem
+
+Problem? .pink[Scarcity.]
+
+--
+
+Organizing an economy
+
+- **Our focus:** Capitalism.
+
+- **Consequences:** Improved living standards .mono[+] higher inequality.
+
+--
+
+What is a price?
+
+- Know the punchline!
+
+--
+
+Opportunity cost
+
+---
+# Exam Topics
+
+## 3. Consumer Theory I
+
+Total *vs.* marginal value
+
+- *e.g.,* Diamond-Water Paradox.
+
+--
+
+Diminishing marginal value .mono[-->] downward-sloping demand.
+
+--
+
+Optimal purchase rule
+
+- Maximizes an individual consumer's surplus.
+
+--
+
+Demand *vs.* quantity demanded
+
+---
+# Exam Topics
+
+## 4. Consumer Theory II
+
+Individual responsiveness .mono[=] price elasticity of demand.
+
+- Relationship with revenue.
+
+--
+
+Determinants of demand .mono[=] demand shifters.
+
+- Prices of other goods (substitutes *vs.* complements).
+
+- Income (normal *vs.* inferior goods).
+
+- Changes in tastes, expectations, *etc.*
+
+--
+
+Relative prices .mono[-->] relative demand.
+
+- *e.g.,* shipping the good apples out.
+
+
+---
+# Exam Topics
+
+## 5. The Market Mechanism
+
+Pit market activity!
+
+- Number on card .mono[=] marginal value.
+
+- Basis of trade? Differences in marginal values.
+
+--
+
+Shortage and surplus *vs.* equilibrium
+
+--
+
+**Q:** Why do we like markets as a means to distribute goods? 
+
+- **A:** They can maximize mutual gains .mono[=] efficiency!
+
+---
+# Exam Topics
+
+## 6. Demand and Supply
+
+Determinants of (market) demand .mono[=] demand shifters.
+
+- Prices of other goods, income, tastes, expectations, number of buyers.
+
+--
+
+Determinants of supply .mono[=] supply shifters.
+
+- Input prices, production technology, expectations, number of sellers, supply disruptions.
+
+--
+
+Simultaneous shifts .mono[-->] ambiguity.
+
+- Know direction of change in price or quantity, but not both.
+
+--
+
+Market spillovers
+
+---
+# Exam Topics
+
+## 7. Policy Levers: Taxes & Subsidies
+
+Tax/subsidy wedge between consumer price and producer price.
+
+- Government gets/pays the difference.
+
+--
+
+Tax incidence .mono[!=] statutory incidence.
+
+- Inelastic side of the market bears more of the burden.
+
+--
+
+Elasticity .mono[-->] tax revenue .mono[+] deadweight loss
+
+--
+
+Per-unit *vs.* lump-sum
+
+--
+
+Equity: progressive *vs.* regressive taxes.
+
+--
+
+Equity-efficiency tradeoff
+
+---
+# Exam Topics
+
+## 8. Policy Levers: Price Controls
+
+Binding price floor .mono[-->] surplus of goods .mono[-->] deadweight loss.
+
+- *e.g.,* agricultural price supports.
+
+--
+
+Binding price ceiling .mono[-->] shortage of goods .mono[-->] deadweight loss.
+
+- *e.g.,* rent control.
+
+--
+
+What causes price controls to become binding?
+
+- *e.g.,* how do price-gouging laws work?
+
+---
+# Exam Topics
+
+## 9. How Economists Learn from Data I
+
+**Q:** Why correlation .mono[!=] causation?
+
+- **A:** Selection bias.
+
+--
+
+Structured thinking about causal *vs.* contaminated comparisons
+
+- Ideal/hypothetical data on potential outcomes
+
+--
+
+How do randomized control trials help us make *internally valid* comparisons?
+
+--
+
+What does .pink[treatment] .mono[-] .purple[control] tell us? 
+
+--
+
+When is a study *externally valid*?
+
+---
+# Exam Topics
+
+## 10. How Economists Learn from Data II
+
+Regressions!
+
+- Interpret slope of regression line.
+
+- Omitted variables bias.
+
+--
+
+Natural experiments
+
+- Accidental randomized control trials (*e.g.,* Oregon Medicaid Experiment)
+
+- Difference-in-differences (*e.g.,* Card and Krueger's minimum wage study)
+
+--
+
+Statistical significance
+
+---
+# Exam Topics
+
+## 11. Externalities
+
+Market failure .mono[-->] deadweight loss.
+
+--
+
+Negative externality .mono[-->] overproduction.
+
+--
+
+Positive externality .mono[-->] underproduction.
+
+--
+
+Solutions?
+
+1. Pigouvian taxes/subsidies
+
+2. Coase theorem
+
+---
+# Exam Topics
+
+## 12. Game Theory
+
+Game .mono[=] players .mono[+] strategies .mono[+] payoffs.
+
+- *e.g.,* Prisoner's dilemma, chicken, matching pennies, *etc.*
+
+--
+
+Dominant strategy is always a best response, but a best response isn't always a dominant strategy.
+
+--
+
+Nash equilibrium .mono[=] mutual best responses.
+
+--
+
+Make sure that you are comfortable solving a 2 .mono[&times;] 2 game!
+
+- Don't worry about the brinkmanship material.
+
+---
+# Exam Topics
+
+## 13. Public Goods
+
+Types of goods
+
+- Rival *vs.* non-rival, excludable *vs.* non-excludable.
+- Private, public, club, and common-resource.
+
+--
+
+Markets fail with non-private goods. Why?
+
+- Club goods .mono[-->] market power.
+- Public goods and common resources .mono[-->] collective action problems.
+
+--
+
+Collective action problems
+
+1. Free-rider problem
+2. Tragedy of the commons
+
+---
+# Exam Topics
+
+## 14. Producer Theory I
+
+Accounting *vs.* economic profit
+
+--
+
+Production technology
+
+--
+
+Profit-maximizing hiring decisions
+
+--
+
+Fixed *vs.* variable costs
+
+- ATC .mono[=] AVC .mono[+] AFC
+
+--
+
+Short-run *vs.* long-run costs
+
+--
+
+Returns to scale
+
+---
+# Exam Topics
+
+## 15. Producer Theory II
+
+Competitive markets
+
+--
+
+Profit maximization: pick Q where MR .mono[=] MC.
+
+- Short-run: make decision to shut down or keep producing.
+
+- Long-run: make entry/exit decisions.
+
+--
+
+Firm-level response to a change in demand and short *vs.* long-run market adjustment.
+
+- Horizontal long-run supply curve at minimum ATC.
+
+- Upward-sloping short-run supply curve.
+
+
+---
+# Exam Topics
+
+## 16. Monopoly & Antitrust
+
+Sources of monopoly power
+
+--
+
+Profit maximization: two steps!
+
+--
+
+Social consequences
+
+--
+
+Antitrust law .mono[+] regulation
+
+---
+# Exam Structure
+
+## Multiple Choice
+
+- 80 questions
+
+- 1 point per question
+
+- Multiple groups of sequential questions (*e.g.,* about graphs or tables)
+
+---
+# Exam Protocol
+
+## Materials
+
+- Writing utensil
+
+- 3-inch-by-5-inch note card
+
+- Basic or scientific calculator (no graphing or programming capabilities)
+
+- UO ID card
+
+- .hi[Nothing else]
+
+---
+# Exam Protocol
+
+## Procedure
+
+- **Randomized** seating chart
+
+- 120 minutes from *"you may begin"* to *"pencils down"*
+
+- First 30 minutes: .hi[quiet period] (no questions, no getting up)
+
+- Last 90 minutes: ask lots of questions
+
+- Show your UO ID card as you turn-in your exam
+
+---
+# Exam Preparation
+
+## Materials
+
+1. Lecture slides
+
+2. Discussion worksheets
+
+3. Midterm exams
+
+4. Practice questions for the midterms and the final
+
+5. Practice problems from the book
+
+---
+# Exam Preparation
+
+## Strategies
+
+1. .pink[**Review**] concepts .pink[.mono[<--] slides .mono[+] book]
+
+2. .pink[**Dissect**] midterm performance .pink[.mono[<--] keys .mono[+] emails]
+
+3. .pink[**Practice**] .pink[.mono[<--] worksheets .mono[+] book problems]
+
+4. .pink[**Simulate**] the final .pink[.mono[<--] 25 .mono[+] 25 .mono[+] 25 .mono[=] 75 practice questions!]
+
+    - Set a timer!
+
+5. .purple[**Visit**] office hours
+
+    - M 10:00-12:00 and T 14:00-16:00 in 412 PLC
+
+6. .purple[**Prepare**] your note card
+
+
+---
+class: inverse, middle
+
+# Q & A
