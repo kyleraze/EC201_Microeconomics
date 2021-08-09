@@ -1,15 +1,17 @@
-# EC 201, Winter 2020
+# Principles of Microeconomics <img align="right" height="275" src="fig_collective_action.png">
 
-Welcome to the course GitHub page for **EC 201: Principles of Microeconomics** (Winter 2020) at the University of Oregon.
+Welcome to EC 201: Principles of Microeconomics (Winter 2020) at the University of Oregon. 
 
 - Instructor: [Kyle Raze](https://kyleraze.com)
 - GE: Connor Wiegand 
 - GE: Promise Kamanga
 - [Syllabus](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Syllabus/syllabus.pdf)
 
+The purpose of this course is to cultivate your economic intuition. My goal is not to teach you *what to think*, but rather *how to think* as economists. We will consider how social outcomes are shaped by the decisions of many individuals, even though each individual commands only a small fraction of the economy. Expanding upon the notion that individuals respond to incentives, we will use models to analyze and assess a variety of social phenomena. Successful students will leave the course with an intellectual framework for understanding and evaluating economic issues and policy.
+
 ## Lectures
 
-The .html versions of the lecture slides allow you to view animations and interactive features, provided that you have an internet connection. The .pdf slides don't require an internet connection, but they cannot display the animations or interactive features.
+The HTML versions of the lecture slides allow you to view animations and interactive features, provided that you have an internet connection. The PDF slides don't require an internet connection, but they cannot display the animations or interactive features.
 
 1. **What is Economics?** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/01-Introduction/01-Introduction.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/01-Introduction/01-Introduction.pdf)
 
@@ -44,3 +46,11 @@ The .html versions of the lecture slides allow you to view animations and intera
 16. **Monopoly & Antitrust** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/16-Monopoly/16-Monopoly.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/16-Monopoly/16-Monopoly.pdf)
 
 17. **Final Review** <br> [.html](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/17-Final_Review/17-Final_Review.html) | [.pdf](https://raw.githack.com/kyleraze/EC201_Microeconomics/master/Lectures/17-Final_Review/17-Final_Review.pdf)
+
+## Other course content
+
+For practice problems and other materials, please see Canvas.
+
+## Contributors
+
+I am indebted to [Glen Waddell](http://www.glenwaddell.com/) ([@glenwaddell](https://github.com/glenwaddell)) and [Keaton Miller](http://www.keatonmiller.org/) for their generous contributions of course materials. I also source material from [Opportunity Insights](https://opportunityinsights.org/) and the [CORE Project](https://www.core-econ.org/) ([@coreeconteam](https://twitter.com/coreeconteam)).
