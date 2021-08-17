@@ -1,4 +1,4 @@
-# Principles of Microeconomics <img align="right" height="275" src="fig_collective_action.png">
+# Principles of Microeconomics
 
 Welcome to EC 201: Principles of Microeconomics (Winter 2020) at the University of Oregon. 
 
@@ -53,4 +53,4 @@ For practice problems and other materials, please see Canvas.
 
 ## Contributors
 
-I am indebted to [Glen Waddell](http://www.glenwaddell.com/) ([@glenwaddell](https://github.com/glenwaddell)) and [Keaton Miller](http://www.keatonmiller.org/) for their generous contributions of course materials. I also source material from [Opportunity Insights](https://opportunityinsights.org/) and the [CORE Project](https://www.core-econ.org/) ([@coreeconteam](https://twitter.com/coreeconteam)).
+I am indebted to [Glen Waddell](http://www.glenwaddell.com/) ([@glenwaddell](https://github.com/glenwaddell)) and [Keaton Miller](http://www.keatonmiller.org/) for their generous contributions of course materials.
